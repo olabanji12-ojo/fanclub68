@@ -10,7 +10,7 @@ html, body {
   color: #1F2937;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: auto;
 }
 
 #root {

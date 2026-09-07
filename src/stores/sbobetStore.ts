@@ -37,6 +37,31 @@ interface SbobetState {
   registerUser: (username: string, phone?: string) => void;
   loginDemo: () => void;
   logout: () => void;
+
+  // Live Odds Refresh & Pull-to-Refresh
+  isRefreshing: boolean;
+  lastRefreshedTime: string;
+  refreshOdds: () => Promise<void>;
+
+  // Search & A-Z Sorting
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  selectedLeague: string;
+  setSelectedLeague: (league: string) => void;
+  isAZModalOpen: boolean;
+  setIsAZModalOpen: (open: boolean) => void;
+
+  // Admin Dashboard & Platform Controls
+  isAdminModalOpen: boolean;
+  setIsAdminModalOpen: (open: boolean) => void;
+  platformTier: 1 | 2 | 3;
+  setPlatformTier: (tier: 1 | 2 | 3) => void;
+  quotaUsed: number;
+  simulateQuota: (delta: number) => void;
+  resetQuota: () => void;
+  casinoOverride: 'tai' | 'xiu' | null;
+  setCasinoOverride: (val: 'tai' | 'xiu' | null) => void;
+  depositBalance: (amount: number) => void;
 }
 
 export const useSbobetStore = create<SbobetState>((set, get) => ({
@@ -140,5 +165,49 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
 
   logout: () => {
     set({ isLoggedIn: false, user: null });
-  }
+  },
+
+  isRefreshing: false,
+  lastRefreshedTime: '13:34:05',
+  refreshOdds: async () => {
+    if (get().isRefreshing) return;
+    set({ isRefreshing: true });
+    
+    // Simulate live data fetch latency
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    const now = new Date();
+    const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+
+    set({
+      isRefreshing: false,
+      lastRefreshedTime: timeString
+    });
+  },
+
+  // Search & A-Z Sorting
+  searchTerm: '',
+  setSearchTerm: (term) => set({ searchTerm: term }),
+  selectedLeague: 'ALL',
+  setSelectedLeague: (league) => set({ selectedLeague: league }),
+  isAZModalOpen: false,
+  setIsAZModalOpen: (open) => set({ isAZModalOpen: open }),
+
+  // Admin Dashboard & Platform Controls
+  isAdminModalOpen: false,
+  setIsAdminModalOpen: (open) => set({ isAdminModalOpen: open }),
+  platformTier: 1,
+  setPlatformTier: (tier) => set({ platformTier: tier }),
+  quotaUsed: 14320,
+  simulateQuota: (delta) => set((s) => ({ quotaUsed: Math.min(s.quotaUsed + delta, 100000) })),
+  resetQuota: () => set({ quotaUsed: 0 }),
+  casinoOverride: null,
+  setCasinoOverride: (val) => set({ casinoOverride: val }),
+  depositBalance: (amount) => set((s) => ({
+    user: s.user ? { ...s.user, balance: Math.max(0, s.user.balance + amount) } : {
+      username: 'SbobetTrader_88',
+      balance: Math.max(0, 1000.0 + amount),
+      vipLevel: 'VIP Master'
+    }
+  }))
 }));

@@ -4,7 +4,7 @@ import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 
 export const SbobetTennisAccordion: React.FC = () => {
-  const { language, addSelection, slipSelections } = useSbobetStore();
+  const { language, addSelection, slipSelections, isRefreshing, refreshOdds } = useSbobetStore();
   const t = translations[language];
 
   const matchId = 'tennis-atp-usopen-01';
@@ -56,8 +56,13 @@ export const SbobetTennisAccordion: React.FC = () => {
       {/* LIVE ORANGE BANNER WITH REFRESH (SCREENSHOT 2) */}
       <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-3 py-1.5 flex items-center justify-between font-black italic tracking-wide rounded-sm shadow-sm gap-2">
         <span className="truncate flex-1 text-xs">TRỰC TIẾP ATP - Grand Slam US Open (Set Handicap)</span>
-        <button className="hover:rotate-180 transition-transform duration-300 shrink-0">
-          <RotateCw className="w-3.5 h-3.5" />
+        <button
+          onClick={() => refreshOdds()}
+          disabled={isRefreshing}
+          className="p-1 rounded-full hover:bg-white/20 transition-all shrink-0 active:scale-90 flex items-center justify-center"
+          title="Làm mới tỷ lệ cược (Refresh live tennis odds)"
+        >
+          <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-yellow-200' : ''}`} />
         </button>
       </div>
 

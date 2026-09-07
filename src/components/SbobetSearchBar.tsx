@@ -3,17 +3,32 @@ import { Search, SlidersHorizontal, ArrowDownAZ } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 
 export const SbobetSearchBar: React.FC = () => {
-  const { language } = useSbobetStore();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLeague, setSelectedLeague] = useState('ALL');
+  const {
+    language,
+    searchTerm,
+    setSearchTerm,
+    selectedLeague,
+    setSelectedLeague,
+    setIsAZModalOpen,
+    setActiveSport,
+    setActiveTab
+  } = useSbobetStore();
 
   const leagues = [
-    { id: 'ALL', label: language === 'vi' ? 'Tất cả giải' : 'All Leagues' },
-    { id: 'LALIGA', label: 'La Liga' },
-    { id: 'PORTUGAL', label: 'Liga Portugal' },
-    { id: 'USOPEN', label: 'US Open' },
-    { id: 'EPL', label: 'Premier League' }
+    { id: 'ALL', label: language === 'vi' ? 'Tất cả giải' : 'All Leagues', sport: 'football', tab: 'live' },
+    { id: 'LALIGA', label: 'La Liga', sport: 'football', tab: 'live' },
+    { id: 'PORTUGAL', label: 'Liga Portugal', sport: 'football', tab: 'matches' },
+    { id: 'USOPEN', label: 'US Open', sport: 'tennis', tab: 'live' },
+    { id: 'NBA', label: 'NBA', sport: 'basketball', tab: 'live' },
+    { id: 'NFL', label: 'NFL', sport: 'nfl', tab: 'live' },
+    { id: 'EPL', label: 'Premier League', sport: 'football', tab: 'live' }
   ];
+
+  const handleSelectLeague = (l: typeof leagues[0]) => {
+    setSelectedLeague(l.id);
+    setActiveSport(l.sport as any);
+    setActiveTab(l.tab as any);
+  };
 
   return (
     <div className="bg-white border-b border-gray-200 p-2 space-y-1.5 text-xs font-sans">
@@ -25,15 +40,25 @@ export const SbobetSearchBar: React.FC = () => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={language === 'vi' ? 'Tìm kiếm đội bóng, giải đấu...' : 'Search team or tournament...'}
+            placeholder={language === 'vi' ? 'Tìm kiếm đội bóng, giải đấu (Barca, Lakers, NFL...)' : 'Search team or tournament (Barca, Lakers, NFL...)'}
             className="w-full bg-transparent text-xs text-gray-800 placeholder-gray-400 focus:outline-none"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="text-gray-400 hover:text-gray-600 text-xs font-bold shrink-0 px-1"
+            >
+              ✕
+            </button>
+          )}
         </div>
         <button
-          className="p-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg text-gray-600 transition-colors"
-          title="A-Z Sorting"
+          onClick={() => setIsAZModalOpen(true)}
+          className="p-1.5 bg-gray-100 hover:bg-gray-200 border border-gray-200 rounded-lg text-gray-600 transition-colors flex items-center gap-1 shrink-0 active:scale-95"
+          title={language === 'vi' ? 'Sắp xếp giải đấu A-Z' : 'A-Z Tournament Sorting'}
         >
           <ArrowDownAZ className="w-4 h-4 text-[#0B4DA2]" />
+          <span className="text-[10px] font-black text-[#0B4DA2] hidden sm:inline">A-Z</span>
         </button>
       </div>
 
@@ -42,7 +67,7 @@ export const SbobetSearchBar: React.FC = () => {
         {leagues.map((l) => (
           <button
             key={l.id}
-            onClick={() => setSelectedLeague(l.id)}
+            onClick={() => handleSelectLeague(l)}
             className={`px-2.5 py-1 rounded-full text-[10px] font-bold shrink-0 transition-all ${
               selectedLeague === l.id
                 ? 'bg-[#0B4DA2] text-white shadow-xs'

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, ChevronDown, Globe, LayoutGrid, Sparkles } from 'lucide-react';
+import { Menu, ChevronDown, Globe, LayoutGrid, RotateCw, Shield } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 import { SportType } from '../types';
@@ -11,7 +11,10 @@ export const SbobetHeader: React.FC = () => {
     activeSport,
     setActiveSport,
     setCurrentView,
-    currentView
+    currentView,
+    isRefreshing,
+    refreshOdds,
+    setIsAdminModalOpen
   } = useSbobetStore();
 
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -48,8 +51,18 @@ export const SbobetHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Master 4-Grid Lobby Switcher & Language Dropdown */}
-        <div className="flex items-center gap-2">
+        {/* Right: Master 4-Grid Lobby Switcher, Circular Refresh, & Language Dropdown */}
+        <div className="flex items-center gap-1.5">
+          {/* Circular Refresh Button (Circle Stuff) */}
+          <button
+            onClick={() => refreshOdds()}
+            disabled={isRefreshing}
+            className="p-1.5 bg-[#08356E] hover:bg-[#072B59] rounded text-white border border-[#165AB8] transition-all flex items-center justify-center active:scale-95"
+            title="Làm mới tỷ lệ cược (Refresh live odds)"
+          >
+            <RotateCw className={`w-3.5 h-3.5 text-white ${isRefreshing ? 'animate-spin text-yellow-300' : ''}`} />
+          </button>
+
           {/* Master 4-Grid Lobby Shortcut */}
           <button
             onClick={() => setCurrentView('lobby')}
@@ -58,6 +71,15 @@ export const SbobetHeader: React.FC = () => {
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             <span className="hidden sm:inline text-[11px] font-bold">4-Grid Hub</span>
+          </button>
+
+          {/* Admin Dashboard Trigger */}
+          <button
+            onClick={() => setIsAdminModalOpen(true)}
+            className="p-1.5 bg-[#07254D] hover:bg-[#061E3F] rounded text-yellow-400 border border-yellow-500/30 transition-all flex items-center justify-center active:scale-95"
+            title="SBOBET Admin Engine (Anti-Latency, Quota, Overrule)"
+          >
+            <Shield className="w-3.5 h-3.5" />
           </button>
 
           {/* Language Selector Dropdown */}
