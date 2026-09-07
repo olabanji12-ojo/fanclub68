@@ -106,29 +106,29 @@ export const SbobetCockfightView: React.FC = () => {
         </div>
 
         {/* TITLE BAR */}
-        <div className="bg-[#0A438D] px-3 py-1.5 flex items-center justify-between text-xs font-bold text-white">
-          <div className="flex items-center gap-1.5 text-red-300">
-            <Swords className="w-4 h-4 text-red-400" />
-            <span>ĐÁ GÀ TRỰC TIẾP SV388 (7 BỒ ĐẤU)</span>
+        <div className="bg-[#0A438D] px-3 py-1.5 flex items-center justify-between text-xs font-bold text-white gap-2">
+          <div className="flex items-center gap-1.5 text-red-300 min-w-0">
+            <Swords className="w-4 h-4 text-red-400 shrink-0" />
+            <span className="truncate text-[11px] sm:text-xs">ĐÁ GÀ SV388 (7 BỒ ĐẤU)</span>
           </div>
           <button
             onClick={() => setCurrentView('sbobet')}
-            className="text-[11px] text-yellow-300 hover:underline flex items-center gap-1 font-bold"
+            className="text-[10px] sm:text-[11px] text-yellow-300 hover:underline flex items-center gap-1 font-bold shrink-0 whitespace-nowrap"
           >
             ← Về Sảnh Thể Thao
           </button>
         </div>
       </header>
 
-      {/* 2. 7-ARENA HORIZONTAL SWIPE TAB BAR (CONTRACT RULE: [CPC1] [CPC2] [CPC3] [CPC4] [PH1] [PH2] [PH3]) */}
-      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-2 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar shadow-inner">
+      {/* 2. 7-ARENA RESPONSIVE TAB BAR (ALL 7 ARENAS FIT PROPORTIONATELY ON ALL MOBILES) */}
+      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1.5 sm:px-2 py-1.5 flex items-center justify-between gap-1 w-full shadow-inner">
         {arenas.map((arena) => (
           <button
             key={arena}
             onClick={() => { setActiveArena(arena); setStatus('OPEN'); }}
-            className={`px-3.5 py-1.5 rounded text-xs font-black shrink-0 transition-all ${
+            className={`flex-1 min-w-0 py-2 px-0.5 sm:px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all whitespace-nowrap ${
               activeArena === arena
-                ? 'bg-[#C0392B] text-white shadow-md border border-red-300 scale-105'
+                ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
                 : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
             }`}
           >
@@ -138,19 +138,19 @@ export const SbobetCockfightView: React.FC = () => {
       </div>
 
       {/* 3. MAIN COCKFIGHT ARENA VIEWPORT & BETTING BOARD */}
-      <main className="flex-1 p-3 space-y-3 overflow-y-auto">
+      <main className="flex-1 p-2.5 sm:p-3 space-y-2.5 sm:space-y-3 overflow-y-auto">
         
         {/* VIDEO VIEWPORT CONTAINER (WHITE CARD WITH MODERN SCREEN) */}
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-xs">
           {/* Header of Video Box */}
-          <div className="p-2.5 bg-[#FAFAFA] border-b border-gray-100 flex items-center justify-between text-xs font-bold">
-            <div className="flex items-center gap-1.5 text-red-600">
-              <span className="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>
-              <span>BỒ ĐẤU: {activeArena} (TRỰC TIẾP)</span>
+          <div className="p-2.5 bg-[#FAFAFA] border-b border-gray-100 flex items-center justify-between text-xs font-bold gap-1.5">
+            <div className="flex items-center gap-1.5 text-red-600 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-red-600 animate-ping shrink-0"></span>
+              <span className="truncate text-[11px] sm:text-xs">BỒ: {activeArena} (TRỰC TIẾP)</span>
             </div>
-            <div className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">
-              <ShieldAlert className="w-3 h-3 text-amber-600" />
-              <span>Anti-Vét 3s Gate Lock</span>
+            <div className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-800 px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-bold shrink-0 whitespace-nowrap">
+              <ShieldAlert className="w-3 h-3 text-amber-600 shrink-0" />
+              <span>Anti-Vét 3s Gate</span>
             </div>
           </div>
 
@@ -220,10 +220,10 @@ export const SbobetCockfightView: React.FC = () => {
 
         {/* 5. ROADMAP / BẢNG SOI CẦU BỒ ĐẤU */}
         <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2">
-            <span>BẢNG SOI CẦU BỒ {activeArena}</span>
-            <span className="text-[10px] text-gray-500">
-              Đỏ (M): 7 | Xanh (W): 5 | Hòa (B): 1
+          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2 gap-1.5">
+            <span className="truncate text-[11px] sm:text-xs">BẢNG SOI CẦU BỒ {activeArena}</span>
+            <span className="text-[10px] text-gray-500 whitespace-nowrap shrink-0">
+              Đ(M):7 | X(W):5 | H(B):1
             </span>
           </div>
           <div className="flex flex-wrap gap-1.5">
