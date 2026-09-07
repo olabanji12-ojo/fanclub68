@@ -29,6 +29,12 @@ interface SbobetState {
     balance: number;
     vipLevel: string;
   } | null;
+  isAuthModalOpen: boolean;
+  authModalTab: 'login' | 'register';
+  openAuthModal: (tab?: 'login' | 'register') => void;
+  closeAuthModal: () => void;
+  loginUser: (username: string) => void;
+  registerUser: (username: string, phone?: string) => void;
   loginDemo: () => void;
   logout: () => void;
 }
@@ -85,9 +91,45 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
   isLoggedIn: false,
   user: null,
 
+  isAuthModalOpen: false,
+  authModalTab: 'login',
+
+  openAuthModal: (tab = 'login') => {
+    set({ isAuthModalOpen: true, authModalTab: tab });
+  },
+
+  closeAuthModal: () => {
+    set({ isAuthModalOpen: false });
+  },
+
+  loginUser: (username) => {
+    set({
+      isLoggedIn: true,
+      isAuthModalOpen: false,
+      user: {
+        username: username.trim() || 'SbobetTrader_88',
+        balance: 1000.0,
+        vipLevel: 'VIP Gold'
+      }
+    });
+  },
+
+  registerUser: (username) => {
+    set({
+      isLoggedIn: true,
+      isAuthModalOpen: false,
+      user: {
+        username: username.trim() || 'NewMember_68',
+        balance: 1000.0,
+        vipLevel: 'Member 2026'
+      }
+    });
+  },
+
   loginDemo: () => {
     set({
       isLoggedIn: true,
+      isAuthModalOpen: false,
       user: {
         username: 'SbobetTrader_88',
         balance: 1000.0,

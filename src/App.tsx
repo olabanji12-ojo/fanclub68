@@ -15,6 +15,7 @@ import { LobbyHubModal } from './components/LobbyHubModal';
 import { SbobetCockfightView } from './components/SbobetCockfightView';
 import { SbobetTaiXiuView } from './components/SbobetTaiXiuView';
 import { SbobetXocDiaView } from './components/SbobetXocDiaView';
+import { SbobetAuthModal } from './components/SbobetAuthModal';
 import { translations } from './locales/translations';
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
       <div className="max-w-md mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
         <SbobetCockfightView />
         <SbobetBetSlipDrawer />
+        <SbobetAuthModal />
       </div>
     );
   }
@@ -44,6 +46,7 @@ export default function App() {
       <div className="max-w-md mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
         <SbobetTaiXiuView />
         <SbobetBetSlipDrawer />
+        <SbobetAuthModal />
       </div>
     );
   }
@@ -53,6 +56,7 @@ export default function App() {
       <div className="max-w-md mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
         <SbobetXocDiaView />
         <SbobetBetSlipDrawer />
+        <SbobetAuthModal />
       </div>
     );
   }
@@ -273,6 +277,9 @@ export default function App() {
 
       {/* 7. 4-GRID MASTER LOBBY MODAL */}
       <LobbyHubModal />
+
+      {/* 8. AUTH MODAL (LOGIN & REGISTER) */}
+      <SbobetAuthModal />
 
     </div>
   );

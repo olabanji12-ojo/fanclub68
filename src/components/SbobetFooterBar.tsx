@@ -12,10 +12,10 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
     language,
     isLoggedIn,
     user,
-    loginDemo,
     logout,
     slipSelections,
-    setIsBetSlipOpen
+    setIsBetSlipOpen,
+    openAuthModal
   } = useSbobetStore();
 
   const t = translations[language];
@@ -80,14 +80,14 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
           /* User is guest: Show Đăng ký (White) and Đăng nhập (Blue) matching screenshots */
           <>
             <button
-              onClick={loginDemo}
+              onClick={() => openAuthModal('register')}
               className="flex-1 py-2.5 bg-white hover:bg-gray-50 text-gray-800 font-bold text-xs uppercase rounded-lg border border-gray-300 shadow-sm transition-all active:scale-98 text-center"
             >
               {t.register}
             </button>
 
             <button
-              onClick={loginDemo}
+              onClick={() => openAuthModal('login')}
               className="flex-1 py-2.5 bg-[#1877F2] hover:bg-[#1366D6] text-white font-black text-xs uppercase rounded-lg shadow transition-all active:scale-98 text-center"
             >
               {t.login}
