@@ -163,12 +163,12 @@ export const SbobetXocDiaView: React.FC = () => {
           )}
 
           {/* CERAMIC WHITE BOWL & 4 DUAL-SIDED TOKENS */}
-          <div className="w-48 h-48 mx-auto my-3 rounded-full bg-gradient-to-b from-gray-50 to-gray-200 border-4 border-amber-600/30 flex items-center justify-center p-3 shadow-inner">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="w-36 h-36 sm:w-48 sm:h-48 mx-auto my-2 sm:my-3 rounded-full bg-gradient-to-b from-gray-50 to-gray-200 border-4 border-amber-600/30 flex items-center justify-center p-2 sm:p-3 shadow-inner">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               {tokens.map((token, i) => (
                 <div
                   key={i}
-                  className={`w-11 h-11 rounded-full border-2 shadow-md flex items-center justify-center font-black text-xs transition-transform transform hover:scale-105 ${
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full border-2 shadow-md flex items-center justify-center font-black text-[10px] sm:text-xs transition-transform transform hover:scale-105 ${
                     token === 'R'
                       ? 'bg-red-600 border-red-400 text-white'
                       : 'bg-white border-gray-300 text-black'
@@ -189,33 +189,33 @@ export const SbobetXocDiaView: React.FC = () => {
         </div>
 
         {/* 3. MAIN BETTING TILES (CHẴN / LẺ) */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <button
             onClick={() => handleBet('CHẴN', 1.98)}
             disabled={isGateLocked}
-            className={`p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
+            className={`p-2.5 sm:p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
               isGateLocked
                 ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60'
                 : 'bg-white border-[#0B4DA2] hover:bg-blue-50 text-[#0B4DA2]'
             }`}
           >
-            <div className="text-base font-black">CHẴN (EVEN)</div>
-            <div className="text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
-            <div className="text-[10px] text-gray-500 mt-1">4 Đỏ, 4 Trắng, 2 Đỏ 2 Trắng</div>
+            <div className="text-sm sm:text-base font-black">CHẴN (EVEN)</div>
+            <div className="text-lg sm:text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 mt-0.5 truncate">4 Đỏ, 4 Trắng, 2Đ-2T</div>
           </button>
 
           <button
             onClick={() => handleBet('LẺ', 1.98)}
             disabled={isGateLocked}
-            className={`p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
+            className={`p-2.5 sm:p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
               isGateLocked
                 ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60'
                 : 'bg-white border-red-500 hover:bg-red-50 text-red-600'
             }`}
           >
-            <div className="text-base font-black">LẺ (ODD)</div>
-            <div className="text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
-            <div className="text-[10px] text-gray-500 mt-1">3 Đỏ 1 Trắng, 3 Trắng 1 Đỏ</div>
+            <div className="text-sm sm:text-base font-black">LẺ (ODD)</div>
+            <div className="text-lg sm:text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 mt-0.5 truncate">3 Đỏ 1T, 3 Trắng 1Đ</div>
           </button>
         </div>
 

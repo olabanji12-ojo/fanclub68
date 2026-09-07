@@ -140,28 +140,30 @@ export const SbobetBetSlipDrawer: React.FC = () => {
                 <span>Số tiền cược (Điểm):</span>
                 <span className="text-[11px] text-gray-500">Số dư: ${user?.balance.toFixed(2) || '1,000.00'}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="space-y-2">
                 <input
                   type="number"
                   value={stake}
                   onChange={(e) => setStake(Number(e.target.value))}
                   disabled={isProcessing}
                   max={300}
-                  className="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-blue-600"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-blue-600 shadow-xs"
                 />
-                {[50, 100, 200, 300].map(val => (
-                  <button
-                    key={val}
-                    type="button"
-                    onClick={() => setStake(val)}
-                    disabled={isProcessing}
-                    className={`px-2 py-1.5 text-xs font-bold rounded border ${
-                      stake === val ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'
-                    }`}
-                  >
-                    {val}
-                  </button>
-                ))}
+                <div className="grid grid-cols-4 gap-1.5">
+                  {[50, 100, 200, 300].map(val => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => setStake(val)}
+                      disabled={isProcessing}
+                      className={`py-1.5 text-xs font-bold rounded-md border transition-all text-center ${
+                        stake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                      }`}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 

@@ -98,15 +98,15 @@ export const SbobetHeader: React.FC = () => {
       </div>
 
       {/* SECOND ROW: SPORT DROPDOWN & MIX PARLAY BUTTON */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-[#0A438D] text-xs font-semibold">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[#0A438D] text-xs font-semibold gap-2">
         {/* Sport Dropdown */}
-        <div className="relative">
+        <div className="relative flex-1 min-w-0">
           <button
             onClick={() => setIsSportOpen(!isSportOpen)}
-            className="flex items-center gap-1 hover:text-yellow-300 transition-colors"
+            className="flex items-center gap-1 hover:text-yellow-300 transition-colors w-full min-w-0 text-left"
           >
-            <span>{t.sports_label} › {t[sportsList.find(s => s.id === activeSport)?.labelKey || 'football']}</span>
-            <ChevronDown className="w-3.5 h-3.5" />
+            <span className="truncate">{t.sports_label} › {t[sportsList.find(s => s.id === activeSport)?.labelKey || 'football']}</span>
+            <ChevronDown className="w-3.5 h-3.5 shrink-0" />
           </button>
 
           {isSportOpen && (
@@ -128,7 +128,7 @@ export const SbobetHeader: React.FC = () => {
         </div>
 
         {/* Mix Parlay Action Button (Cược Xiên) */}
-        <button className="bg-white text-[#0B4DA2] hover:bg-yellow-300 hover:text-black px-2.5 py-0.5 rounded text-[11px] font-bold shadow-sm transition-colors uppercase">
+        <button className="bg-white text-[#0B4DA2] hover:bg-yellow-300 hover:text-black px-2.5 py-0.5 rounded text-[11px] font-bold shadow-sm transition-colors uppercase shrink-0 whitespace-nowrap">
           {t.mix_parlay}
         </button>
       </div>

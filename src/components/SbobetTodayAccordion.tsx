@@ -226,17 +226,18 @@ export const SbobetTodayAccordion: React.FC<TodayAccordionProps> = ({
         {expanded.dc && (
           <div className="p-2 bg-[#FAF3F0] grid grid-cols-3 gap-1.5">
             {[
-              { label: '1X (Chủ hoặc Hòa)', odds: 1.25 },
-              { label: '12 (Chủ hoặc Khách)', odds: 1.30 },
-              { label: 'X2 (Hòa hoặc Khách)', odds: 1.85 }
+              { code: '1X', desc: 'Chủ / Hòa', odds: 1.25 },
+              { code: '12', desc: 'Chủ / Khách', odds: 1.30 },
+              { code: 'X2', desc: 'Hòa / Khách', odds: 1.85 }
             ].map(item => (
               <button
-                key={item.label}
-                onClick={() => handleBetClick(t.double_chance, item.label, item.odds)}
-                className="p-2 bg-white border rounded text-center"
+                key={item.code}
+                onClick={() => handleBetClick(t.double_chance, `${item.code} (${item.desc})`, item.odds)}
+                className="p-1.5 sm:p-2 bg-white border rounded text-center shadow-xs hover:border-blue-400 transition-colors"
               >
-                <div className="text-gray-500 text-[9px] truncate">{item.label}</div>
-                <div className="font-bold text-blue-900 text-xs">{item.odds.toFixed(2)}</div>
+                <div className="font-extrabold text-gray-800 text-xs">{item.code}</div>
+                <div className="text-gray-500 text-[9px] truncate">{item.desc}</div>
+                <div className="font-black text-blue-900 text-xs mt-0.5">{item.odds.toFixed(2)}</div>
               </button>
             ))}
           </div>
@@ -263,13 +264,13 @@ export const SbobetTodayAccordion: React.FC<TodayAccordionProps> = ({
           </button>
           {expanded[c.key] && (
             <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
-              <button onClick={() => handleBetClick(c.title, 'Over / Home', 1.88)} className="p-2 bg-white border rounded text-center flex justify-between">
-                <span>{homeTeam}</span>
-                <span className="font-bold text-gray-900">1.88</span>
+              <button onClick={() => handleBetClick(c.title, 'Over / Home', 1.88)} className="p-2 bg-white border rounded text-center flex items-center justify-between gap-1 shadow-xs">
+                <span className="truncate text-left">{homeTeam}</span>
+                <span className="font-bold text-gray-900 shrink-0">1.88</span>
               </button>
-              <button onClick={() => handleBetClick(c.title, 'Under / Away', 1.92)} className="p-2 bg-white border rounded text-center flex justify-between">
-                <span>{awayTeam}</span>
-                <span className="font-bold text-gray-900">1.92</span>
+              <button onClick={() => handleBetClick(c.title, 'Under / Away', 1.92)} className="p-2 bg-white border rounded text-center flex items-center justify-between gap-1 shadow-xs">
+                <span className="truncate text-left">{awayTeam}</span>
+                <span className="font-bold text-gray-900 shrink-0">1.92</span>
               </button>
             </div>
           )}

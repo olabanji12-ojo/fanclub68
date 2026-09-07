@@ -48,28 +48,28 @@ export const SbobetTennisAccordion: React.FC = () => {
     <div className="space-y-2 text-xs font-sans select-none">
       
       {/* TOURNAMENT BANNER */}
-      <div className="bg-[#D9E6F7] text-[#0B4DA2] px-3 py-1.5 font-bold flex items-center justify-between rounded-t border-b border-[#BFD4EE]">
-        <span className="truncate">ATP - Giải Grand Slam Mỹ Mở rộng (Thể thức chấp điểm)</span>
-        <span className="bg-[#1877F2] text-white px-1.5 py-0.5 rounded text-[10px]">2 ▴</span>
+      <div className="bg-[#D9E6F7] text-[#0B4DA2] px-3 py-1.5 font-bold flex items-center justify-between rounded-t border-b border-[#BFD4EE] gap-2">
+        <span className="truncate flex-1">ATP - Giải Grand Slam Mỹ Mở rộng (Thể thức chấp điểm)</span>
+        <span className="bg-[#1877F2] text-white px-1.5 py-0.5 rounded text-[10px] shrink-0">2 ▴</span>
       </div>
 
       {/* LIVE ORANGE BANNER WITH REFRESH (SCREENSHOT 2) */}
-      <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-3 py-1.5 flex items-center justify-between font-black italic tracking-wide rounded-sm shadow-sm">
-        <span>TRỰC TIẾP ATP - Grand Slam US Open (Set Handicap)</span>
-        <button className="hover:rotate-180 transition-transform duration-300">
+      <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-3 py-1.5 flex items-center justify-between font-black italic tracking-wide rounded-sm shadow-sm gap-2">
+        <span className="truncate flex-1 text-xs">TRỰC TIẾP ATP - Grand Slam US Open (Set Handicap)</span>
+        <button className="hover:rotate-180 transition-transform duration-300 shrink-0">
           <RotateCw className="w-3.5 h-3.5" />
         </button>
       </div>
 
       {/* PLAYERS & SET SCORES */}
       <div className="bg-white p-3 border border-gray-200 rounded shadow-sm">
-        <div className="flex items-center justify-between text-sm font-black text-gray-900 mb-2">
-          <div className="flex-1 text-left">{playerHome}</div>
-          <div className="text-center px-3">
-            <div className="text-[10px] text-gray-500 font-semibold">Set 2 : 0</div>
-            <div className="text-base text-red-600 font-black tracking-widest">2 : 2</div>
+        <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900 mb-2 gap-1.5">
+          <div className="flex-1 text-left truncate">{playerHome}</div>
+          <div className="text-center px-2 shrink-0">
+            <div className="text-[10px] text-gray-500 font-semibold whitespace-nowrap">Set 2 : 0</div>
+            <div className="text-sm sm:text-base text-red-600 font-black tracking-widest whitespace-nowrap">2 : 2</div>
           </div>
-          <div className="flex-1 text-right">{playerAway}</div>
+          <div className="flex-1 text-right truncate">{playerAway}</div>
         </div>
 
         {/* MAIN ODDS ROW: SET MONEY LINE / GAME HANDICAP / TOTAL GAMES */}

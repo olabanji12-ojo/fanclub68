@@ -231,25 +231,25 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
           <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
             <button
               onClick={() => handleBetClick(t.corners_handicap_ft, `${homeTeam} -1.5`, 0.94)}
-              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between ${
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
                 isSelected(t.corners_handicap_ft, `${homeTeam} -1.5`)
                   ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
                   : 'border-gray-200 hover:border-blue-400'
               }`}
             >
-              <span className="text-gray-700 font-medium">{homeTeam} -1.5</span>
-              <span className="text-gray-900 font-extrabold">0.94</span>
+              <span className="text-gray-700 font-medium truncate text-left">{homeTeam} -1.5</span>
+              <span className="text-gray-900 font-extrabold shrink-0">0.94</span>
             </button>
             <button
               onClick={() => handleBetClick(t.corners_handicap_ft, `${awayTeam} +1.5`, 0.88)}
-              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between ${
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
                 isSelected(t.corners_handicap_ft, `${awayTeam} +1.5`)
                   ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
                   : 'border-gray-200 hover:border-blue-400'
               }`}
             >
-              <span className="text-gray-700 font-medium">{awayTeam} +1.5</span>
-              <span className="text-gray-900 font-extrabold">0.88</span>
+              <span className="text-gray-700 font-medium truncate text-left">{awayTeam} +1.5</span>
+              <span className="text-gray-900 font-extrabold shrink-0">0.88</span>
             </button>
           </div>
         )}
@@ -269,25 +269,25 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
           <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
             <button
               onClick={() => handleBetClick(t.fast_goal_1min, 'Có bàn thắng (Yes)', 6.50)}
-              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between ${
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
                 isSelected(t.fast_goal_1min, 'Có bàn thắng (Yes)')
                   ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
                   : 'border-gray-200 hover:border-blue-400'
               }`}
             >
-              <span className="text-gray-700 font-medium">Có bàn thắng</span>
-              <span className="text-gray-900 font-extrabold">6.50</span>
+              <span className="text-gray-700 font-medium truncate text-left">Có bàn thắng</span>
+              <span className="text-gray-900 font-extrabold shrink-0">6.50</span>
             </button>
             <button
               onClick={() => handleBetClick(t.fast_goal_1min, 'Không bàn thắng (No)', 1.08)}
-              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between ${
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
                 isSelected(t.fast_goal_1min, 'Không bàn thắng (No)')
                   ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
                   : 'border-gray-200 hover:border-blue-400'
               }`}
             >
-              <span className="text-gray-700 font-medium">Không bàn thắng</span>
-              <span className="text-gray-900 font-extrabold">1.08</span>
+              <span className="text-gray-700 font-medium truncate text-left">Không bàn thắng</span>
+              <span className="text-gray-900 font-extrabold shrink-0">1.08</span>
             </button>
           </div>
         )}
@@ -314,14 +314,14 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
               <button
                 key={item.player}
                 onClick={() => handleBetClick(t.anytime_goalscorer, item.player, item.odds)}
-                className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between ${
+                className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
                   isSelected(t.anytime_goalscorer, item.player)
                     ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
                     : 'border-gray-200 hover:border-blue-400'
                 }`}
               >
-                <span className="text-gray-700 font-medium truncate max-w-[120px]">{item.player}</span>
-                <span className="text-gray-900 font-extrabold">{item.odds.toFixed(2)}</span>
+                <span className="text-gray-700 font-medium truncate flex-1 text-left">{item.player}</span>
+                <span className="text-gray-900 font-extrabold shrink-0">{item.odds.toFixed(2)}</span>
               </button>
             ))}
           </div>

@@ -60,70 +60,70 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
       <div className="p-2 grid grid-cols-3 gap-1.5 text-center">
         {/* Handicap Column */}
         <div className="space-y-1">
-          <div className="text-[10px] text-gray-500 font-semibold">Kèo Chấp</div>
+          <div className="text-[10px] text-gray-500 font-semibold truncate">Kèo Chấp</div>
           <button
             onClick={() => handleBetClick('Handicap FT', `${homeTeam} -0.25`, -0.54, '-0.25')}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('Handicap FT', `${homeTeam} -0.25`) ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-blue-600 font-bold">-0.25</span>
-            <span className="text-red-600 font-black text-xs">-0.54</span>
+            <span className="text-[10px] text-blue-600 font-bold truncate">-0.25</span>
+            <span className="text-red-600 font-black text-xs shrink-0">-0.54</span>
           </button>
           <button
             onClick={() => handleBetClick('Handicap FT', `${awayTeam} +0.25`, 0.46, '+0.25')}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('Handicap FT', `${awayTeam} +0.25`) ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-blue-600 font-bold">+0.25</span>
-            <span className="text-gray-900 font-black text-xs">0.46</span>
+            <span className="text-[10px] text-blue-600 font-bold truncate">+0.25</span>
+            <span className="text-gray-900 font-black text-xs shrink-0">0.46</span>
           </button>
         </div>
 
         {/* Over/Under Column */}
         <div className="space-y-1">
-          <div className="text-[10px] text-gray-500 font-semibold">Tài / Xỉu</div>
+          <div className="text-[10px] text-gray-500 font-semibold truncate">Tài / Xỉu</div>
           <button
             onClick={() => handleBetClick('Total Goals FT', 'Tài 3.50', -0.61, '3.50')}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('Total Goals FT', 'Tài 3.50') ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold">T 3.50</span>
-            <span className="text-red-600 font-black text-xs">-0.61</span>
+            <span className="text-[10px] text-gray-500 font-bold truncate">T 3.50</span>
+            <span className="text-red-600 font-black text-xs shrink-0">-0.61</span>
           </button>
           <button
             onClick={() => handleBetClick('Total Goals FT', 'Xỉu 3.50', 0.51, '3.50')}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('Total Goals FT', 'Xỉu 3.50') ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold">X 3.50</span>
-            <span className="text-gray-900 font-black text-xs">0.51</span>
+            <span className="text-[10px] text-gray-500 font-bold truncate">X 3.50</span>
+            <span className="text-gray-900 font-black text-xs shrink-0">0.51</span>
           </button>
         </div>
 
         {/* 1X2 Column */}
         <div className="space-y-1">
-          <div className="text-[10px] text-gray-500 font-semibold">1X2</div>
+          <div className="text-[10px] text-gray-500 font-semibold truncate">1X2</div>
           <button
             onClick={() => handleBetClick('1X2 FT', 'Home', 2.10)}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('1X2 FT', 'Home') ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold">1</span>
-            <span className="text-gray-900 font-black text-xs">2.10</span>
+            <span className="text-[10px] text-gray-500 font-bold truncate">1</span>
+            <span className="text-gray-900 font-black text-xs shrink-0">2.10</span>
           </button>
           <button
             onClick={() => handleBetClick('1X2 FT', 'Away', 3.40)}
-            className={`w-full p-2 rounded bg-white border flex items-center justify-between shadow-xs ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs ${
               isSelected('1X2 FT', 'Away') ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500' : 'border-gray-200'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold">2</span>
-            <span className="text-gray-900 font-black text-xs">3.40</span>
+            <span className="text-[10px] text-gray-500 font-bold truncate">2</span>
+            <span className="text-gray-900 font-black text-xs shrink-0">3.40</span>
           </button>
         </div>
       </div>

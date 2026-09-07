@@ -51,17 +51,17 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
       <div className="p-2.5 flex items-center gap-2.5 bg-white">
         {isLoggedIn && user ? (
           /* User is logged in: Show Wallet Balance + Bet Slip Button */
-          <div className="flex-1 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg">
-              <User className="w-4 h-4 text-blue-700" />
-              <div className="text-left">
-                <div className="text-[10px] text-gray-500 font-semibold leading-tight">{user.username}</div>
-                <div className="text-xs font-black text-blue-900">${user.balance.toFixed(2)} PLAY</div>
+          <div className="flex-1 flex items-center justify-between gap-2 min-w-0">
+            <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 px-2 py-1.5 rounded-lg min-w-0 shrink-0">
+              <User className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+              <div className="text-left min-w-0">
+                <div className="text-[10px] text-gray-500 font-semibold leading-tight truncate max-w-[65px] sm:max-w-[100px]">{user.username}</div>
+                <div className="text-[11px] sm:text-xs font-black text-blue-900 whitespace-nowrap">${user.balance.toFixed(2)}</div>
               </div>
               <button
                 onClick={logout}
                 title="Đăng xuất"
-                className="text-gray-400 hover:text-red-500 p-1 ml-1"
+                className="text-gray-400 hover:text-red-500 p-0.5 ml-0.5"
               >
                 <LogOut className="w-3.5 h-3.5" />
               </button>
@@ -70,9 +70,9 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
             {/* Bet Slip Drawer Trigger */}
             <button
               onClick={() => setIsBetSlipOpen(true)}
-              className="flex-1 py-2.5 px-4 bg-[#FFC800] hover:bg-[#F0BB00] text-black font-black text-xs uppercase rounded-lg shadow flex items-center justify-center gap-2 transition-transform active:scale-98"
+              className="flex-1 py-2 sm:py-2.5 px-2.5 sm:px-4 bg-[#FFC800] hover:bg-[#F0BB00] text-black font-black text-[11px] sm:text-xs uppercase rounded-lg shadow flex items-center justify-center gap-1.5 whitespace-nowrap transition-transform active:scale-98"
             >
-              <Layers className="w-4 h-4" />
+              <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               <span>{t.bet_slip} ({slipSelections.length})</span>
             </button>
           </div>

@@ -167,12 +167,12 @@ export const SbobetTaiXiuView: React.FC = () => {
           </div>
 
           {/* PORCELAIN SHAKING PLATE & 3D IVORY DICE DISPLAY */}
-          <div className="w-56 h-36 mx-auto my-3 bg-gradient-to-b from-gray-100 to-gray-200 border-4 border-gray-300 rounded-full flex items-center justify-center p-3 shadow-inner relative">
-            <div className="flex items-center gap-3">
+          <div className="w-44 h-28 sm:w-56 sm:h-36 mx-auto my-2 sm:my-3 bg-gradient-to-b from-gray-100 to-gray-200 border-4 border-gray-300 rounded-full flex items-center justify-center p-2 sm:p-3 shadow-inner relative">
+            <div className="flex items-center gap-2 sm:gap-3">
               {dice.map((d, i) => (
                 <div
                   key={i}
-                  className="w-12 h-12 bg-white border-2 border-gray-300 rounded-xl shadow-md flex items-center justify-center text-2xl font-black text-red-600 transform hover:rotate-6 transition-transform"
+                  className="w-9 h-9 sm:w-12 sm:h-12 bg-white border-2 border-gray-300 rounded-lg sm:rounded-xl shadow-md flex items-center justify-center text-lg sm:text-2xl font-black text-red-600 transform hover:rotate-6 transition-transform"
                 >
                   {d}
                 </div>
@@ -189,35 +189,35 @@ export const SbobetTaiXiuView: React.FC = () => {
         </div>
 
         {/* 3. MAIN BETTING TILES (XỈU / TÀI) */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {/* XỈU BUTTON */}
           <button
             onClick={() => handleBet('XỈU')}
             disabled={isGateLocked}
-            className={`p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
+            className={`p-2.5 sm:p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
               isGateLocked
                 ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60'
                 : 'bg-white border-[#0B4DA2] hover:bg-blue-50 text-[#0B4DA2]'
             }`}
           >
-            <div className="text-base font-black">XỈU (4 - 10)</div>
-            <div className="text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
-            <div className="text-[10px] text-gray-500 mt-1">Hoàn tiền 100% nếu bão</div>
+            <div className="text-sm sm:text-base font-black">XỈU (4 - 10)</div>
+            <div className="text-lg sm:text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 mt-0.5 truncate">Hoàn 100% nếu bão</div>
           </button>
 
           {/* TÀI BUTTON */}
           <button
             onClick={() => handleBet('TÀI')}
             disabled={isGateLocked}
-            className={`p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
+            className={`p-2.5 sm:p-4 rounded-xl text-center border-2 transition-all shadow-xs active:scale-98 ${
               isGateLocked
                 ? 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-60'
                 : 'bg-white border-red-500 hover:bg-red-50 text-red-600'
             }`}
           >
-            <div className="text-base font-black">TÀI (11 - 17)</div>
-            <div className="text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
-            <div className="text-[10px] text-gray-500 mt-1">Hoàn tiền 100% nếu bão</div>
+            <div className="text-sm sm:text-base font-black">TÀI (11 - 17)</div>
+            <div className="text-lg sm:text-xl font-black text-gray-900 mt-0.5">1 : 1.98</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 mt-0.5 truncate">Hoàn 100% nếu bão</div>
           </button>
         </div>
 

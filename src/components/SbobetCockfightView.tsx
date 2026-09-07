@@ -175,38 +175,38 @@ export const SbobetCockfightView: React.FC = () => {
         </div>
 
         {/* 4. BETTING BOARD: MERON (RED) / BDD (DRAW) / WALA (BLUE) */}
-        <div className="grid grid-cols-3 gap-2 text-center">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center">
           {/* MERON (RED COCK) */}
           <button
             onClick={() => handlePlaceCockfightBet('MERON', 0.88)}
             disabled={delayCountdown !== null}
-            className="p-3.5 rounded-xl bg-white border-2 border-red-500 hover:bg-red-50 text-gray-900 shadow-xs transition-all active:scale-98 group"
+            className="p-2 sm:p-3.5 rounded-xl bg-white border-2 border-red-500 hover:bg-red-50 text-gray-900 shadow-xs transition-all active:scale-98 group flex flex-col justify-between h-full min-h-[95px]"
           >
-            <div className="text-[11px] uppercase font-black text-red-600 tracking-wider">MERON</div>
-            <div className="text-2xl font-black text-red-700 my-0.5">0.88</div>
-            <div className="text-[10px] text-gray-500 font-semibold">Gà Đỏ Chấp</div>
+            <div className="text-[10px] sm:text-[11px] uppercase font-black text-red-600 tracking-wider">MERON</div>
+            <div className="text-xl sm:text-2xl font-black text-red-700 my-0.5">0.88</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">Gà Đỏ Chấp</div>
           </button>
 
           {/* BDD (DRAW) */}
           <button
             onClick={() => handlePlaceCockfightBet('BDD', 8.00)}
             disabled={delayCountdown !== null}
-            className="p-3.5 rounded-xl bg-white border-2 border-emerald-500 hover:bg-emerald-50 text-gray-900 shadow-xs transition-all active:scale-98 group"
+            className="p-2 sm:p-3.5 rounded-xl bg-white border-2 border-emerald-500 hover:bg-emerald-50 text-gray-900 shadow-xs transition-all active:scale-98 group flex flex-col justify-between h-full min-h-[95px]"
           >
-            <div className="text-[11px] uppercase font-black text-emerald-600 tracking-wider">BDD (HÒA)</div>
-            <div className="text-2xl font-black text-emerald-700 my-0.5">1 : 8</div>
-            <div className="text-[10px] text-gray-500 font-semibold">Hòa 1 Ăn 8</div>
+            <div className="text-[10px] sm:text-[11px] uppercase font-black text-emerald-600 tracking-wider">BDD (HÒA)</div>
+            <div className="text-xl sm:text-2xl font-black text-emerald-700 my-0.5">1 : 8</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">Hòa 1 Ăn 8</div>
           </button>
 
           {/* WALA (BLUE COCK) */}
           <button
             onClick={() => handlePlaceCockfightBet('WALA', 0.96)}
             disabled={delayCountdown !== null}
-            className="p-3.5 rounded-xl bg-white border-2 border-[#0B4DA2] hover:bg-blue-50 text-gray-900 shadow-xs transition-all active:scale-98 group"
+            className="p-2 sm:p-3.5 rounded-xl bg-white border-2 border-[#0B4DA2] hover:bg-blue-50 text-gray-900 shadow-xs transition-all active:scale-98 group flex flex-col justify-between h-full min-h-[95px]"
           >
-            <div className="text-[11px] uppercase font-black text-[#0B4DA2] tracking-wider">WALA</div>
-            <div className="text-2xl font-black text-[#0B4DA2] my-0.5">0.96</div>
-            <div className="text-[10px] text-gray-500 font-semibold">Gà Xanh Điểm</div>
+            <div className="text-[10px] sm:text-[11px] uppercase font-black text-[#0B4DA2] tracking-wider">WALA</div>
+            <div className="text-xl sm:text-2xl font-black text-[#0B4DA2] my-0.5">0.96</div>
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">Gà Xanh Điểm</div>
           </button>
         </div>
 
