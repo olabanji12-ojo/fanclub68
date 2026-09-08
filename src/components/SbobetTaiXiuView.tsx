@@ -168,7 +168,7 @@ export const SbobetTaiXiuView: React.FC = () => {
   };
 
   // Render 3D Casino Dice Face with authentic pips
-  const renderDiceFace = (val: number) => {
+  const renderDiceFace = (val: number, size: 'compact' | 'normal' = 'compact') => {
     const dotPositions: Record<number, string[]> = {
       1: ['center'],
       2: ['top-left', 'bottom-right'],
@@ -179,12 +179,13 @@ export const SbobetTaiXiuView: React.FC = () => {
     };
 
     const pips = dotPositions[val] || ['center'];
+    const isComp = size === 'compact';
 
     return (
       <div 
-        className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border-2 border-red-300 shadow-md relative p-1 sm:p-1.5 flex items-center justify-center transform hover:rotate-6 transition-all"
+        className={`${isComp ? 'w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg' : 'w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl'} bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border sm:border-2 border-red-300 shadow-md relative p-0.5 sm:p-1 flex items-center justify-center transform transition-transform`}
         style={{
-          boxShadow: '0 3px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.3)'
+          boxShadow: '0 3px 8px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.4)'
         }}
       >
         <div className="w-full h-full relative">
@@ -200,7 +201,7 @@ export const SbobetTaiXiuView: React.FC = () => {
             return (
               <span
                 key={idx}
-                className={`absolute ${posClass} w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white shadow-inner`}
+                className={`absolute ${posClass} ${isComp ? 'w-1.5 h-1.5 sm:w-1.5 sm:h-1.5' : 'w-2 h-2 sm:w-2.5 sm:h-2.5'} rounded-full bg-white shadow-inner`}
               />
             );
           })}
@@ -208,6 +209,7 @@ export const SbobetTaiXiuView: React.FC = () => {
       </div>
     );
   };
+
 
   return (
     <div className="min-h-screen bg-[#F0F2F5] text-gray-900 font-sans flex flex-col select-none relative overflow-x-hidden">
@@ -307,189 +309,349 @@ export const SbobetTaiXiuView: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. MAIN CASINO STAGE - LIGHT THEME */}
+      {/* 2. MAIN CASINO STAGE */}
       <main className="flex-1 px-2.5 sm:px-3 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 max-w-2xl mx-auto w-full">
-        
-        {/* WHITE CARD STAGE: STATUS & 3D DICE TRAY WITH SMOOTH OPENING CUP */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-3 sm:p-4 shadow-sm text-center">
+        {/* ========================================================= */}
+        {/* SUNWIN GOLD CAPSULE CONSOLE (AUTHENTIC TO IMG_0915.MOV)  */}
+        {/* ========================================================= */}
+        <div className="relative w-full max-w-xl mx-auto select-none pt-5 sm:pt-6">
           
-          {/* Status announcement pill */}
-          <div className="mb-2.5 sm:mb-3">
-            <div className={`py-1.5 px-3 rounded-lg border text-center text-xs font-bold transition-all ${
-              phase === 'WARNING'
-                ? 'bg-amber-50 border-amber-300 text-amber-700 animate-pulse'
-                : phase === 'REVEAL'
-                  ? 'bg-emerald-50 border-emerald-300 text-emerald-800 font-black'
-                  : 'bg-slate-50 border-slate-200 text-slate-700'
-            }`}>
-              {phase === 'BETTING' && (language === 'vi' ? `Phiên đang nhận cược. Còn ${timeLeft} giây.` : `Currently accepting bets. ${timeLeft}s remaining.`)}
-              {phase === 'WARNING' && (language === 'vi' ? `Sắp khóa cược! Còn ${timeLeft} giây.` : `Closing bets soon! ${timeLeft}s remaining.`)}
-              {phase === 'REVEAL' && (
-                language === 'vi'
-                  ? `Kết quả: ${dice.join(' + ')} = ${sum} Điểm (${isTai ? 'TÀI' : 'XỈU'}).`
-                  : `Result: ${dice.join(' + ')} = ${sum} Points (${isTai ? 'TÀI / OVER' : 'XỈU / UNDER'}).`
-              )}
+          {/* 1. FLOATING 3D HEADER BADGE & CONTROLS */}
+          <div className="relative z-30 flex items-center justify-between px-2 sm:px-4 -mb-3 sm:-mb-3.5">
+            
+            {/* Left Utility Icons */}
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <button 
+                type="button"
+                onClick={() => setIsRulesOpen(!isRulesOpen)}
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                title="Hướng dẫn / Luật chơi"
+              >
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300">
+                  ?
+                </div>
+              </button>
+              <button 
+                type="button"
+                onClick={() => setIsRulesOpen(true)}
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                title="Thông tin phiên"
+              >
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300 italic font-serif">
+                  i
+                </div>
+              </button>
+            </div>
+
+            {/* Center 3D Title Crest with Wings & Red Dice Accent */}
+            <div className="flex flex-col items-center">
+              <div className="relative flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-[#50100A] via-[#851810] to-[#50100A] border-2 border-[#FFE28A] shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+                {/* 3D Dice Icon */}
+                <div className="flex -space-x-1 shrink-0">
+                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded bg-red-600 border border-yellow-300 shadow flex items-center justify-center">
+                    <span className="w-1 h-1 rounded-full bg-white" />
+                  </div>
+                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded bg-red-700 border border-yellow-300 shadow flex items-center justify-center rotate-12">
+                    <span className="w-1 h-1 rounded-full bg-white" />
+                  </div>
+                </div>
+
+                {/* 3D Title Text */}
+                <span className="text-sm sm:text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFF3B0] to-[#E6B033] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                  TÀI XỈU
+                </span>
+
+                {/* Sparkling Icon */}
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-300 fill-yellow-300" />
+              </div>
+
+              {/* Round identifier pill */}
+              <div className="mt-0.5 px-2 py-0.5 rounded-full bg-[#180C05]/90 border border-[#D4AF37]/50 text-[9px] sm:text-[10px] font-mono font-bold text-amber-200 shadow">
+                #TX-260907
+              </div>
+            </div>
+
+            {/* Right Utility Icons */}
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <button 
+                type="button"
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                title="Bảng xếp hạng"
+              >
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs">
+                  🏆
+                </div>
+              </button>
+              <button 
+                type="button"
+                onClick={() => setCurrentView('sbobet')}
+                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                title="Đóng / Quay lại"
+              >
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300">
+                  ✕
+                </div>
+              </button>
             </div>
           </div>
 
-          {/* 3D PORCELAIN TRAY & THE SMOOTH OPENING CUP (OPENS ONCE ON TIMER ZERO) */}
-          <div className="relative py-1 sm:py-2 flex flex-col items-center justify-center">
-            
-            {/* Outer Porcelain Plate with Metallic Rim */}
-            <div className="relative w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-gradient-to-b from-slate-100 via-white to-slate-200 border-4 border-slate-300 shadow-[0_8px_25px_rgba(0,0,0,0.12)] flex items-center justify-center p-2.5 sm:p-3">
-              
-              {/* Decorative dotted gold ring */}
-              <div className="absolute inset-1.5 rounded-full border-2 border-dashed border-amber-400/40 pointer-events-none" />
+          {/* 2. THE GOLD CAPSULE CHASSIS */}
+          <div 
+            className="rounded-[26px] sm:rounded-[34px] p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF0A5] via-[#D4AF37] to-[#784E0B] shadow-[0_12px_32px_rgba(0,0,0,0.45),0_2px_8px_rgba(212,175,55,0.4)]"
+          >
+            {/* Inner Metallic Dark Onyx Housing */}
+            <div 
+              className="rounded-[22px] sm:rounded-[30px] p-2 sm:p-3 bg-gradient-to-b from-[#2B160B] via-[#190C05] to-[#0A0502] border border-[#FFE894]/40 relative overflow-hidden"
+            >
+              {/* Subtle luxury ambient sheen */}
+              <div className="absolute top-0 left-1/4 right-1/4 h-8 bg-gradient-to-b from-yellow-300/10 to-transparent blur-md pointer-events-none" />
 
-              {/* Inner Green Casino Felt with 3 3D Dice (Completely Unobstructed!) */}
-              <div className="w-36 h-36 sm:w-42 sm:h-42 rounded-full bg-gradient-to-b from-[#114B36] to-[#0A2E21] border-2 border-[#1B6B4D] shadow-inner flex flex-col items-center justify-center p-2 relative">
+              {/* THREE-COLUMN CONSOLE: TÀI GATE (LEFT) | CIRCULAR VAULT (CENTER) | XỈU GATE (RIGHT) */}
+              <div className="flex items-center justify-between gap-1 sm:gap-2 relative z-10 pt-2 pb-1">
                 
-                {/* 3 Dice Array */}
-                <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 z-10">
-                  {dice.map((d, i) => (
-                    <div key={i}>
-                      {renderDiceFace(d)}
+                {/* ════════ LEFT WING: TÀI GATE ════════ */}
+                <div 
+                  onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('TÀI')}
+                  className={`flex-1 flex flex-col items-center justify-between py-2 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
+                    selectedSide === 'TÀI'
+                      ? 'bg-gradient-to-b from-amber-500/35 via-yellow-500/20 to-transparent border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]'
+                      : phase === 'REVEAL' && isTai
+                        ? 'bg-gradient-to-b from-amber-500/45 via-yellow-500/30 to-amber-700/25 border-2 border-yellow-300 shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-pulse ring-2 ring-yellow-400'
+                        : 'bg-gradient-to-b from-[#3E2312] via-[#241308] to-[#160A04] border border-[#855B25] hover:border-[#D4AF37]/80'
+                  }`}
+                  style={{ minHeight: '122px' }}
+                >
+                  {/* Selected checkmark indicator */}
+                  {selectedSide === 'TÀI' && (
+                    <div className="absolute top-1 left-1 bg-yellow-400 text-black p-0.5 rounded-full shadow">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </div>
+                  )}
+
+                  {/* Bettors Count Pill */}
+                  <div className="px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[9px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
+                    {taiBettors}
+                  </div>
+
+                  {/* Title & Range */}
+                  <div className="text-center my-0.5 sm:my-1">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFDF0] via-[#FDE48B] to-[#D99A26] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      TÀI
+                    </div>
+                    <div className="text-[8px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
+                      11 - 17
+                    </div>
+                  </div>
+
+                  {/* Pool Amount */}
+                  <div className="text-[10px] sm:text-xs font-mono font-black text-amber-300 truncate max-w-full px-1">
+                    {taiPool.toLocaleString()}
+                  </div>
+
+                  {/* Embossed Bet Button */}
+                  <button 
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (phase === 'BETTING' || phase === 'WARNING') {
+                        setSelectedSide('TÀI');
+                        if (currentStake > 0) handlePlaceBet();
+                      }
+                    }}
+                    className={`mt-1.5 w-full max-w-[85px] sm:max-w-[105px] py-1 px-1 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
+                      selectedSide === 'TÀI'
+                        ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black border border-yellow-200 shadow-[0_0_8px_rgba(250,204,21,0.6)]'
+                        : 'bg-gradient-to-r from-[#805018] via-[#B88628] to-[#693E0E] text-yellow-100 border border-yellow-600/50 hover:brightness-110'
+                    }`}
+                  >
+                    {language === 'vi' ? 'ĐẶT CƯỢC' : 'BET'}
+                  </button>
+                </div>
+
+
+                {/* ════════ CENTER VAULT: CIRCULAR DIAL (TIMER / 3D DICE) ════════ */}
+                <div className="relative shrink-0 flex flex-col items-center justify-center mx-0.5 sm:mx-1">
+                  
+                  {/* Floating Result Badge Perched on Top Edge (Reveal Phase) */}
+                  {phase === 'REVEAL' && (
+                    <div className="absolute -top-3.5 z-30 px-2.5 sm:px-3 py-0.5 rounded-full bg-gradient-to-b from-[#593412] via-[#2D1807] to-[#120802] border-2 border-yellow-400 text-yellow-300 font-black text-xs sm:text-sm font-mono shadow-[0_4px_10px_rgba(0,0,0,0.7)] animate-bounce">
+                      {sum}
+                    </div>
+                  )}
+
+                  {/* Outer Beveled Gold Ring */}
+                  <div 
+                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#593412] shadow-[0_8px_20px_rgba(0,0,0,0.65)] flex items-center justify-center"
+                  >
+                    {/* Inner Deep Onyx Pit */}
+                    <div 
+                      className="w-full h-full rounded-full bg-gradient-to-b from-[#1C0D07] via-[#0D0603] to-[#000000] border-2 border-[#4A2E14] flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-1"
+                    >
+                      {/* Ambient radial lighting */}
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(212,175,55,0.15),transparent_70%)] pointer-events-none" />
+
+                      {/* 1. COUNTDOWN STATE (BETTING / WARNING) */}
+                      {phase !== 'REVEAL' ? (
+                        <div className="flex flex-col items-center justify-center z-10">
+                          <span 
+                            className={`text-2xl sm:text-4xl font-black font-mono leading-none tracking-tight transition-colors ${
+                              phase === 'WARNING'
+                                ? 'text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.9)] animate-pulse'
+                                : 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+                            }`}
+                          >
+                            {timeLeft}
+                          </span>
+                          <span 
+                            className={`mt-1 text-[7px] sm:text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full tracking-wider ${
+                              phase === 'WARNING'
+                                ? 'bg-red-600 text-white animate-bounce'
+                                : 'bg-[#D4AF37]/25 text-amber-200 border border-[#D4AF37]/40'
+                            }`}
+                          >
+                            {phase === 'WARNING'
+                              ? (language === 'vi' ? 'SẮP KHÓA' : 'CLOSING')
+                              : (language === 'vi' ? 'CƯỢC' : 'BETTING')}
+                          </span>
+                        </div>
+                      ) : (
+                        /* 2. 3D DICE REVEAL STATE (TRIANGULAR FORMATION - 1 TOP, 2 BOTTOM) */
+                        <div className="flex flex-col items-center justify-center -space-y-0.5 sm:-space-y-1 z-10">
+                          {/* Soft golden/red glow behind dice */}
+                          <div className="absolute w-14 h-14 rounded-full bg-red-500/25 blur-md pointer-events-none" />
+                          
+                          {/* Top Center Die */}
+                          <div className="z-10 animate-fade-in">
+                            {renderDiceFace(dice[0], 'compact')}
+                          </div>
+
+                          {/* Bottom Two Dice Side-by-Side */}
+                          <div className="flex items-center gap-1 sm:gap-1.5 z-10 animate-fade-in">
+                            {renderDiceFace(dice[1], 'compact')}
+                            {renderDiceFace(dice[2], 'compact')}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* ════════ RIGHT WING: XỈU GATE ════════ */}
+                <div 
+                  onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('XỈU')}
+                  className={`flex-1 flex flex-col items-center justify-between py-2 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
+                    selectedSide === 'XỈU'
+                      ? 'bg-gradient-to-b from-blue-500/35 via-indigo-500/20 to-transparent border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]'
+                      : phase === 'REVEAL' && !isTai
+                        ? 'bg-gradient-to-b from-amber-500/45 via-yellow-500/30 to-amber-700/25 border-2 border-yellow-300 shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-pulse ring-2 ring-yellow-400'
+                        : 'bg-gradient-to-b from-[#3E2312] via-[#241308] to-[#160A04] border border-[#855B25] hover:border-[#D4AF37]/80'
+                  }`}
+                  style={{ minHeight: '122px' }}
+                >
+                  {/* Selected checkmark indicator */}
+                  {selectedSide === 'XỈU' && (
+                    <div className="absolute top-1 right-1 bg-yellow-400 text-black p-0.5 rounded-full shadow">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </div>
+                  )}
+
+                  {/* Bettors Count Pill */}
+                  <div className="px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[9px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
+                    {xiuBettors}
+                  </div>
+
+                  {/* Title & Range */}
+                  <div className="text-center my-0.5 sm:my-1">
+                    <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#E2E8F0] to-[#94A3B8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      XỈU
+                    </div>
+                    <div className="text-[8px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
+                      4 - 10
+                    </div>
+                  </div>
+
+                  {/* Pool Amount */}
+                  <div className="text-[10px] sm:text-xs font-mono font-black text-amber-300 truncate max-w-full px-1">
+                    {xiuPool.toLocaleString()}
+                  </div>
+
+                  {/* Embossed Bet Button */}
+                  <button 
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (phase === 'BETTING' || phase === 'WARNING') {
+                        setSelectedSide('XỈU');
+                        if (currentStake > 0) handlePlaceBet();
+                      }
+                    }}
+                    className={`mt-1.5 w-full max-w-[85px] sm:max-w-[105px] py-1 px-1 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
+                      selectedSide === 'XỈU'
+                        ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black border border-yellow-200 shadow-[0_0_8px_rgba(250,204,21,0.6)]'
+                        : 'bg-gradient-to-r from-[#805018] via-[#B88628] to-[#693E0E] text-yellow-100 border border-yellow-600/50 hover:brightness-110'
+                    }`}
+                  >
+                    {language === 'vi' ? 'ĐẶT CƯỢC' : 'BET'}
+                  </button>
+                </div>
+
+              </div>
+
+              {/* 3. INTEGRATED BOTTOM BEAD HISTORY TRACK */}
+              <div className="mt-1 pt-1.5 border-t border-[#855B25]/50 flex items-center justify-between px-1">
+                <div className="flex items-center gap-1 overflow-x-hidden w-full py-0.5">
+                  {history.slice(-18).map((item, idx) => (
+                    <div
+                      key={idx}
+                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[7px] sm:text-[8px] font-black shrink-0 transition-transform ${
+                        item === 'T'
+                          ? 'bg-gradient-to-b from-white to-gray-200 text-black border border-yellow-400 shadow-[0_0_4px_rgba(250,204,21,0.6)]'
+                          : 'bg-gradient-to-b from-gray-900 to-black text-white border border-gray-600 shadow-sm'
+                      } ${idx === history.slice(-18).length - 1 ? 'ring-1 sm:ring-2 ring-yellow-400 scale-110' : ''}`}
+                    >
+                      {item}
                     </div>
                   ))}
                 </div>
-              </div>
 
-              {/* THE SLEEK SILVER/PORCELAIN CUP COVER (LIFTS UP & TO THE RIGHT TO FULLY UNCOVER THE DICE) */}
-              <div 
-                className={`absolute inset-2 sm:inset-3 rounded-full transition-all duration-700 ease-out z-20 flex flex-col items-center justify-center ${
-                  phase === 'REVEAL'
-                    ? 'translate-x-20 sm:translate-x-24 -translate-y-20 sm:-translate-y-24 rotate-25 scale-75 opacity-85 pointer-events-none'
-                    : 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100'
-                }`}
-                style={{
-                  background: 'radial-gradient(circle at 35% 35%, #FFFFFF 0%, #E2E8F0 45%, #94A3B8 85%, #64748B 100%)',
-                  boxShadow: '0 12px 28px rgba(0,0,0,0.25), inset 0 2px 6px rgba(255,255,255,0.9), inset 0 -4px 10px rgba(0,0,0,0.2)'
-                }}
-              >
-                {/* Polished Gold Rim */}
-                <div className="absolute inset-1.5 rounded-full border-4 border-[#D4AF37]/80 shadow-inner" />
-                <div className="absolute inset-3.5 rounded-full border border-yellow-500/40" />
-
-                {/* Cup Center Countdown Dial (Visible when cup covers dice) */}
-                {phase !== 'REVEAL' && (
-                  <div className="relative flex flex-col items-center justify-center">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
-                      phase === 'WARNING'
-                        ? 'border-red-500 bg-red-50/95 text-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse'
-                        : 'border-[#0B4DA2] bg-white/95 text-[#0B4DA2] shadow-md'
-                    }`}>
-                      <span className="text-xl sm:text-2xl font-black font-mono leading-none">
-                        {timeLeft}
-                      </span>
-                    </div>
-                    <span className={`mt-1 text-[8px] sm:text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-xs ${
-                      phase === 'WARNING'
-                        ? 'bg-red-600 text-white animate-bounce'
-                        : 'bg-[#0B4DA2] text-white'
-                    }`}>
-                      {phase === 'WARNING' 
-                        ? (language === 'vi' ? 'SẮP KHÓA CƯỢC' : 'CLOSING SOON')
-                        : (language === 'vi' ? 'ĐANG NHẬN CƯỢC' : 'ACCEPTING BETS')}
-                    </span>
-                  </div>
-                )}
+                {/* Mini Hand Icon / Stat Indicator */}
+                <div className="ml-1.5 shrink-0 px-1.5 py-0.5 rounded bg-[#1A0C04] border border-[#855B25] text-[8px] font-mono text-amber-300 flex items-center gap-0.5">
+                  <span>✋</span>
+                  <span className="font-bold">{history.length}</span>
+                </div>
               </div>
 
             </div>
-
-            {/* FLOATING OUTCOME RESULT CARD (POSITIONED SAFELY BELOW THE TRAY - NEVER BLOCKS THE DICE!) */}
-            {phase === 'REVEAL' && (
-              <div className="mt-3 bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-500 rounded-2xl px-5 py-1.5 shadow-lg text-center z-30 animate-fade-in transition-all max-w-xs">
-                <div className="text-[10px] sm:text-[11px] font-black text-gray-500 uppercase tracking-wider">
-                  {dice.join(' + ')} = <span className="text-gray-900 font-bold">{sum} {language === 'vi' ? 'ĐIỂM' : 'POINTS'}</span>
-                </div>
-                <div className={`text-base sm:text-lg font-black tracking-wider leading-none mt-0.5 ${isTai ? 'text-red-600' : 'text-[#0B4DA2]'}`}>
-                  {isTai ? (language === 'vi' ? 'TÀI (LỚN)' : 'TÀI / OVER') : (language === 'vi' ? 'XỈU (NHỎ)' : 'XỈU / UNDER')}
-                </div>
-              </div>
-            )}
-
           </div>
 
-          {/* 5-Second Invisible Buffer Security Label */}
+          {/* Outcome Result Notification Banner (Below Console on Reveal) */}
+          {phase === 'REVEAL' && (
+            <div className="mt-2 text-center animate-fade-in">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/30 to-amber-500/20 border border-yellow-400/80 shadow-md">
+                <span className="text-xs font-black text-amber-900">
+                  {language === 'vi' ? 'Kết quả:' : 'Result:'}
+                </span>
+                <span className="text-xs font-mono font-bold text-gray-900">
+                  {dice.join(' + ')} = {sum} Điểm
+                </span>
+                <span className={`text-xs font-black px-2 py-0.5 rounded ${isTai ? 'bg-red-600 text-white' : 'bg-[#0B4DA2] text-white'}`}>
+                  {isTai ? 'TÀI (LỚN)' : 'XỈU (NHỎ)'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* 5-Second Buffer Notice */}
           <div className="mt-2 text-[10px] sm:text-[11px] text-gray-500 flex items-center justify-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <span className="truncate">
               {language === 'vi' 
-                ? 'Cổng cược tự động khóa ở 5 giây cuối trước khi mở bát'
+                ? 'Cổng cược tự động khóa ở 5 giây cuối trước khi mở phiên'
                 : 'Bets locked automatically at 5s before reveal'}
             </span>
           </div>
-        </div>
 
-        {/* 3. MAIN BETTING CARDS - AUTHENTIC WHITE THEME */}
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          
-          {/* TÀI CARD */}
-          <div
-            onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('TÀI')}
-            className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
-              selectedSide === 'TÀI'
-                ? 'ring-2 ring-red-500 border-red-500 bg-red-50/70 shadow-md'
-                : phase === 'REVEAL' && isTai
-                  ? 'border-amber-500 bg-amber-50 shadow-md ring-2 ring-amber-400'
-                  : 'bg-white border-red-500 hover:bg-red-50/40'
-            }`}
-          >
-            {selectedSide === 'TÀI' && (
-              <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-red-600 text-white p-0.5 rounded-full shadow">
-                <Check className="w-3 h-3 stroke-[3]" />
-              </div>
-            )}
-            <div className="text-xl sm:text-2xl font-black text-red-600 tracking-wider">
-              TÀI
-            </div>
-            <div className="text-[9px] sm:text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
-              11 - 17 ĐIỂM
-            </div>
-            <div className="text-xs sm:text-sm font-black text-amber-600 my-0.5 sm:my-1">
-              ĂN 1 : 1.98
-            </div>
-            <div className="text-xs sm:text-sm md:text-base font-black text-gray-900 font-mono tracking-wide truncate">
-              {taiPool.toLocaleString()} VND
-            </div>
-            <div className="text-[9px] sm:text-[10px] text-gray-500 font-medium mt-0.5 truncate">
-              {taiBettors} {language === 'vi' ? 'NGƯỜI ĐANG CHỌN' : 'BETTORS'}
-            </div>
-          </div>
-
-          {/* XỈU CARD */}
-          <div
-            onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('XỈU')}
-            className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
-              selectedSide === 'XỈU'
-                ? 'ring-2 ring-[#0B4DA2] border-[#0B4DA2] bg-blue-50/70 shadow-md'
-                : phase === 'REVEAL' && !isTai
-                  ? 'border-amber-500 bg-amber-50 shadow-md ring-2 ring-amber-400'
-                  : 'bg-white border-[#0B4DA2] hover:bg-blue-50/40'
-            }`}
-          >
-            {selectedSide === 'XỈU' && (
-              <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-[#0B4DA2] text-white p-0.5 rounded-full shadow">
-                <Check className="w-3 h-3 stroke-[3]" />
-              </div>
-            )}
-            <div className="text-xl sm:text-2xl font-black text-[#0B4DA2] tracking-wider">
-              XỈU
-            </div>
-            <div className="text-[9px] sm:text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
-              4 - 10 ĐIỂM
-            </div>
-            <div className="text-xs sm:text-sm font-black text-amber-600 my-0.5 sm:my-1">
-              ĂN 1 : 1.98
-            </div>
-            <div className="text-xs sm:text-sm md:text-base font-black text-gray-900 font-mono tracking-wide truncate">
-              {xiuPool.toLocaleString()} VND
-            </div>
-            <div className="text-[9px] sm:text-[10px] text-gray-500 font-medium mt-0.5 truncate">
-              {xiuBettors} {language === 'vi' ? 'NGƯỜI ĐANG CHỌN' : 'BETTORS'}
-            </div>
-          </div>
         </div>
 
         {/* 4. HISTORY ROADMAP (BEAD MATRIX) - LIGHT THEME */}
