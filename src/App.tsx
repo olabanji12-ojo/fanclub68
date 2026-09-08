@@ -372,6 +372,7 @@ export default function App() {
                       matchId="match-barca-real-01"
                       homeTeam="Barcelona"
                       awayTeam="Real Madrid"
+                      cornerScore="[4:2]"
                     />
                   </div>
                 </div>
@@ -446,7 +447,12 @@ export default function App() {
 
                   {/* LIGA PORTUGAL ACCORDIONS WITH CORNERS [2:1] (SCREENSHOT 3) */}
                   <div className="p-2">
-                    <SbobetLigaPortugalAccordion />
+                    <SbobetLigaPortugalAccordion
+                      matchId="match-benfica-sporting-01"
+                      homeTeam="Benfica"
+                      awayTeam="Sporting CP"
+                      cornerScore="[2:1]"
+                    />
                   </div>
                 </div>
               </div>

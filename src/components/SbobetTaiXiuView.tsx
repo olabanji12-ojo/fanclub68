@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Dice5, ShieldAlert, Globe, ChevronDown } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
+import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
 
 export const SbobetTaiXiuView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user } = useSbobetStore();
@@ -244,29 +245,17 @@ export const SbobetTaiXiuView: React.FC = () => {
           </div>
         </div>
 
-        {/* 5. 30-ROUND SOI CẦU BEAD PLATE ROADMAP */}
-        <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2">
-            <span>BẢNG SOI CẦU 30 VÁN (TREND ROADMAP)</span>
-            <span className="text-[10px] text-gray-500">
-              Tài: {history.filter(h => h === 'T').length} | Xỉu: {history.filter(h => h === 'X').length}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {history.map((h, i) => (
-              <span
-                key={i}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-xs ${
-                  h === 'T'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-[#0B4DA2] text-white'
-                }`}
-              >
-                {h}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* 5. 30-ROUND SOI CẦU BEAD PLATE ROADMAP (AUTHENTIC 6-ROW CASINO MATRIX) */}
+        <SbobetScorecardRoadmap
+          title="BẢNG SOI CẦU TÀI / XỈU 30 VÁN"
+          gameType="taixiu"
+          items={history.map((res, idx) => ({
+            round: idx + 1,
+            result: res,
+            detail: res === 'T' ? 'Kết quả: TÀI (Tổng điểm 11-17)' : 'Kết quả: XỈU (Tổng điểm 4-10)'
+          }))}
+          rows={6}
+        />
 
       </main>
     </div>

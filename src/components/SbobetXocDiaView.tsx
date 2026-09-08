@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Disc3, ShieldAlert, Globe, ChevronDown } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
+import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
 
 export const SbobetXocDiaView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user } = useSbobetStore();
@@ -242,29 +243,17 @@ export const SbobetXocDiaView: React.FC = () => {
           </div>
         </div>
 
-        {/* 5. 30-ROUND SOI CẦU ROADMAP */}
-        <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2">
-            <span>BẢNG SOI CẦU CHẴN / LẺ 30 VÁN</span>
-            <span className="text-[10px] text-gray-500">
-              Chẵn: {history.filter(h => h === 'C').length} | Lẻ: {history.filter(h => h === 'L').length}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {history.map((h, i) => (
-              <span
-                key={i}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-xs ${
-                  h === 'C'
-                    ? 'bg-[#0B4DA2] text-white'
-                    : 'bg-red-600 text-white'
-                }`}
-              >
-                {h}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* 5. 30-ROUND SOI CẦU ROADMAP (AUTHENTIC 6-ROW CASINO BEAD MATRIX) */}
+        <SbobetScorecardRoadmap
+          title="BẢNG SOI CẦU CHẴN / LẺ 30 VÁN"
+          gameType="xocdia"
+          items={history.map((res, idx) => ({
+            round: idx + 1,
+            result: res,
+            detail: res === 'C' ? 'Kết quả: Chẵn (2 Đỏ 2 Trắng hoặc Tứ Tử)' : 'Kết quả: Lẻ (3 Đỏ 1 Trắng hoặc 3 Trắng 1 Đỏ)'
+          }))}
+          rows={6}
+        />
 
       </main>
     </div>

@@ -244,15 +244,73 @@ export const SbobetTodayAccordion: React.FC<TodayAccordionProps> = ({
         )}
       </div>
 
-      {/* 9 - 15. CORNERS ACCORDIONS (ALL MATCHING SCREENSHOT 4) */}
+      {/* 9 - 15. CORNERS ACCORDIONS (ALL MATCHING SCREENSHOT 4 DYNAMICALLY) */}
       {[
-        { key: 'c_hdp_ft', title: t.corners_handicap_ft },
-        { key: 'c_hdp_ht', title: t.corners_handicap_ht },
-        { key: 'c_ou_ft', title: t.corners_ou_ft },
-        { key: 'c_ou_ht', title: t.corners_ou_ht },
-        { key: 'c_oe_ft', title: t.corners_oe_ft },
-        { key: 'c_1x2_ft', title: t.corners_1x2_ft },
-        { key: 'c_1x2_ht', title: t.corners_1x2_ht }
+        {
+          key: 'c_hdp_ft',
+          title: t.corners_handicap_ft,
+          gridCols: 'grid-cols-2',
+          options: [
+            { name: `${homeTeam} -1.0`, odds: 0.95 },
+            { name: `${awayTeam} +1.0`, odds: 0.87 }
+          ]
+        },
+        {
+          key: 'c_hdp_ht',
+          title: t.corners_handicap_ht,
+          gridCols: 'grid-cols-2',
+          options: [
+            { name: `${homeTeam} -0.5`, odds: 0.89 },
+            { name: `${awayTeam} +0.5`, odds: 0.93 }
+          ]
+        },
+        {
+          key: 'c_ou_ft',
+          title: t.corners_ou_ft,
+          gridCols: 'grid-cols-2',
+          options: [
+            { name: `${language === 'vi' ? 'Tài' : 'Over'} 9.5`, odds: 0.94 },
+            { name: `${language === 'vi' ? 'Xỉu' : 'Under'} 9.5`, odds: 0.88 }
+          ]
+        },
+        {
+          key: 'c_ou_ht',
+          title: t.corners_ou_ht,
+          gridCols: 'grid-cols-2',
+          options: [
+            { name: `${language === 'vi' ? 'Tài' : 'Over'} 4.5`, odds: 0.90 },
+            { name: `${language === 'vi' ? 'Xỉu' : 'Under'} 4.5`, odds: 0.92 }
+          ]
+        },
+        {
+          key: 'c_oe_ft',
+          title: t.corners_oe_ft,
+          gridCols: 'grid-cols-2',
+          options: [
+            { name: language === 'vi' ? 'Chẵn (Even)' : 'Even', odds: 0.98 },
+            { name: language === 'vi' ? 'Lẻ (Odd)' : 'Odd', odds: 0.94 }
+          ]
+        },
+        {
+          key: 'c_1x2_ft',
+          title: t.corners_1x2_ft,
+          gridCols: 'grid-cols-3',
+          options: [
+            { name: homeTeam, odds: 1.65 },
+            { name: language === 'vi' ? 'Hòa (X)' : 'Draw', odds: 7.50 },
+            { name: awayTeam, odds: 2.45 }
+          ]
+        },
+        {
+          key: 'c_1x2_ht',
+          title: t.corners_1x2_ht,
+          gridCols: 'grid-cols-3',
+          options: [
+            { name: homeTeam, odds: 1.85 },
+            { name: language === 'vi' ? 'Hòa (X)' : 'Draw', odds: 4.20 },
+            { name: awayTeam, odds: 2.65 }
+          ]
+        }
       ].map(c => (
         <div key={c.key} className="border border-[#F3C7B9] rounded overflow-hidden">
           <button
@@ -263,15 +321,21 @@ export const SbobetTodayAccordion: React.FC<TodayAccordionProps> = ({
             {expanded[c.key] ? <ChevronUp className="w-4 h-4 text-gray-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-gray-500 shrink-0" />}
           </button>
           {expanded[c.key] && (
-            <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
-              <button onClick={() => handleBetClick(c.title, 'Over / Home', 1.88)} className="p-2 bg-white border rounded text-center flex items-center justify-between gap-1 shadow-xs">
-                <span className="truncate text-left">{homeTeam}</span>
-                <span className="font-bold text-gray-900 shrink-0">1.88</span>
-              </button>
-              <button onClick={() => handleBetClick(c.title, 'Under / Away', 1.92)} className="p-2 bg-white border rounded text-center flex items-center justify-between gap-1 shadow-xs">
-                <span className="truncate text-left">{awayTeam}</span>
-                <span className="font-bold text-gray-900 shrink-0">1.92</span>
-              </button>
+            <div className={`p-2 bg-[#FAF3F0] grid ${c.gridCols} gap-2`}>
+              {c.options.map((opt, oIdx) => (
+                <button
+                  key={oIdx}
+                  onClick={() => handleBetClick(c.title, opt.name, opt.odds)}
+                  className={`p-2 bg-white border rounded text-center flex items-center justify-between gap-1 shadow-xs transition-all ${
+                    isSelected(c.title, opt.name)
+                      ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                      : 'border-gray-200 hover:border-blue-400'
+                  }`}
+                >
+                  <span className="truncate text-left text-gray-700 font-medium">{opt.name}</span>
+                  <span className="font-bold text-gray-900 shrink-0">{opt.odds.toFixed(2)}</span>
+                </button>
+              ))}
             </div>
           )}
         </div>

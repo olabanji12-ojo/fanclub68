@@ -7,12 +7,14 @@ interface MatchAccordionProps {
   matchId: string;
   homeTeam: string;
   awayTeam: string;
+  cornerScore?: string;
 }
 
 export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
   matchId,
   homeTeam,
-  awayTeam
+  awayTeam,
+  cornerScore = '[4:2]'
 }) => {
   const { language, addSelection, slipSelections } = useSbobetStore();
   const t = translations[language];
@@ -214,7 +216,7 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
         )}
       </div>
 
-      {/* 5. PHẠT GÓC - KÈO CHẤP & TÀI XỈU [2:1] */}
+      {/* 5. PHẠT GÓC - KÈO CHẤP [DYNAMIC CORNER SCORE] */}
       <div className="border border-[#F3C7B9] rounded overflow-hidden">
         <button
           onClick={() => toggleSection('corners_hdp')}
@@ -222,7 +224,7 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
         >
           <div className="flex items-center gap-2">
             <span>{t.corners_handicap_ft}</span>
-            <span className="text-red-600 text-[11px] font-extrabold">[2:1]</span>
+            <span className="text-red-600 text-[11px] font-extrabold">{cornerScore}</span>
           </div>
           {expandedSections.corners_hdp ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
         </button>
@@ -250,6 +252,47 @@ export const SbobetMatchAccordion: React.FC<MatchAccordionProps> = ({
             >
               <span className="text-gray-700 font-medium truncate text-left">{awayTeam} +1.5</span>
               <span className="text-gray-900 font-extrabold shrink-0">0.88</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* 5B. PHẠT GÓC - TÀI / XỈU TOÀN TRẬN */}
+      <div className="border border-[#F3C7B9] rounded overflow-hidden">
+        <button
+          onClick={() => toggleSection('corners_ou')}
+          className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <span>{t.corners_ou_ft}</span>
+            <span className="text-red-600 text-[11px] font-extrabold">{cornerScore}</span>
+          </div>
+          {expandedSections.corners_ou ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
+        </button>
+
+        {expandedSections.corners_ou && (
+          <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
+            <button
+              onClick={() => handleBetClick(t.corners_ou_ft, `${language === 'vi' ? 'Tài' : 'Over'} 9.5`, 0.91)}
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
+                isSelected(t.corners_ou_ft, `${language === 'vi' ? 'Tài' : 'Over'} 9.5`)
+                  ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                  : 'border-gray-200 hover:border-blue-400'
+              }`}
+            >
+              <span className="text-gray-700 font-medium truncate text-left">{language === 'vi' ? 'Tài' : 'Over'} 9.5</span>
+              <span className="text-gray-900 font-extrabold shrink-0">0.91</span>
+            </button>
+            <button
+              onClick={() => handleBetClick(t.corners_ou_ft, `${language === 'vi' ? 'Xỉu' : 'Under'} 9.5`, 0.91)}
+              className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
+                isSelected(t.corners_ou_ft, `${language === 'vi' ? 'Xỉu' : 'Under'} 9.5`)
+                  ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                  : 'border-gray-200 hover:border-blue-400'
+              }`}
+            >
+              <span className="text-gray-700 font-medium truncate text-left">{language === 'vi' ? 'Xỉu' : 'Under'} 9.5</span>
+              <span className="text-gray-900 font-extrabold shrink-0">0.91</span>
             </button>
           </div>
         )}

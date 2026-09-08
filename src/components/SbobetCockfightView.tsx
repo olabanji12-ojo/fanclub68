@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Swords, Tv, ShieldAlert, Globe, Clock, ChevronDown } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
+import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
 
 export const SbobetCockfightView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user } = useSbobetStore();
@@ -218,31 +219,17 @@ export const SbobetCockfightView: React.FC = () => {
           </div>
         )}
 
-        {/* 5. ROADMAP / BẢNG SOI CẦU BỒ ĐẤU */}
-        <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2 gap-1.5">
-            <span className="truncate text-[11px] sm:text-xs">BẢNG SOI CẦU BỒ {activeArena}</span>
-            <span className="text-[10px] text-gray-500 whitespace-nowrap shrink-0">
-              Đ(M):7 | X(W):5 | H(B):1
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {history.map((h, i) => (
-              <span
-                key={i}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shadow-xs ${
-                  h === 'M'
-                    ? 'bg-red-600 text-white'
-                    : h === 'W'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-emerald-600 text-white'
-                }`}
-              >
-                {h}
-              </span>
-            ))}
-          </div>
-        </div>
+        {/* 5. ROADMAP / BẢNG SOI CẦU BỒ ĐẤU (AUTHENTIC 6-ROW SV388 MATRIX) */}
+        <SbobetScorecardRoadmap
+          title={`BẢNG SOI CẦU BỒ ${activeArena}`}
+          gameType="cockfight"
+          items={history.map((res, idx) => ({
+            round: idx + 1,
+            result: res,
+            detail: res === 'M' ? 'Meron (Gà Đỏ) Thắng KO' : res === 'W' ? 'Wala (Gà Xanh) Thắng' : 'BDD (Hòa 1 Ăn 8)'
+          }))}
+          rows={6}
+        />
 
       </main>
     </div>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { BarChart2, Tv, Trophy, Layers, User, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { BarChart2, Tv, Layers, User, LogOut, ChevronDown, ChevronUp } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 
@@ -18,10 +18,28 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
     openAuthModal
   } = useSbobetStore();
 
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const t = translations[language];
 
+  // Collapsed Minimal Floating Badge: Frees up full screen space for lower markets
+  if (isCollapsed) {
+    return (
+      <div className="fixed bottom-3 right-3 z-40 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <button
+          onClick={() => setIsCollapsed(false)}
+          className="bg-gradient-to-r from-[#F58220] to-[#E06E0E] hover:brightness-110 text-white px-3.5 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 shadow-2xl border border-orange-300 active:scale-95 transition-all ring-2 ring-orange-400/40"
+          title="Mở rộng thanh công cụ cược (Click to expand betting toolbar)"
+        >
+          <span>{subMarketCount}</span>
+          <span className="text-xs font-bold">+</span>
+          <ChevronUp className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <footer className="sticky bottom-0 z-40 bg-white border-t border-gray-300 shadow-[0_-4px_10px_rgba(0,0,0,0.06)] font-sans safe-bottom">
+    <footer className="sticky bottom-0 z-40 bg-white border-t border-gray-300 shadow-[0_-4px_10px_rgba(0,0,0,0.06)] font-sans safe-bottom transition-all duration-200">
       {/* TOOLBAR WITH STATS, TV STREAM, PITCH RADAR, SUB-MARKET COUNT */}
       <div className="flex items-center justify-between px-4 py-1.5 border-b border-gray-200 text-gray-700 bg-gray-50">
         <div className="flex items-center gap-4">
@@ -38,12 +56,17 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
           </button>
         </div>
 
-        {/* Orange Sub-Market Counter Pill matching screenshot 1 */}
+        {/* Orange Sub-Market Counter Pill: Click to collapse and free up space */}
         <div className="flex items-center gap-1">
-          <span className="bg-[#F58220] text-white px-2.5 py-0.5 rounded-full text-xs font-black flex items-center gap-1 shadow-sm">
+          <button
+            onClick={() => setIsCollapsed(true)}
+            className="bg-[#F58220] hover:bg-[#E06E0E] text-white px-2.5 py-0.5 rounded-full text-xs font-black flex items-center gap-1 shadow-sm active:scale-95 transition-all cursor-pointer"
+            title="Thu gọn thanh công cụ để xem thêm các kèo bên dưới (Collapse toolbar)"
+          >
             <span>{subMarketCount}</span>
             <span className="text-[10px] font-normal">−</span>
-          </span>
+            <ChevronDown className="w-3 h-3 text-white/90" />
+          </button>
         </div>
       </div>
 

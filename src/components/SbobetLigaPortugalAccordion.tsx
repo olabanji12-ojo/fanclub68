@@ -3,13 +3,21 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 
-export const SbobetLigaPortugalAccordion: React.FC = () => {
+interface LigaPortugalAccordionProps {
+  matchId?: string;
+  homeTeam?: string;
+  awayTeam?: string;
+  cornerScore?: string;
+}
+
+export const SbobetLigaPortugalAccordion: React.FC<LigaPortugalAccordionProps> = ({
+  matchId = 'match-benfica-sporting-01',
+  homeTeam = 'Benfica',
+  awayTeam = 'Sporting CP',
+  cornerScore = '[2:1]'
+}) => {
   const { language, addSelection, slipSelections } = useSbobetStore();
   const t = translations[language];
-
-  const matchId = 'match-benfica-sporting-01';
-  const homeTeam = 'Benfica';
-  const awayTeam = 'Sporting CP';
 
   const [expanded, setExpanded] = useState<Record<string, boolean>>({
     oe: true, // Screenshot 3 has Odd/Even open
@@ -153,36 +161,129 @@ export const SbobetLigaPortugalAccordion: React.FC = () => {
 
       {/* 8. PHẠT GÓC - KÈO CHẤP & TÀI XỈU TOÀN TRẬN / NỬA TRẬN [2:1] */}
       {[
-        { key: 'c_hdp_ft', title: t.corners_handicap_ft, tag: '[2:1]' },
-        { key: 'c_hdp_ht', title: t.corners_handicap_ht, tag: '[2:1]' },
-        { key: 'c_ou_ft', title: t.corners_ou_ft, tag: '[2:1]' },
-        { key: 'c_ou_ht', title: t.corners_ou_ht, tag: '[2:1]' }
+        {
+          key: 'c_hdp_ft',
+          title: t.corners_handicap_ft,
+          tag: cornerScore,
+          options: [
+            { name: `${homeTeam} -0.5`, odds: 0.92 },
+            { name: `${awayTeam} +0.5`, odds: 0.90 }
+          ]
+        },
+        {
+          key: 'c_hdp_ht',
+          title: t.corners_handicap_ht,
+          tag: cornerScore,
+          options: [
+            { name: `${homeTeam} -0.25`, odds: 0.85 },
+            { name: `${awayTeam} +0.25`, odds: 0.97 }
+          ]
+        },
+        {
+          key: 'c_ou_ft',
+          title: t.corners_ou_ft,
+          tag: cornerScore,
+          options: [
+            { name: `${language === 'vi' ? 'Tài' : 'Over'} 9.5`, odds: 0.91 },
+            { name: `${language === 'vi' ? 'Xỉu' : 'Under'} 9.5`, odds: 0.91 }
+          ]
+        },
+        {
+          key: 'c_ou_ht',
+          title: t.corners_ou_ht,
+          tag: cornerScore,
+          options: [
+            { name: `${language === 'vi' ? 'Tài' : 'Over'} 4.5`, odds: 0.88 },
+            { name: `${language === 'vi' ? 'Xỉu' : 'Under'} 4.5`, odds: 0.94 }
+          ]
+        }
       ].map(item => (
         <div key={item.key} className="border border-[#F3C7B9] rounded overflow-hidden">
-          <button onClick={() => toggle(item.key)} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left">
+          <button onClick={() => toggle(item.key)} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left transition-colors">
             <div className="flex items-center gap-2 truncate pr-2">
               <span className="truncate">{item.title}</span>
               <span className="text-red-600 text-[11px] font-extrabold shrink-0">{item.tag}</span>
             </div>
             {expanded[item.key] ? <ChevronUp className="w-4 h-4 text-gray-500 shrink-0" /> : <ChevronDown className="w-4 h-4 text-gray-500 shrink-0" />}
           </button>
+          {expanded[item.key] && (
+            <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
+              {item.options.map((opt, oIdx) => (
+                <button
+                  key={oIdx}
+                  onClick={() => handleBetClick(item.title, opt.name, opt.odds)}
+                  className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
+                    isSelected(item.title, opt.name)
+                      ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                      : 'border-gray-200 hover:border-blue-400'
+                  }`}
+                >
+                  <span className="text-gray-700 font-medium truncate text-left">{opt.name}</span>
+                  <span className="text-gray-900 font-extrabold shrink-0">{opt.odds.toFixed(2)}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ))}
 
       {/* 9. 2ND GOAL - KÈO CHẤP TOÀN TRẬN */}
       <div className="border border-[#F3C7B9] rounded overflow-hidden">
-        <button onClick={() => toggle('goal_2nd')} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left">
+        <button onClick={() => toggle('goal_2nd')} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left transition-colors">
           <span>2nd Goal - Kèo Chấp Toàn Trận</span>
           {expanded.goal_2nd ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
         </button>
+        {expanded.goal_2nd && (
+          <div className="p-2 bg-[#FAF3F0] grid grid-cols-3 gap-1.5">
+            {[
+              { name: `${homeTeam} (2nd Goal)`, odds: 1.75 },
+              { name: language === 'vi' ? 'Không có bàn' : 'No Goal', odds: 4.20 },
+              { name: `${awayTeam} (2nd Goal)`, odds: 2.30 }
+            ].map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleBetClick('2nd Goal', opt.name, opt.odds)}
+                className={`p-2 rounded bg-white border text-center transition-all flex flex-col items-center justify-center gap-0.5 shadow-xs ${
+                  isSelected('2nd Goal', opt.name)
+                    ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                    : 'border-gray-200 hover:border-blue-400'
+                }`}
+              >
+                <span className="text-gray-700 font-medium text-[11px] truncate w-full text-center">{opt.name}</span>
+                <span className="text-gray-900 font-extrabold text-xs">{opt.odds.toFixed(2)}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 10. CƯỢC BÀN THẮNG NHANH - 5 PHÚT */}
       <div className="border border-[#F3C7B9] rounded overflow-hidden">
-        <button onClick={() => toggle('fast_5min')} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left">
+        <button onClick={() => toggle('fast_5min')} className="w-full flex items-center justify-between px-3 py-2 bg-[#FDEEE9] hover:bg-[#FCDFD7] text-gray-800 font-bold text-left transition-colors">
           <span>{t.fast_goal_5min}</span>
           {expanded.fast_5min ? <ChevronUp className="w-4 h-4 text-gray-500" /> : <ChevronDown className="w-4 h-4 text-gray-500" />}
         </button>
+        {expanded.fast_5min && (
+          <div className="p-2 bg-[#FAF3F0] grid grid-cols-2 gap-2">
+            {[
+              { name: language === 'vi' ? 'Có bàn (Phút 36-40)' : 'Goal (36-40 min)', odds: 3.85 },
+              { name: language === 'vi' ? 'Không bàn thắng' : 'No Goal', odds: 1.22 }
+            ].map((opt, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleBetClick(t.fast_goal_5min, opt.name, opt.odds)}
+                className={`p-2 rounded bg-white border text-center transition-all flex items-center justify-between gap-1 shadow-xs ${
+                  isSelected(t.fast_goal_5min, opt.name)
+                    ? 'border-[#0B4DA2] bg-blue-50 ring-1 ring-blue-500'
+                    : 'border-gray-200 hover:border-blue-400'
+                }`}
+              >
+                <span className="text-gray-700 font-medium truncate text-left">{opt.name}</span>
+                <span className="text-gray-900 font-extrabold shrink-0">{opt.odds.toFixed(2)}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* LIGA PORTUGAL BOTTOM ACCORDION MATCHING SCREENSHOT 3 */}
