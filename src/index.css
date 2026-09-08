@@ -37,3 +37,25 @@ html, body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* 3D Xoc Dia Animations */
+@keyframes gentleTilt2x {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(-5px, -1px) rotate(-3.5deg); }
+  50% { transform: translate(0, 0) rotate(0deg); }
+  75% { transform: translate(5px, -1px) rotate(3.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.animate-gentle-tilt-2x {
+  animation: gentleTilt2x 1.2s ease-in-out forwards;
+}
+
+@keyframes pulseGlowGold {
+  0%, 100% { box-shadow: 0 0 15px rgba(255, 200, 0, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(255, 200, 0, 0.85); }
+}
+
+.glow-gold {
+  animation: pulseGlowGold 1.5s infinite;
+}
+

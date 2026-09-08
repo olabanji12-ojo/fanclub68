@@ -57,18 +57,24 @@ export const SbobetXocDiaView: React.FC = () => {
 
   // 30s Autonomous Master Game Loop
   useEffect(() => {
+    // Guard: Do not run timer during SHAKING or REVEAL so tokens remain static
+    if (gameState === 'REVEAL' || gameState === 'SHAKING') return;
+
     const timer = setInterval(() => {
       setTimeLeft(prev => {
-        // A. ROUND SETTLEMENT & TRANSITION TO SHAKING AT 0s
+        // When timer reaches 0:
         if (prev <= 1) {
-          setGameState('SHAKING');
-          
-          // Generate new secret outcome
+          clearInterval(timer);
+
+          // 1. Generate final secret outcome under the closed cover
           const newTokens: TokenColor[] = Array.from({ length: 4 }, () => (Math.random() > 0.5 ? 'R' : 'W'));
           const newRedCount = newTokens.filter(t => t === 'R').length;
           const newIsEven = newRedCount % 2 === 0;
 
-          // After 3.5s of shaking -> Reveal the bowl
+          // 2. Bowl tilts gently 2 times left-right (1.2s) while keeping outcome 100% concealed
+          setGameState('SHAKING');
+
+          // 3. On 3rd motion: slide to upper-right and reveal final outcome
           setTimeout(() => {
             setTokens(newTokens);
             setGameState('REVEAL');
@@ -89,18 +95,18 @@ export const SbobetXocDiaView: React.FC = () => {
               }
             }
 
-            // After 5s of reveal -> Start new 30s round
+            // 4. Stay open at upper-right for 5.5s, then slide back down to center and restart
             setTimeout(() => {
-              setGameState('BETTING');
               setHasPlacedBet(false);
               setPlacedBetSide(null);
               setPlacedBetAmount(0);
               setCurrentStake(0);
               setBetFeedback(null);
               setTimeLeft(30);
+              setGameState('BETTING');
             }, 5500);
 
-          }, 3500);
+          }, 1200);
 
           return 0;
         }
@@ -127,7 +133,7 @@ export const SbobetXocDiaView: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [placedBetSide, placedBetAmount]);
+  }, [gameState, placedBetSide, placedBetAmount]);
 
   // Handle Chip Click
   const handleChipClick = (value: number) => {
@@ -189,32 +195,6 @@ export const SbobetXocDiaView: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#070A12] text-white font-sans flex flex-col select-none relative overflow-x-hidden">
       
-      {/* CSS KEYFRAMES FOR AUTHENTIC BOWL SHAKING & LIFTING */}
-      <style>{`
-        @keyframes bowlShakeEffect {
-          0% { transform: translate(0, 0) rotate(0deg); }
-          10% { transform: translate(-7px, -4px) rotate(-3deg); }
-          20% { transform: translate(7px, 3px) rotate(3deg); }
-          30% { transform: translate(-6px, 4px) rotate(-2deg); }
-          40% { transform: translate(6px, -3px) rotate(2deg); }
-          50% { transform: translate(-8px, -2px) rotate(-3deg); }
-          60% { transform: translate(8px, 4px) rotate(3deg); }
-          70% { transform: translate(-5px, 2px) rotate(-1.5deg); }
-          80% { transform: translate(5px, -3px) rotate(2deg); }
-          90% { transform: translate(-3px, 2px) rotate(-1deg); }
-          100% { transform: translate(0, 0) rotate(0deg); }
-        }
-        .animate-bowl-shake {
-          animation: bowlShakeEffect 0.35s infinite ease-in-out;
-        }
-        @keyframes pulseGlowGold {
-          0%, 100% { box-shadow: 0 0 15px rgba(255, 200, 0, 0.4); }
-          50% { box-shadow: 0 0 30px rgba(255, 200, 0, 0.85); }
-        }
-        .glow-gold {
-          animation: pulseGlowGold 1.5s infinite;
-        }
-      `}</style>
 
       {/* 1. TOP HEADER (DEEP CRIMSON WITH GOLD TRIM - MATCHING REFERENCE.PNG) */}
       <header className="bg-gradient-to-r from-[#5B0909] via-[#851111] to-[#5B0909] border-b border-[#A62B2B]/60 shadow-lg sticky top-0 z-50">
@@ -289,7 +269,7 @@ export const SbobetXocDiaView: React.FC = () => {
       </header>
 
       {/* 2. DYNAMIC STATUS TICKER BAR */}
-      <div className="px-3 pt-2.5 pb-1">
+      <div className="px-3 pt-2.5 pb-1 notranslate" translate="no">
         <div className={`py-1.5 px-3 rounded-lg border text-center text-xs font-semibold transition-all ${
           gameState === 'WARNING' 
             ? 'bg-amber-950/80 border-amber-500/80 text-amber-300 animate-pulse'
@@ -299,99 +279,118 @@ export const SbobetXocDiaView: React.FC = () => {
                 ? 'bg-emerald-950/80 border-emerald-500/80 text-emerald-200 font-bold'
                 : 'bg-[#101827] border-[#1F293D] text-gray-300'
         }`}>
-          {getStatusText()}
+          <span>{getStatusText()}</span>
         </div>
       </div>
 
-      {/* 3. CENTER CERAMIC SHAKING BOWL & TOKENS REVEAL STAGE */}
-      <div className="relative px-3 py-2 flex flex-col items-center justify-center">
+      {/* 3. CENTER ARENA: FLOATING TIMER/RESULT INDICATOR & 3D ELLIPTICAL BOWL/PLATE MATCHING REFERENCE */}
+      <div className="relative px-3 pt-1 pb-2 flex flex-col items-center justify-center notranslate" translate="no">
         
-        {/* INNER GREEN/WHITE CERAMIC BASE PLATE */}
-        <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-gradient-to-b from-[#1C2433] via-[#0E1524] to-[#080D17] border-4 border-[#C9983E]/70 shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-center p-4">
-          
-          {/* Outer Decorative Gold Ring */}
-          <div className="absolute inset-1.5 rounded-full border-2 border-dashed border-[#FFC800]/30 pointer-events-none"></div>
+        {/* A. FLOATING CIRCULAR BADGE (HOVERS DIRECTLY ABOVE PLATE - MATCHING VIDEO 00:00 - 00:04) */}
+        <div className="flex flex-col items-center justify-center mb-1 z-30 notranslate" translate="no">
+          <div className="w-13 h-13 sm:w-15 sm:h-15 rounded-full bg-[#08101E] border-2 border-[#255485] shadow-[0_4px_16px_rgba(0,0,0,0.85)] flex flex-col items-center justify-center">
+            <span className="text-2xl sm:text-3xl font-black font-mono text-yellow-400 leading-none">
+              {gameState === 'REVEAL' ? redCount : gameState === 'SHAKING' ? 0 : timeLeft}
+            </span>
+          </div>
+          <span className="mt-1 text-[10px] font-black uppercase tracking-wider text-gray-300">
+            {gameState === 'REVEAL' && `${redCount} ĐỎ • ${4 - redCount} TRẮNG`}
+            {gameState === 'SHAKING' && 'ĐANG XÓC'}
+            {gameState === 'WARNING' && 'SẮP KHÓA CƯỢC'}
+            {gameState === 'BETTING' && 'ĐANG NHẬN CƯỢC'}
+          </span>
+        </div>
 
-          {/* INNER FELT WITH 4 TOKENS (ALWAYS PRESENT UNDERNEATH) */}
-          <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-gradient-to-b from-[#0F392B] to-[#082219] border-2 border-[#1B5E4B] shadow-inner flex flex-col items-center justify-center p-3 relative">
-            
-            {/* 4 Dual-Sided Tokens (2x2 Grid) */}
-            <div className="grid grid-cols-2 gap-3 z-0">
-              {tokens.map((token, i) => (
-                <div
-                  key={i}
-                  className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 shadow-lg flex items-center justify-center font-black text-xs transition-all transform ${
-                    token === 'R'
-                      ? 'bg-gradient-to-br from-[#FF2B2B] via-[#D31010] to-[#800606] border-white/90 text-white shadow-[0_2px_8px_rgba(255,40,40,0.6)]'
-                      : 'bg-gradient-to-br from-[#FFFFFF] via-[#F3F4F6] to-[#D1D5DB] border-gray-400 text-gray-800 shadow-[0_2px_8px_rgba(255,255,255,0.4)]'
-                  }`}
-                >
-                  <span className="drop-shadow-sm font-black">
-                    {token === 'R' ? 'ĐỎ' : 'TRẮNG'}
-                  </span>
-                </div>
-              ))}
+        {/* B. 3D PERSPECTIVE ELLIPTICAL PLATE (MATCHING REFERENCE.PNG & VIDEO) */}
+        <div 
+          className="relative w-72 sm:w-84 h-44 sm:h-48 rounded-[50%] flex items-center justify-center p-3 transition-all"
+          style={{
+            background: 'radial-gradient(ellipse at center, #263347 0%, #121824 60%, #060911 100%)',
+            border: '4px solid #D4AF37',
+            boxShadow: '0 18px 40px rgba(0,0,0,0.95), inset 0 2px 6px rgba(255,215,0,0.6), inset 0 -4px 12px rgba(0,0,0,0.95)'
+          }}
+        >
+          {/* Concentric Dashed Gold Accent on Plate */}
+          <div className="absolute inset-1 rounded-[50%] border border-dashed border-amber-400/40 pointer-events-none" />
+
+          {/* INNER FELT BED WITH TOKENS (UNDERNEATH) */}
+          <div 
+            className="w-[88%] h-[84%] rounded-[50%] flex flex-col items-center justify-center relative shadow-inner overflow-hidden"
+            style={{
+              background: 'radial-gradient(ellipse at center, #134B38 0%, #0C3326 65%, #061C14 100%)',
+              border: '2px solid #1E5D48'
+            }}
+          >
+            {/* 4 CASINO PIECES/BALLS (SMALLER, CLEAN WITHOUT TEXT, DENOTED STRICTLY BY COLOR, NATURAL STAGGERED ARC) */}
+            <div className="flex items-center justify-center gap-2 sm:gap-2.5 z-10 pt-1">
+              {tokens.map((token, i) => {
+                // Natural staggered arc offsets matching reference video
+                const staggerOffsets = ['translate-y-1', '-translate-y-1.5', 'translate-y-1.5', '-translate-y-0.5'];
+                const stagger = staggerOffsets[i % staggerOffsets.length];
+
+                return (
+                  <div
+                    key={i}
+                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border transform transition-all duration-300 ${stagger} ${
+                      token === 'R'
+                        ? 'bg-gradient-to-br from-[#FF4D4D] via-[#D31010] to-[#780000] border-[#FF8A8A] shadow-[0_4px_10px_rgba(220,38,38,0.85)]'
+                        : 'bg-gradient-to-br from-[#FFFFFF] via-[#F1F5F9] to-[#CBD5E1] border-white shadow-[0_4px_10px_rgba(255,255,255,0.7)]'
+                    }`}
+                    style={{
+                      boxShadow: token === 'R'
+                        ? '0 3px 6px rgba(0,0,0,0.65), inset 0 2px 4px rgba(255,255,255,0.85), inset 0 -2px 5px rgba(0,0,0,0.6)'
+                        : '0 3px 6px rgba(0,0,0,0.45), inset 0 2px 4px rgba(255,255,255,1), inset 0 -2px 5px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    {/* Concentric 3D Spherical Specular Glare (Gives tactile glossy bead depth with zero text) */}
+                    <div className="w-full h-full rounded-full flex items-center justify-center relative overflow-hidden pointer-events-none">
+                      <div className="absolute top-0.5 left-1 w-2.5 h-1.5 rounded-full bg-white/70 blur-[0.4px] transform -rotate-12" />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Floating Outcome Result Pill (Appears during REVEAL) */}
+            {/* LOWER RESULT PILL (APPEARS DURING REVEAL IN LOWER HALF OF PLATE - MATCHING VIDEO) */}
             {gameState === 'REVEAL' && (
-              <div className="absolute inset-x-2 -bottom-3 bg-[#0A101D]/95 border-2 border-yellow-400 rounded-xl px-3 py-1 shadow-2xl text-center z-30 animate-bounce">
-                <div className="text-[10px] font-black text-gray-300 uppercase tracking-wide">
-                  {redCount} ĐỎ • {4 - redCount} TRẮNG
+              <div className="mt-2.5 bg-[#0A101D]/95 border border-yellow-500/80 rounded-full px-5 py-1 shadow-2xl text-center z-10 animate-fade-in notranslate" translate="no">
+                <div className="text-[9px] font-black text-gray-300 uppercase tracking-wider">
+                  <span>{redCount} ĐỎ • {4 - redCount} TRẮNG</span>
                 </div>
-                <div className="text-base font-black text-yellow-400 tracking-wider">
-                  {isEven ? 'CHẴN' : 'LẺ'}
+                <div className="text-base font-black text-yellow-400 tracking-widest leading-none mt-0.5">
+                  <span>{isEven ? 'CHẴN' : 'LẺ'}</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* THE 3D CERAMIC METALLIC BOWL (COVERS THE TOKENS) */}
+          {/* C. THE SCULPTED 3D DOME BOWL (LIFTS UP AND RIGHT TO FULLY CLEAR ALL 4 BALLS MATCHING REFERENCE VIDEO) */}
           <div 
-            className={`absolute inset-3 rounded-full transition-all duration-700 ease-out z-20 flex flex-col items-center justify-center ${
+            className={`absolute w-[92%] h-[92%] rounded-[50%] z-20 flex flex-col items-center justify-center pointer-events-none transition-all duration-700 ease-out ${
               gameState === 'SHAKING'
-                ? 'animate-bowl-shake'
-                : gameState === 'REVEAL'
-                  ? 'translate-x-16 -translate-y-12 rotate-12 opacity-80 pointer-events-none scale-95'
-                  : 'translate-x-0 translate-y-0 rotate-0 opacity-100'
+                ? 'animate-gentle-tilt-2x'
+                : ''
             }`}
             style={{
-              background: 'radial-gradient(circle at 35% 35%, #7D5C2C 0%, #3D2910 45%, #1F1406 85%, #0A0602 100%)',
-              boxShadow: '0 12px 28px rgba(0,0,0,0.85), inset 0 2px 6px rgba(255,215,0,0.5), inset 0 -4px 10px rgba(0,0,0,0.9)'
+              background: 'radial-gradient(ellipse at 40% 22%, #FFF8D6 0%, #F5CE68 22%, #B38217 55%, #593C08 85%, #241602 100%)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.95), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)',
+              border: '4px solid #FCD34D',
+              transform: gameState === 'REVEAL'
+                ? 'translate(135px, -115px) rotate(38deg) scale(0.85)'
+                : 'translate(0px, 0px) rotate(0deg) scale(1)',
+              opacity: gameState === 'REVEAL' ? 0.95 : 1
             }}
           >
-            {/* Sculpted Outer Gold Rim */}
-            <div className="absolute inset-1 rounded-full border-4 border-[#E5A84B]/70 shadow-inner"></div>
-            <div className="absolute inset-3 rounded-full border border-yellow-500/30"></div>
-
-            {/* Bowl Center Countdown Dial (Only visible when bowl is closed) */}
-            {gameState !== 'REVEAL' && (
-              <div className="relative flex flex-col items-center justify-center">
-                {/* Circular Progress Ring */}
-                <div className={`w-16 h-16 sm:w-18 sm:h-18 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
-                  gameState === 'WARNING'
-                    ? 'border-yellow-400 bg-yellow-950/60 shadow-[0_0_18px_rgba(250,204,21,0.8)] animate-pulse'
-                    : gameState === 'SHAKING'
-                      ? 'border-red-500 bg-red-950/80 shadow-[0_0_20px_rgba(239,68,68,0.9)]'
-                      : 'border-yellow-500/80 bg-black/50 shadow-lg'
-                }`}>
-                  <span className="text-xl sm:text-2xl font-black font-mono text-yellow-300 leading-none">
-                    {gameState === 'SHAKING' ? '0' : timeLeft}
-                  </span>
-                </div>
-
-                {/* Status Sub-badge */}
-                <span className={`mt-1.5 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider ${
-                  gameState === 'WARNING'
-                    ? 'bg-amber-500 text-black font-bold animate-bounce'
-                    : gameState === 'SHAKING'
-                      ? 'bg-red-600 text-white font-black animate-pulse'
-                      : 'text-yellow-200/90'
-                }`}>
-                  {gameState === 'WARNING' ? 'SẮP KHÓA CƯỢC' : gameState === 'SHAKING' ? 'ĐANG XÓC' : 'ĐANG NHẬN CƯỢC'}
-                </span>
-              </div>
-            )}
+            {/* Specular Light Highlight Ridge */}
+            <div className="absolute inset-x-8 top-2.5 h-6 rounded-[50%] border-t-2 border-white/70 pointer-events-none" />
+            
+            {/* Concentric Golden Ring Accent */}
+            <div className="absolute inset-2.5 sm:inset-3.5 rounded-[50%] border border-yellow-300/40 pointer-events-none" />
+            
+            {/* Authentic Vietnamese "Bát Úp" Inverted Ceramic Foot-Rim on Top of Bowl */}
+            <div className="w-16 sm:w-20 h-7 sm:h-9 rounded-[50%] bg-gradient-to-b from-[#E6C364] via-[#C89B32] to-[#805810] border border-[#FFF0A0]/90 shadow-[0_4px_8px_rgba(0,0,0,0.6)] flex items-center justify-center pointer-events-none mb-1">
+              <div className="w-12 sm:w-15 h-4 sm:h-5 rounded-[50%] bg-[#5E3C0B] shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)]" />
+            </div>
           </div>
 
         </div>
@@ -496,7 +495,7 @@ export const SbobetXocDiaView: React.FC = () => {
         <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center mb-1">
           LỊCH SỬ KẾT QUẢ
         </div>
-        <div className="flex items-center justify-center gap-1.5 overflow-x-auto py-1 px-2 bg-[#0B101D] border border-[#1C263D] rounded-xl">
+        <div className="flex items-center justify-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-2 bg-[#0B101D] border border-[#1C263D] rounded-xl">
           {history.map((item, idx) => (
             <div
               key={idx}
@@ -512,26 +511,72 @@ export const SbobetXocDiaView: React.FC = () => {
         </div>
       </div>
 
-      {/* 6. CASINO CHIPS SELECTION & WAGER CONTROLS (CIRCLED IN RED IN REFERENCE.PNG) */}
-      <div className="px-3 py-2 space-y-2">
-        {/* Status: Cửa đã chọn & Điểm cược */}
-        <div className="flex items-center justify-between text-xs px-2 py-1 bg-[#0D1524] rounded-lg border border-[#1E2B45]">
-          <div className="flex items-center gap-1.5">
-            <span className="text-gray-400">Cửa:</span>
-            <span className="font-black text-yellow-400">
-              {selectedSide ? selectedSide : 'Chưa chọn'}
-            </span>
+      {/* 6. CASINO CHIPS & CUSTOM STAKE INPUT CONTROLS */}
+      <div className="px-3 py-2 space-y-2.5">
+        {/* Custom Bet Stake Input & Multipliers Box */}
+        <div className="bg-[#0D1524] rounded-xl p-2.5 border border-[#1E2B45] space-y-2">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5">
+              <span className="text-gray-400">Cửa cược:</span>
+              <span className="font-black text-yellow-400">{selectedSide || 'Chưa chọn'}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setCurrentStake(prev => Math.floor(prev / 2))}
+                className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-gray-300 border border-gray-700 transition-colors"
+                title="Giảm 1 nửa tiền cược"
+              >
+                1/2
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentStake(prev => (prev === 0 ? 50000 : prev * 2))}
+                className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-yellow-400 border border-gray-700 transition-colors"
+                title="Gấp đôi tiền cược"
+              >
+                2X
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentStake(prev => prev + 100000)}
+                className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-blue-300 border border-gray-700 transition-colors"
+              >
+                +100K
+              </button>
+              <button
+                type="button"
+                onClick={() => setCurrentStake(1000000)}
+                className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-emerald-400 border border-gray-700 transition-colors"
+                title="Đặt mức tối đa"
+              >
+                TẤT TAY
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-gray-400">Điểm cược:</span>
-            <span className="font-mono font-black text-yellow-300">
-              {currentStake.toLocaleString()}
+
+          {/* Numeric Custom Input Field */}
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              inputMode="numeric"
+              value={currentStake > 0 ? currentStake.toLocaleString() : ''}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, '');
+                setCurrentStake(raw ? parseInt(raw, 10) : 0);
+              }}
+              placeholder="Nhập số tiền cược tùy ý (VND)..."
+              disabled={gameState === 'REVEAL'}
+              className="w-full bg-[#070A12] border border-[#23355A] focus:border-yellow-400 rounded-lg py-2 pl-3 pr-14 text-sm font-black text-yellow-300 font-mono tracking-wider outline-none transition-colors"
+            />
+            <span className="absolute right-3 text-xs font-black text-gray-400 pointer-events-none">
+              VND
             </span>
           </div>
         </div>
 
-        {/* 3D Casino Chips Row */}
-        <div className="flex items-center justify-between gap-1 sm:gap-2 px-1 py-1">
+        {/* 3D Casino Chips Row for Fast Selection */}
+        <div className="flex items-center justify-between gap-1 sm:gap-2 px-1 py-0.5">
           {chips.map(chip => (
             <button
               key={chip.value}
