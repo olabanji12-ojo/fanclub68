@@ -182,9 +182,9 @@ export const SbobetTaiXiuView: React.FC = () => {
 
     return (
       <div 
-        className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border-2 border-red-300 shadow-md relative p-1.5 flex items-center justify-center transform hover:rotate-6 transition-all"
+        className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border-2 border-red-300 shadow-md relative p-1 sm:p-1.5 flex items-center justify-center transform hover:rotate-6 transition-all"
         style={{
-          boxShadow: '0 4px 10px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.3)'
+          boxShadow: '0 3px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.3)'
         }}
       >
         <div className="w-full h-full relative">
@@ -200,7 +200,7 @@ export const SbobetTaiXiuView: React.FC = () => {
             return (
               <span
                 key={idx}
-                className={`absolute ${posClass} w-2.5 h-2.5 rounded-full bg-white shadow-inner`}
+                className={`absolute ${posClass} w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white shadow-inner`}
               />
             );
           })}
@@ -213,35 +213,36 @@ export const SbobetTaiXiuView: React.FC = () => {
     <div className="min-h-screen bg-[#F0F2F5] text-gray-900 font-sans flex flex-col select-none relative overflow-x-hidden">
       
       {/* 1. AUTHENTIC SBOBET ROYAL BLUE HEADER */}
+      {/* 1. AUTHENTIC SBOBET ROYAL BLUE HEADER */}
       <header className="bg-[#0B4DA2] text-white shadow-md sticky top-0 z-50">
-        <div className="flex items-center justify-between px-3 py-2 border-b border-[#0A3E82]">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 border-b border-[#0A3E82]">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setCurrentView('sbobet')}
-              className="p-1 hover:bg-[#08356E] rounded text-white flex items-center gap-1 text-xs font-bold transition-colors"
+              className="p-1 hover:bg-[#08356E] rounded text-white flex items-center gap-1 text-xs font-bold transition-colors shrink-0"
               title="Quay lại Thể Thao"
             >
               <ArrowLeft className="w-4 h-4 text-yellow-300" />
               <span className="hidden sm:inline font-bold">SBOBET Thể Thao</span>
             </button>
-            <div className="flex items-center gap-1 ml-1">
+            <div className="flex items-center gap-1 ml-0.5 sm:ml-1">
               <span className="text-yellow-400 text-sm font-black">3</span>
-              <span className="text-base font-black italic tracking-tight">SBOBET</span>
-              <span className="text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded ml-1 uppercase">
+              <span className="text-sm sm:text-base font-black italic tracking-tight">SBOBET</span>
+              <span className="text-[9px] sm:text-[10px] bg-emerald-600 text-white font-bold px-1.5 py-0.5 rounded uppercase">
                 Casino 3D
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             {/* Language Selector */}
             <div className="relative">
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-1 bg-[#08356E] px-2 py-1 rounded text-xs text-white border border-[#165AB8]"
+                className="flex items-center gap-1 bg-[#08356E] px-1.5 sm:px-2 py-1 rounded text-[11px] sm:text-xs text-white border border-[#165AB8]"
               >
                 <Globe className="w-3 h-3 text-[#A8CEFC]" />
-                <span className="font-semibold">{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
+                <span className="font-semibold">{language === 'vi' ? 'VI' : 'EN'}</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
               {isLangOpen && (
@@ -264,7 +265,7 @@ export const SbobetTaiXiuView: React.FC = () => {
 
             {/* User Balance or Auth */}
             {user ? (
-              <div className="bg-[#08356E] px-2.5 py-1 rounded text-right border border-[#165AB8]">
+              <div className="bg-[#08356E] px-2 sm:px-2.5 py-1 rounded text-right border border-[#165AB8]">
                 <div className="text-[9px] text-blue-200 uppercase font-semibold leading-none">
                   {language === 'vi' ? 'Số dư' : 'Balance'}
                 </div>
@@ -276,13 +277,13 @@ export const SbobetTaiXiuView: React.FC = () => {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => openAuthModal('login')}
-                  className="bg-gradient-to-b from-[#B86B1C] to-[#783E08] border border-[#E5A84B]/80 text-white text-[11px] font-black px-2 py-1 rounded shadow-sm active:scale-95"
+                  className="bg-gradient-to-b from-[#B86B1C] to-[#783E08] border border-[#E5A84B]/80 text-white text-[10px] sm:text-[11px] font-black px-2 sm:px-2.5 py-1 rounded shadow-sm active:scale-95"
                 >
                   {language === 'vi' ? 'ĐĂNG NHẬP' : 'LOG IN'}
                 </button>
                 <button
                   onClick={() => openAuthModal('register')}
-                  className="bg-gradient-to-b from-[#D31818] to-[#880808] border border-[#FF6B6B]/80 text-white text-[11px] font-black px-2 py-1 rounded shadow-sm active:scale-95"
+                  className="bg-gradient-to-b from-[#D31818] to-[#880808] border border-[#FF6B6B]/80 text-white text-[10px] sm:text-[11px] font-black px-2 sm:px-2.5 py-1 rounded shadow-sm active:scale-95"
                 >
                   {language === 'vi' ? 'ĐĂNG KÝ' : 'REGISTER'}
                 </button>
@@ -292,28 +293,28 @@ export const SbobetTaiXiuView: React.FC = () => {
         </div>
 
         {/* SUB BAR: TITLE & SESSION INFO */}
-        <div className="bg-[#0A438D] px-3 py-1.5 flex items-center justify-between text-xs font-bold text-white border-t border-[#08356E]">
-          <div className="flex items-center gap-1.5 text-emerald-300">
-            <Dice5 className="w-4 h-4 text-yellow-400" />
-            <span className="tracking-wide">TÀI XỈU 3D VIRTUAL (SICBO ARENA)</span>
+        <div className="bg-[#0A438D] px-2 sm:px-3 py-1.5 flex items-center justify-between text-[11px] sm:text-xs font-bold text-white border-t border-[#08356E]">
+          <div className="flex items-center gap-1.5 text-emerald-300 truncate">
+            <Dice5 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-400 shrink-0" />
+            <span className="tracking-wide truncate">TÀI XỈU 3D VIRTUAL (SICBO)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-blue-200 text-[11px]">
+          <div className="flex items-center gap-1.5 shrink-0 ml-1">
+            <span className="text-blue-200 text-[10px] sm:text-[11px]">
               Phiên: <strong className="text-yellow-300 font-mono">#TX-260907</strong>
             </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           </div>
         </div>
       </header>
 
       {/* 2. MAIN CASINO STAGE - LIGHT THEME */}
-      <main className="flex-1 p-3 space-y-3 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-2.5 sm:px-3 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 max-w-2xl mx-auto w-full">
         
         {/* WHITE CARD STAGE: STATUS & 3D DICE TRAY WITH SMOOTH OPENING CUP */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm text-center">
+        <div className="bg-white rounded-2xl border border-gray-200 p-3 sm:p-4 shadow-sm text-center">
           
           {/* Status announcement pill */}
-          <div className="mb-3">
+          <div className="mb-2.5 sm:mb-3">
             <div className={`py-1.5 px-3 rounded-lg border text-center text-xs font-bold transition-all ${
               phase === 'WARNING'
                 ? 'bg-amber-50 border-amber-300 text-amber-700 animate-pulse'
@@ -332,45 +333,33 @@ export const SbobetTaiXiuView: React.FC = () => {
           </div>
 
           {/* 3D PORCELAIN TRAY & THE SMOOTH OPENING CUP (OPENS ONCE ON TIMER ZERO) */}
-          <div className="relative py-2 flex flex-col items-center justify-center">
+          <div className="relative py-1 sm:py-2 flex flex-col items-center justify-center">
             
             {/* Outer Porcelain Plate with Metallic Rim */}
-            <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-gradient-to-b from-slate-100 via-white to-slate-200 border-4 border-slate-300 shadow-[0_8px_25px_rgba(0,0,0,0.12)] flex items-center justify-center p-3">
+            <div className="relative w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-gradient-to-b from-slate-100 via-white to-slate-200 border-4 border-slate-300 shadow-[0_8px_25px_rgba(0,0,0,0.12)] flex items-center justify-center p-2.5 sm:p-3">
               
               {/* Decorative dotted gold ring */}
               <div className="absolute inset-1.5 rounded-full border-2 border-dashed border-amber-400/40 pointer-events-none" />
 
-              {/* Inner Green Casino Felt with 3 3D Dice */}
-              <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-full bg-gradient-to-b from-[#114B36] to-[#0A2E21] border-2 border-[#1B6B4D] shadow-inner flex flex-col items-center justify-center p-3 relative">
+              {/* Inner Green Casino Felt with 3 3D Dice (Completely Unobstructed!) */}
+              <div className="w-36 h-36 sm:w-42 sm:h-42 rounded-full bg-gradient-to-b from-[#114B36] to-[#0A2E21] border-2 border-[#1B6B4D] shadow-inner flex flex-col items-center justify-center p-2 relative">
                 
                 {/* 3 Dice Array */}
-                <div className="flex items-center gap-2 sm:gap-2.5 z-0">
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 z-10">
                   {dice.map((d, i) => (
                     <div key={i}>
                       {renderDiceFace(d)}
                     </div>
                   ))}
                 </div>
-
-                {/* Floating Outcome Result Pill (Appears during REVEAL) */}
-                {phase === 'REVEAL' && (
-                  <div className="absolute inset-x-3 -bottom-3 bg-white border-2 border-amber-500 rounded-xl px-3 py-1 shadow-xl text-center z-30 animate-bounce">
-                    <div className="text-[10px] font-black text-gray-500 uppercase tracking-wide">
-                      {dice.join(' - ')} • TỔNG {sum} ĐIỂM
-                    </div>
-                    <div className="text-base font-black text-red-600 tracking-wider">
-                      {isTai ? 'TÀI (LỚN)' : 'XỈU (NHỎ)'}
-                    </div>
-                  </div>
-                )}
               </div>
 
-              {/* THE SLEEK SILVER/PORCELAIN CUP COVER (OPENS SMOOTHLY ONCE - NO RAPID SHAKING) */}
+              {/* THE SLEEK SILVER/PORCELAIN CUP COVER (LIFTS UP & TO THE RIGHT TO FULLY UNCOVER THE DICE) */}
               <div 
-                className={`absolute inset-3 rounded-full transition-all duration-700 ease-out z-20 flex flex-col items-center justify-center ${
+                className={`absolute inset-2 sm:inset-3 rounded-full transition-all duration-700 ease-out z-20 flex flex-col items-center justify-center ${
                   phase === 'REVEAL'
-                    ? '-translate-y-24 scale-90 opacity-80 pointer-events-none'
-                    : 'translate-y-0 scale-100 opacity-100'
+                    ? 'translate-x-20 sm:translate-x-24 -translate-y-20 sm:-translate-y-24 rotate-25 scale-75 opacity-85 pointer-events-none'
+                    : 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100'
                 }`}
                 style={{
                   background: 'radial-gradient(circle at 35% 35%, #FFFFFF 0%, #E2E8F0 45%, #94A3B8 85%, #64748B 100%)',
@@ -384,7 +373,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                 {/* Cup Center Countdown Dial (Visible when cup covers dice) */}
                 {phase !== 'REVEAL' && (
                   <div className="relative flex flex-col items-center justify-center">
-                    <div className={`w-16 h-16 sm:w-18 sm:h-18 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-4 flex flex-col items-center justify-center transition-all ${
                       phase === 'WARNING'
                         ? 'border-red-500 bg-red-50/95 text-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-pulse'
                         : 'border-[#0B4DA2] bg-white/95 text-[#0B4DA2] shadow-md'
@@ -393,7 +382,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                         {timeLeft}
                       </span>
                     </div>
-                    <span className={`mt-1.5 text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-xs ${
+                    <span className={`mt-1 text-[8px] sm:text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-xs ${
                       phase === 'WARNING'
                         ? 'bg-red-600 text-white animate-bounce'
                         : 'bg-[#0B4DA2] text-white'
@@ -407,12 +396,25 @@ export const SbobetTaiXiuView: React.FC = () => {
               </div>
 
             </div>
+
+            {/* FLOATING OUTCOME RESULT CARD (POSITIONED SAFELY BELOW THE TRAY - NEVER BLOCKS THE DICE!) */}
+            {phase === 'REVEAL' && (
+              <div className="mt-3 bg-gradient-to-r from-amber-50 via-white to-amber-50 border-2 border-amber-500 rounded-2xl px-5 py-1.5 shadow-lg text-center z-30 animate-fade-in transition-all max-w-xs">
+                <div className="text-[10px] sm:text-[11px] font-black text-gray-500 uppercase tracking-wider">
+                  {dice.join(' + ')} = <span className="text-gray-900 font-bold">{sum} {language === 'vi' ? 'ĐIỂM' : 'POINTS'}</span>
+                </div>
+                <div className={`text-base sm:text-lg font-black tracking-wider leading-none mt-0.5 ${isTai ? 'text-red-600' : 'text-[#0B4DA2]'}`}>
+                  {isTai ? (language === 'vi' ? 'TÀI (LỚN)' : 'TÀI / OVER') : (language === 'vi' ? 'XỈU (NHỎ)' : 'XỈU / UNDER')}
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* 5-Second Invisible Buffer Security Label */}
-          <div className="mt-2 text-[11px] text-gray-500 flex items-center justify-center gap-1">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
-            <span>
+          <div className="mt-2 text-[10px] sm:text-[11px] text-gray-500 flex items-center justify-center gap-1">
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span className="truncate">
               {language === 'vi' 
                 ? 'Cổng cược tự động khóa ở 5 giây cuối trước khi mở bát'
                 : 'Bets locked automatically at 5s before reveal'}
@@ -421,12 +423,12 @@ export const SbobetTaiXiuView: React.FC = () => {
         </div>
 
         {/* 3. MAIN BETTING CARDS - AUTHENTIC WHITE THEME */}
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           
           {/* TÀI CARD */}
           <div
             onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('TÀI')}
-            className={`relative rounded-xl p-3 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
+            className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
               selectedSide === 'TÀI'
                 ? 'ring-2 ring-red-500 border-red-500 bg-red-50/70 shadow-md'
                 : phase === 'REVEAL' && isTai
@@ -435,23 +437,23 @@ export const SbobetTaiXiuView: React.FC = () => {
             }`}
           >
             {selectedSide === 'TÀI' && (
-              <div className="absolute top-2 right-2 bg-red-600 text-white p-0.5 rounded-full shadow">
+              <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-red-600 text-white p-0.5 rounded-full shadow">
                 <Check className="w-3 h-3 stroke-[3]" />
               </div>
             )}
             <div className="text-xl sm:text-2xl font-black text-red-600 tracking-wider">
               TÀI
             </div>
-            <div className="text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
               11 - 17 ĐIỂM
             </div>
-            <div className="text-xs sm:text-sm font-black text-amber-600 my-1">
+            <div className="text-xs sm:text-sm font-black text-amber-600 my-0.5 sm:my-1">
               ĂN 1 : 1.98
             </div>
-            <div className="text-sm sm:text-base font-black text-gray-900 font-mono tracking-wide">
+            <div className="text-xs sm:text-sm md:text-base font-black text-gray-900 font-mono tracking-wide truncate">
               {taiPool.toLocaleString()} VND
             </div>
-            <div className="text-[10px] text-gray-500 font-medium mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-medium mt-0.5 truncate">
               {taiBettors} {language === 'vi' ? 'NGƯỜI ĐANG CHỌN' : 'BETTORS'}
             </div>
           </div>
@@ -459,7 +461,7 @@ export const SbobetTaiXiuView: React.FC = () => {
           {/* XỈU CARD */}
           <div
             onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('XỈU')}
-            className={`relative rounded-xl p-3 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
+            className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 border-2 shadow-sm ${
               selectedSide === 'XỈU'
                 ? 'ring-2 ring-[#0B4DA2] border-[#0B4DA2] bg-blue-50/70 shadow-md'
                 : phase === 'REVEAL' && !isTai
@@ -468,27 +470,26 @@ export const SbobetTaiXiuView: React.FC = () => {
             }`}
           >
             {selectedSide === 'XỈU' && (
-              <div className="absolute top-2 right-2 bg-[#0B4DA2] text-white p-0.5 rounded-full shadow">
+              <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-[#0B4DA2] text-white p-0.5 rounded-full shadow">
                 <Check className="w-3 h-3 stroke-[3]" />
               </div>
             )}
             <div className="text-xl sm:text-2xl font-black text-[#0B4DA2] tracking-wider">
               XỈU
             </div>
-            <div className="text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-bold mt-0.5 uppercase tracking-tight">
               4 - 10 ĐIỂM
             </div>
-            <div className="text-xs sm:text-sm font-black text-amber-600 my-1">
+            <div className="text-xs sm:text-sm font-black text-amber-600 my-0.5 sm:my-1">
               ĂN 1 : 1.98
             </div>
-            <div className="text-sm sm:text-base font-black text-gray-900 font-mono tracking-wide">
+            <div className="text-xs sm:text-sm md:text-base font-black text-gray-900 font-mono tracking-wide truncate">
               {xiuPool.toLocaleString()} VND
             </div>
-            <div className="text-[10px] text-gray-500 font-medium mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-gray-500 font-medium mt-0.5 truncate">
               {xiuBettors} {language === 'vi' ? 'NGƯỜI ĐANG CHỌN' : 'BETTORS'}
             </div>
           </div>
-
         </div>
 
         {/* 4. HISTORY ROADMAP (BEAD MATRIX) - LIGHT THEME */}
@@ -499,7 +500,7 @@ export const SbobetTaiXiuView: React.FC = () => {
               Tài: {history.filter(h => h === 'T').length} | Xỉu: {history.filter(h => h === 'X').length}
             </span>
           </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1 px-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1">
             {history.map((item, idx) => (
               <div
                 key={idx}
@@ -572,9 +573,9 @@ export const SbobetTaiXiuView: React.FC = () => {
                   const raw = e.target.value.replace(/\D/g, '');
                   setCurrentStake(raw ? parseInt(raw, 10) : 0);
                 }}
-                placeholder={language === 'vi' ? 'Nhập số tiền cược tùy ý (VND)...' : 'Enter custom stake amount...'}
+                placeholder={language === 'vi' ? 'Nhập tiền cược (VND)...' : 'Enter stake amount...'}
                 disabled={phase === 'REVEAL'}
-                className="w-full bg-white border border-slate-300 focus:border-[#0B4DA2] rounded-lg py-2 pl-3 pr-14 text-sm font-black text-[#0B4DA2] font-mono tracking-wider outline-none shadow-xs transition-colors"
+                className="w-full bg-white border border-slate-300 focus:border-[#0B4DA2] rounded-lg py-1.5 sm:py-2 pl-3 pr-12 text-sm font-black text-[#0B4DA2] font-mono tracking-wider outline-none shadow-xs transition-colors"
               />
               <span className="absolute right-3 text-xs font-black text-gray-500 pointer-events-none">
                 VND
@@ -583,7 +584,7 @@ export const SbobetTaiXiuView: React.FC = () => {
           </div>
 
           {/* 3D Casino Chips Row for Fast Selection */}
-          <div className="flex items-center justify-between gap-1 sm:gap-2 px-1 py-0.5">
+          <div className="flex items-center justify-between gap-1 sm:gap-2 px-0.5 sm:px-1 py-0.5">
             {chips.map(chip => (
               <button
                 key={chip.value}
@@ -593,13 +594,13 @@ export const SbobetTaiXiuView: React.FC = () => {
                 }`}
               >
                 <div 
-                  className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
+                  className={`w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
                     activeChip === chip.value ? `ring-2 ${chip.ring} shadow-[0_0_12px_rgba(234,179,8,0.6)]` : ''
                   }`}
                 >
                   <div className="absolute inset-0.5 rounded-full border border-dashed border-white/40 pointer-events-none" />
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/40 border border-white/30 flex items-center justify-center">
-                    <span className="text-[10px] sm:text-[11px] font-black text-white drop-shadow font-mono">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/40 border border-white/30 flex items-center justify-center">
+                    <span className="text-[9px] sm:text-[10px] font-black text-white drop-shadow font-mono">
                       {chip.label}
                     </span>
                   </div>

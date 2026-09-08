@@ -376,7 +376,7 @@ export const SbobetXocDiaView: React.FC = () => {
               boxShadow: '0 20px 40px rgba(0,0,0,0.95), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)',
               border: '4px solid #FCD34D',
               transform: gameState === 'REVEAL'
-                ? 'translate(135px, -115px) rotate(38deg) scale(0.85)'
+                ? 'translate(125px, -110px) rotate(36deg) scale(0.84)'
                 : 'translate(0px, 0px) rotate(0deg) scale(1)',
               opacity: gameState === 'REVEAL' ? 0.95 : 1
             }}
@@ -398,7 +398,7 @@ export const SbobetXocDiaView: React.FC = () => {
       </div>
 
       {/* 4. TWO MAIN NEON BETTING CARDS (CHẴN vs LẺ) */}
-      <div className="px-3 py-1 grid grid-cols-2 gap-2.5 sm:gap-3">
+      <div className="px-2 sm:px-3 py-1 grid grid-cols-2 gap-2 sm:gap-3">
         
         {/* CARD 1: CHẴN (NEON BLUE BORDER - MATCHING REFERENCE.PNG) */}
         <div
@@ -407,7 +407,7 @@ export const SbobetXocDiaView: React.FC = () => {
               setSelectedSide('CHẴN');
             }
           }}
-          className={`relative rounded-xl p-3 sm:p-4 text-center cursor-pointer transition-all active:scale-98 ${
+          className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 ${
             selectedSide === 'CHẴN'
               ? 'ring-2 ring-yellow-400 shadow-[0_0_25px_rgba(30,107,255,0.7)]'
               : ''
@@ -419,7 +419,7 @@ export const SbobetXocDiaView: React.FC = () => {
         >
           {/* Active selection badge */}
           {selectedSide === 'CHẴN' && (
-            <div className="absolute top-2 right-2 bg-yellow-400 text-black p-0.5 rounded-full shadow">
+            <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-yellow-400 text-black p-0.5 rounded-full shadow">
               <Check className="w-3 h-3 stroke-[3]" />
             </div>
           )}
@@ -427,19 +427,19 @@ export const SbobetXocDiaView: React.FC = () => {
           <div className="text-xl sm:text-2xl font-black text-[#2B82FF] tracking-wider drop-shadow-sm">
             CHẴN
           </div>
-          <div className="text-[10px] text-gray-400 font-semibold mt-0.5 uppercase tracking-tight">
+          <div className="text-[9px] sm:text-[10px] text-gray-400 font-semibold mt-0.5 uppercase tracking-tight">
             0, 2 HOẶC 4 QUÂN ĐỎ
           </div>
 
-          <div className="text-xs sm:text-sm font-black text-[#FFD043] my-1.5 flex items-center justify-center gap-1">
+          <div className="text-xs sm:text-sm font-black text-[#FFD043] my-1 sm:my-1.5 flex items-center justify-center gap-1">
             <span>ĂN 1 : 0.96</span>
           </div>
 
           {/* Live Pool Total */}
-          <div className="text-sm sm:text-base font-black text-[#FFC800] font-mono tracking-wide">
+          <div className="text-xs sm:text-sm md:text-base font-black text-[#FFC800] font-mono tracking-wide truncate">
             {chanPool.toLocaleString()}
           </div>
-          <div className="text-[10px] text-gray-400 font-medium mt-0.5">
+          <div className="text-[9px] sm:text-[10px] text-gray-400 font-medium mt-0.5 truncate">
             {chanBettors} NGƯỜI ĐANG CHỌN
           </div>
         </div>
@@ -451,7 +451,7 @@ export const SbobetXocDiaView: React.FC = () => {
               setSelectedSide('LẺ');
             }
           }}
-          className={`relative rounded-xl p-3 sm:p-4 text-center cursor-pointer transition-all active:scale-98 ${
+          className={`relative rounded-xl p-2.5 sm:p-4 text-center cursor-pointer transition-all active:scale-98 ${
             selectedSide === 'LẺ'
               ? 'ring-2 ring-yellow-400 shadow-[0_0_25px_rgba(255,43,94,0.7)]'
               : ''
@@ -463,7 +463,7 @@ export const SbobetXocDiaView: React.FC = () => {
         >
           {/* Active selection badge */}
           {selectedSide === 'LẺ' && (
-            <div className="absolute top-2 right-2 bg-yellow-400 text-black p-0.5 rounded-full shadow">
+            <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-yellow-400 text-black p-0.5 rounded-full shadow">
               <Check className="w-3 h-3 stroke-[3]" />
             </div>
           )}
@@ -471,19 +471,19 @@ export const SbobetXocDiaView: React.FC = () => {
           <div className="text-xl sm:text-2xl font-black text-[#FF3366] tracking-wider drop-shadow-sm">
             LẺ
           </div>
-          <div className="text-[10px] text-gray-400 font-semibold mt-0.5 uppercase tracking-tight">
+          <div className="text-[9px] sm:text-[10px] text-gray-400 font-semibold mt-0.5 uppercase tracking-tight">
             1 HOẶC 3 QUÂN ĐỎ
           </div>
 
-          <div className="text-xs sm:text-sm font-black text-[#FFD043] my-1.5 flex items-center justify-center gap-1">
+          <div className="text-xs sm:text-sm font-black text-[#FFD043] my-1 sm:my-1.5 flex items-center justify-center gap-1">
             <span>ĂN 1 : 0.96</span>
           </div>
 
           {/* Live Pool Total */}
-          <div className="text-sm sm:text-base font-black text-[#FFC800] font-mono tracking-wide">
+          <div className="text-xs sm:text-sm md:text-base font-black text-[#FFC800] font-mono tracking-wide truncate">
             {lePool.toLocaleString()}
           </div>
-          <div className="text-[10px] text-gray-400 font-medium mt-0.5">
+          <div className="text-[9px] sm:text-[10px] text-gray-400 font-medium mt-0.5 truncate">
             {leBettors} NGƯỜI ĐANG CHỌN
           </div>
         </div>
