@@ -233,12 +233,12 @@ export const SbobetXocDiaView: React.FC = () => {
               <div className="text-sm font-black text-red-600">1 : 12.0</div>
             </button>
             <button
-              onClick={() => handleBet('3 ĐỎ 1 TRẮNG', 3.5)}
+              onClick={() => handleBet('3 ĐỎ 1 TRẮNG', 4.0)}
               disabled={isGateLocked}
-              className="p-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded text-center"
+              className="p-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded text-center transition-colors"
             >
               <div className="text-xs font-bold text-blue-800">3 ĐỎ 1 TRẮNG</div>
-              <div className="text-sm font-black text-[#0B4DA2]">1 : 3.5</div>
+              <div className="text-sm font-black text-[#0B4DA2]">1 : 4.0</div>
             </button>
           </div>
         </div>
