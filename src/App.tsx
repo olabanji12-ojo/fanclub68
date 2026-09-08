@@ -92,7 +92,7 @@ export default function App() {
 
   if (currentView === 'taixiu') {
     return (
-      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
+      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#070A12] border-x border-[#1A253C] shadow-2xl">
         <SbobetTaiXiuView />
         <SbobetBetSlipDrawer />
         <SbobetAuthModal />
@@ -103,7 +103,7 @@ export default function App() {
 
   if (currentView === 'xocdia') {
     return (
-      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
+      <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#070A12] border-x border-[#1A253C] shadow-2xl">
         <SbobetXocDiaView />
         <SbobetBetSlipDrawer />
         <SbobetAuthModal />
