@@ -183,9 +183,9 @@ export const SbobetTaiXiuView: React.FC = () => {
 
     return (
       <div 
-        className={`${isComp ? 'w-7 h-7 sm:w-8 sm:h-8 rounded-md sm:rounded-lg' : 'w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl'} bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border sm:border-2 border-red-300 shadow-md relative p-0.5 sm:p-1 flex items-center justify-center transform transition-transform`}
+        className={`${isComp ? 'w-5 h-5 sm:w-6 sm:h-6 rounded sm:rounded-md' : 'w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl'} bg-gradient-to-br from-[#E62E2E] via-[#C91A1A] to-[#8A0F0F] border border-red-300 shadow-md relative p-0.5 flex items-center justify-center transform transition-transform`}
         style={{
-          boxShadow: '0 3px 8px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.4)'
+          boxShadow: '0 2px 5px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.4), inset 0 -1px 2px rgba(0,0,0,0.4)'
         }}
       >
         <div className="w-full h-full relative">
@@ -201,7 +201,7 @@ export const SbobetTaiXiuView: React.FC = () => {
             return (
               <span
                 key={idx}
-                className={`absolute ${posClass} ${isComp ? 'w-1.5 h-1.5 sm:w-1.5 sm:h-1.5' : 'w-2 h-2 sm:w-2.5 sm:h-2.5'} rounded-full bg-white shadow-inner`}
+                className={`absolute ${posClass} ${isComp ? 'w-1 h-1 sm:w-1.5 sm:h-1.5' : 'w-2 h-2 sm:w-2.5 sm:h-2.5'} rounded-full bg-white shadow-inner`}
               />
             );
           })}
@@ -310,11 +310,11 @@ export const SbobetTaiXiuView: React.FC = () => {
       </header>
 
       {/* 2. MAIN CASINO STAGE */}
-      <main className="flex-1 px-2.5 sm:px-3 py-2.5 sm:py-3 space-y-2.5 sm:space-y-3 max-w-2xl mx-auto w-full">
+      <main className="flex-1 px-2 sm:px-3 py-1.5 sm:py-3 space-y-2 sm:space-y-3 max-w-xl mx-auto w-full">
         {/* ========================================================= */}
         {/* SUNWIN GOLD CAPSULE CONSOLE (AUTHENTIC TO IMG_0915.MOV)  */}
         {/* ========================================================= */}
-        <div className="relative w-full max-w-xl mx-auto select-none pt-4 sm:pt-6 overflow-hidden">
+        <div className="relative w-full max-w-xl mx-auto select-none pt-3 sm:pt-5 overflow-hidden">
           
           {/* 1. FLOATING 3D HEADER BADGE & CONTROLS */}
           <div className="relative z-30 flex items-center justify-between px-1 sm:px-4 -mb-3 sm:-mb-3.5 w-full">
@@ -472,16 +472,9 @@ export const SbobetTaiXiuView: React.FC = () => {
                 {/* ════════ CENTER VAULT: CIRCULAR DIAL (TIMER / 3D DICE) ════════ */}
                 <div className="relative shrink-0 flex flex-col items-center justify-center mx-0.5 sm:mx-1">
                   
-                  {/* Floating Result Badge Perched on Top Edge (Reveal Phase) */}
-                  {phase === 'REVEAL' && (
-                    <div className="absolute -top-3 z-30 px-2 sm:px-3 py-0.5 rounded-full bg-gradient-to-b from-[#593412] via-[#2D1807] to-[#120802] border border-yellow-400 text-yellow-300 font-black text-[10px] sm:text-sm font-mono shadow-[0_4px_10px_rgba(0,0,0,0.7)] animate-bounce">
-                      {sum}
-                    </div>
-                  )}
-
                   {/* Outer Beveled Gold Ring */}
                   <div 
-                    className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#593412] shadow-[0_8px_20px_rgba(0,0,0,0.65)] flex items-center justify-center shrink-0"
+                    className="w-[84px] h-[84px] sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#593412] shadow-[0_8px_20px_rgba(0,0,0,0.65)] flex items-center justify-center shrink-0"
                   >
                     {/* Inner Deep Onyx Pit */}
                     <div 
@@ -515,10 +508,10 @@ export const SbobetTaiXiuView: React.FC = () => {
                           </span>
                         </div>
                       ) : (
-                        /* 2. 3D DICE REVEAL STATE (TRIANGULAR FORMATION - 1 TOP, 2 BOTTOM) */
+                        /* 2. 3D DICE REVEAL STATE (TRIANGULAR FORMATION - 1 TOP, 2 BOTTOM - 100% UNBLOCKED & FULLY FITTED) */
                         <div className="flex flex-col items-center justify-center -space-y-0.5 z-10">
                           {/* Soft golden/red glow behind dice */}
-                          <div className="absolute w-12 h-12 rounded-full bg-red-500/25 blur-md pointer-events-none" />
+                          <div className="absolute w-10 h-10 rounded-full bg-red-500/20 blur-md pointer-events-none" />
                           
                           {/* Top Center Die */}
                           <div className="z-10 animate-fade-in">
@@ -654,38 +647,14 @@ export const SbobetTaiXiuView: React.FC = () => {
 
         </div>
 
-        {/* 4. HISTORY ROADMAP (BEAD MATRIX) - LIGHT THEME */}
-        <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs">
-          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-2">
-            <span>{language === 'vi' ? 'LỊCH SỬ KẾT QUẢ TÀI / XỈU' : 'RESULTS ROADMAP (T / X)'}</span>
-            <span className="text-[10px] text-gray-500 font-medium">
-              Tài: {history.filter(h => h === 'T').length} | Xỉu: {history.filter(h => h === 'X').length}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-1">
-            {history.map((item, idx) => (
-              <div
-                key={idx}
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-xs shrink-0 ${
-                  item === 'T'
-                    ? 'bg-red-600'
-                    : 'bg-[#0B4DA2]'
-                }`}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 5. CASINO CHIPS & BETTING CONTROLS - LIGHT THEME */}
-        <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs space-y-2.5">
+        {/* 3. CASINO CHIPS & BETTING CONTROLS (DIRECTLY ACCESSIBLE ON MOBILE) */}
+        <div className="bg-white border border-gray-200 rounded-xl p-2 sm:p-3 shadow-xs space-y-2 sm:space-y-2.5">
           
           {/* Custom Stake Input & Quick Multipliers Box */}
-          <div className="bg-slate-50 rounded-xl p-2 sm:p-2.5 border border-slate-200 space-y-2">
+          <div className="bg-slate-50 rounded-lg sm:rounded-xl p-1.5 sm:p-2.5 border border-slate-200 space-y-1.5 sm:space-y-2">
             <div className="flex items-center justify-between gap-1 flex-wrap text-xs">
               <div className="flex items-center gap-1">
-                <span className="text-gray-500 text-[11px] sm:text-xs">{language === 'vi' ? 'Cửa cược:' : 'Gate:'}</span>
+                <span className="text-gray-500 text-[10px] sm:text-xs">{language === 'vi' ? 'Cửa cược:' : 'Gate:'}</span>
                 <span className="font-black text-red-600 text-xs">
                   {selectedSide || (language === 'vi' ? 'Chưa chọn' : 'None')}
                 </span>
@@ -752,17 +721,17 @@ export const SbobetTaiXiuView: React.FC = () => {
                 key={chip.value}
                 onClick={() => handleChipClick(chip.value)}
                 className={`relative flex flex-col items-center justify-center transition-all duration-150 active:scale-90 ${
-                  activeChip === chip.value ? '-translate-y-1.5 scale-105' : 'hover:-translate-y-0.5'
+                  activeChip === chip.value ? '-translate-y-1 scale-105' : 'hover:-translate-y-0.5'
                 }`}
               >
                 <div 
-                  className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
                     activeChip === chip.value ? `ring-2 ${chip.ring} shadow-[0_0_12px_rgba(234,179,8,0.6)]` : ''
                   }`}
                 >
                   <div className="absolute inset-0.5 rounded-full border border-dashed border-white/40 pointer-events-none" />
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/40 border border-white/30 flex items-center justify-center">
-                    <span className="text-[8px] sm:text-[10px] font-black text-white drop-shadow font-mono">
+                    <span className="text-[8px] sm:text-[9px] font-black text-white drop-shadow font-mono">
                       {chip.label}
                     </span>
                   </div>
@@ -779,11 +748,11 @@ export const SbobetTaiXiuView: React.FC = () => {
           )}
 
           {/* Action Buttons: XÓA vs ĐẶT CƯỢC */}
-          <div className="grid grid-cols-2 gap-2.5 pt-1">
+          <div className="grid grid-cols-2 gap-2 pt-0.5">
             <button
               onClick={handleClear}
               disabled={phase === 'REVEAL'}
-              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors active:scale-95 disabled:opacity-50"
+              className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors active:scale-95 disabled:opacity-50"
             >
               <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
               <span>{language === 'vi' ? 'XÓA LỰA CHỌN' : 'CLEAR'}</span>
@@ -792,7 +761,7 @@ export const SbobetTaiXiuView: React.FC = () => {
             {phase === 'BETTING' || phase === 'WARNING' ? (
               <button
                 onClick={handlePlaceBet}
-                className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#D49B24] via-[#F3C452] to-[#B87C0D] hover:brightness-105 text-black font-black text-xs shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95"
+                className="py-2 px-3 rounded-xl bg-gradient-to-r from-[#D49B24] via-[#F3C452] to-[#B87C0D] hover:brightness-105 text-black font-black text-xs shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95"
               >
                 <Sparkles className="w-3.5 h-3.5 fill-black" />
                 <span>{language === 'vi' ? 'ĐẶT CƯỢC' : 'PLACE BET'}</span>
@@ -800,13 +769,37 @@ export const SbobetTaiXiuView: React.FC = () => {
             ) : (
               <button
                 disabled
-                className="py-2.5 px-3 rounded-xl bg-slate-200 border border-slate-300 text-slate-500 font-black text-xs flex items-center justify-center gap-1.5 cursor-not-allowed opacity-80"
+                className="py-2 px-3 rounded-xl bg-slate-200 border border-slate-300 text-slate-500 font-black text-xs flex items-center justify-center gap-1.5 cursor-not-allowed opacity-80"
               >
                 <span>⏳ {language === 'vi' ? 'CHỜ PHIÊN MỚI' : 'NEXT ROUND'}</span>
               </button>
             )}
           </div>
 
+        </div>
+
+        {/* 4. HISTORY ROADMAP (BEAD MATRIX) - LIGHT THEME */}
+        <div className="bg-white border border-gray-200 rounded-xl p-2.5 sm:p-3 shadow-xs">
+          <div className="flex items-center justify-between text-xs font-bold text-gray-700 mb-1.5">
+            <span>{language === 'vi' ? 'LỊCH SỬ KẾT QUẢ TÀI / XỈU' : 'RESULTS ROADMAP (T / X)'}</span>
+            <span className="text-[10px] text-gray-500 font-medium">
+              Tài: {history.filter(h => h === 'T').length} | Xỉu: {history.filter(h => h === 'X').length}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 px-0.5">
+            {history.map((item, idx) => (
+              <div
+                key={idx}
+                className={`w-5.5 h-5.5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-black text-white shadow-xs shrink-0 ${
+                  item === 'T'
+                    ? 'bg-red-600'
+                    : 'bg-[#0B4DA2]'
+                }`}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 6. USER STATISTICS BAR - LIGHT THEME */}
