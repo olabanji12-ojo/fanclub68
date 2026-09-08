@@ -284,7 +284,7 @@ export const SbobetXocDiaView: React.FC = () => {
       </div>
 
       {/* 3. CENTER ARENA: FLOATING TIMER/RESULT INDICATOR & 3D ELLIPTICAL BOWL/PLATE MATCHING REFERENCE */}
-      <div className="relative px-3 pt-1 pb-2 flex flex-col items-center justify-center notranslate" translate="no">
+      <div className="relative px-2 sm:px-3 pt-1 pb-2 flex flex-col items-center justify-center overflow-hidden max-w-full notranslate" translate="no">
         
         {/* A. FLOATING CIRCULAR BADGE (HOVERS DIRECTLY ABOVE PLATE - MATCHING VIDEO 00:00 - 00:04) */}
         <div className="flex flex-col items-center justify-center mb-1 z-30 notranslate" translate="no">
@@ -303,7 +303,7 @@ export const SbobetXocDiaView: React.FC = () => {
 
         {/* B. 3D PERSPECTIVE ELLIPTICAL PLATE (MATCHING REFERENCE.PNG & VIDEO) */}
         <div 
-          className="relative w-72 sm:w-84 h-44 sm:h-48 rounded-[50%] flex items-center justify-center p-3 transition-all"
+          className="relative w-64 sm:w-84 h-40 sm:h-48 rounded-[50%] flex items-center justify-center p-2.5 sm:p-3 transition-all"
           style={{
             background: 'radial-gradient(ellipse at center, #263347 0%, #121824 60%, #060911 100%)',
             border: '4px solid #D4AF37',
@@ -331,7 +331,7 @@ export const SbobetXocDiaView: React.FC = () => {
                 return (
                   <div
                     key={i}
-                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border transform transition-all duration-300 ${stagger} ${
+                    className={`w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full border transform transition-all duration-300 ${stagger} ${
                       token === 'R'
                         ? 'bg-gradient-to-br from-[#FF4D4D] via-[#D31010] to-[#780000] border-[#FF8A8A] shadow-[0_4px_10px_rgba(220,38,38,0.85)]'
                         : 'bg-gradient-to-br from-[#FFFFFF] via-[#F1F5F9] to-[#CBD5E1] border-white shadow-[0_4px_10px_rgba(255,255,255,0.7)]'
@@ -353,11 +353,11 @@ export const SbobetXocDiaView: React.FC = () => {
 
             {/* LOWER RESULT PILL (APPEARS DURING REVEAL IN LOWER HALF OF PLATE - MATCHING VIDEO) */}
             {gameState === 'REVEAL' && (
-              <div className="mt-2.5 bg-[#0A101D]/95 border border-yellow-500/80 rounded-full px-5 py-1 shadow-2xl text-center z-10 animate-fade-in notranslate" translate="no">
-                <div className="text-[9px] font-black text-gray-300 uppercase tracking-wider">
+              <div className="mt-2 bg-[#0A101D]/95 border border-yellow-500/80 rounded-full px-4 sm:px-5 py-0.5 sm:py-1 shadow-2xl text-center z-10 animate-fade-in notranslate" translate="no">
+                <div className="text-[8px] sm:text-[9px] font-black text-gray-300 uppercase tracking-wider">
                   <span>{redCount} ĐỎ • {4 - redCount} TRẮNG</span>
                 </div>
-                <div className="text-base font-black text-yellow-400 tracking-widest leading-none mt-0.5">
+                <div className="text-sm sm:text-base font-black text-yellow-400 tracking-widest leading-none mt-0.5">
                   <span>{isEven ? 'CHẴN' : 'LẺ'}</span>
                 </div>
               </div>
@@ -370,15 +370,15 @@ export const SbobetXocDiaView: React.FC = () => {
               gameState === 'SHAKING'
                 ? 'animate-gentle-tilt-2x'
                 : ''
+            } ${
+              gameState === 'REVEAL'
+                ? 'translate-x-[75px] -translate-y-[80px] rotate-[30deg] scale-[0.8] sm:translate-x-[125px] sm:-translate-y-[110px] sm:rotate-[36deg] sm:scale-[0.84] opacity-95'
+                : 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100'
             }`}
             style={{
               background: 'radial-gradient(ellipse at 40% 22%, #FFF8D6 0%, #F5CE68 22%, #B38217 55%, #593C08 85%, #241602 100%)',
               boxShadow: '0 20px 40px rgba(0,0,0,0.95), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)',
-              border: '4px solid #FCD34D',
-              transform: gameState === 'REVEAL'
-                ? 'translate(125px, -110px) rotate(36deg) scale(0.84)'
-                : 'translate(0px, 0px) rotate(0deg) scale(1)',
-              opacity: gameState === 'REVEAL' ? 0.95 : 1
+              border: '4px solid #FCD34D'
             }}
           >
             {/* Specular Light Highlight Ridge */}

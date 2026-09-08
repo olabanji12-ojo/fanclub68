@@ -314,81 +314,81 @@ export const SbobetTaiXiuView: React.FC = () => {
         {/* ========================================================= */}
         {/* SUNWIN GOLD CAPSULE CONSOLE (AUTHENTIC TO IMG_0915.MOV)  */}
         {/* ========================================================= */}
-        <div className="relative w-full max-w-xl mx-auto select-none pt-5 sm:pt-6">
+        <div className="relative w-full max-w-xl mx-auto select-none pt-4 sm:pt-6 overflow-hidden">
           
           {/* 1. FLOATING 3D HEADER BADGE & CONTROLS */}
-          <div className="relative z-30 flex items-center justify-between px-2 sm:px-4 -mb-3 sm:-mb-3.5">
+          <div className="relative z-30 flex items-center justify-between px-1 sm:px-4 -mb-3 sm:-mb-3.5 w-full">
             
             {/* Left Utility Icons */}
-            <div className="flex items-center gap-1 sm:gap-1.5">
+            <div className="flex items-center gap-1 shrink-0">
               <button 
                 type="button"
                 onClick={() => setIsRulesOpen(!isRulesOpen)}
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
                 title="Hướng dẫn / Luật chơi"
               >
-                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300">
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[9px] sm:text-xs font-black text-amber-300">
                   ?
                 </div>
               </button>
               <button 
                 type="button"
                 onClick={() => setIsRulesOpen(true)}
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
                 title="Thông tin phiên"
               >
-                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300 italic font-serif">
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[9px] sm:text-xs font-black text-amber-300 italic font-serif">
                   i
                 </div>
               </button>
             </div>
 
             {/* Center 3D Title Crest with Wings & Red Dice Accent */}
-            <div className="flex flex-col items-center">
-              <div className="relative flex items-center gap-1 sm:gap-1.5 px-3 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-[#50100A] via-[#851810] to-[#50100A] border-2 border-[#FFE28A] shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
+            <div className="flex flex-col items-center shrink-0">
+              <div className="relative flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-[#50100A] via-[#851810] to-[#50100A] border sm:border-2 border-[#FFE28A] shadow-[0_4px_12px_rgba(0,0,0,0.6)]">
                 {/* 3D Dice Icon */}
                 <div className="flex -space-x-1 shrink-0">
-                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded bg-red-600 border border-yellow-300 shadow flex items-center justify-center">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-red-600 border border-yellow-300 shadow flex items-center justify-center">
                     <span className="w-1 h-1 rounded-full bg-white" />
                   </div>
-                  <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded bg-red-700 border border-yellow-300 shadow flex items-center justify-center rotate-12">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-red-700 border border-yellow-300 shadow flex items-center justify-center rotate-12">
                     <span className="w-1 h-1 rounded-full bg-white" />
                   </div>
                 </div>
 
                 {/* 3D Title Text */}
-                <span className="text-sm sm:text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFF3B0] to-[#E6B033] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                <span className="text-xs sm:text-base font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#FFF3B0] to-[#E6B033] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                   TÀI XỈU
                 </span>
 
                 {/* Sparkling Icon */}
-                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-yellow-300 fill-yellow-300" />
+                <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-yellow-300 fill-yellow-300" />
               </div>
 
               {/* Round identifier pill */}
-              <div className="mt-0.5 px-2 py-0.5 rounded-full bg-[#180C05]/90 border border-[#D4AF37]/50 text-[9px] sm:text-[10px] font-mono font-bold text-amber-200 shadow">
+              <div className="mt-0.5 px-1.5 sm:px-2 py-0.5 rounded-full bg-[#180C05]/90 border border-[#D4AF37]/50 text-[8px] sm:text-[10px] font-mono font-bold text-amber-200 shadow">
                 #TX-260907
               </div>
             </div>
 
             {/* Right Utility Icons */}
-            <div className="flex items-center gap-1 sm:gap-1.5">
+            <div className="flex items-center gap-1 shrink-0">
               <button 
                 type="button"
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
                 title="Bảng xếp hạng"
               >
-                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs">
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[9px] sm:text-xs">
                   🏆
                 </div>
               </button>
               <button 
                 type="button"
                 onClick={() => setCurrentView('sbobet')}
-                className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
+                className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#8A6721] p-0.5 shadow-md hover:brightness-110 active:scale-95 transition-all"
                 title="Đóng / Quay lại"
               >
-                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[10px] sm:text-xs font-black text-amber-300">
+                <div className="w-full h-full rounded-full bg-[#2A170A] flex items-center justify-center text-[9px] sm:text-xs font-black text-amber-300">
                   ✕
                 </div>
               </button>
@@ -397,54 +397,54 @@ export const SbobetTaiXiuView: React.FC = () => {
 
           {/* 2. THE GOLD CAPSULE CHASSIS */}
           <div 
-            className="rounded-[26px] sm:rounded-[34px] p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF0A5] via-[#D4AF37] to-[#784E0B] shadow-[0_12px_32px_rgba(0,0,0,0.45),0_2px_8px_rgba(212,175,55,0.4)]"
+            className="rounded-[22px] sm:rounded-[34px] p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF0A5] via-[#D4AF37] to-[#784E0B] shadow-[0_12px_32px_rgba(0,0,0,0.45),0_2px_8px_rgba(212,175,55,0.4)] w-full overflow-hidden"
           >
             {/* Inner Metallic Dark Onyx Housing */}
             <div 
-              className="rounded-[22px] sm:rounded-[30px] p-2 sm:p-3 bg-gradient-to-b from-[#2B160B] via-[#190C05] to-[#0A0502] border border-[#FFE894]/40 relative overflow-hidden"
+              className="rounded-[18px] sm:rounded-[30px] p-1.5 sm:p-3 bg-gradient-to-b from-[#2B160B] via-[#190C05] to-[#0A0502] border border-[#FFE894]/40 relative overflow-hidden w-full"
             >
               {/* Subtle luxury ambient sheen */}
               <div className="absolute top-0 left-1/4 right-1/4 h-8 bg-gradient-to-b from-yellow-300/10 to-transparent blur-md pointer-events-none" />
 
               {/* THREE-COLUMN CONSOLE: TÀI GATE (LEFT) | CIRCULAR VAULT (CENTER) | XỈU GATE (RIGHT) */}
-              <div className="flex items-center justify-between gap-1 sm:gap-2 relative z-10 pt-2 pb-1">
+              <div className="flex items-center justify-between gap-1 sm:gap-2 relative z-10 pt-2 pb-1 w-full min-w-0">
                 
                 {/* ════════ LEFT WING: TÀI GATE ════════ */}
                 <div 
                   onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('TÀI')}
-                  className={`flex-1 flex flex-col items-center justify-between py-2 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
+                  className={`flex-1 min-w-0 flex flex-col items-center justify-between py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
                     selectedSide === 'TÀI'
                       ? 'bg-gradient-to-b from-amber-500/35 via-yellow-500/20 to-transparent border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]'
                       : phase === 'REVEAL' && isTai
                         ? 'bg-gradient-to-b from-amber-500/45 via-yellow-500/30 to-amber-700/25 border-2 border-yellow-300 shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-pulse ring-2 ring-yellow-400'
                         : 'bg-gradient-to-b from-[#3E2312] via-[#241308] to-[#160A04] border border-[#855B25] hover:border-[#D4AF37]/80'
                   }`}
-                  style={{ minHeight: '122px' }}
+                  style={{ minHeight: '115px' }}
                 >
                   {/* Selected checkmark indicator */}
                   {selectedSide === 'TÀI' && (
                     <div className="absolute top-1 left-1 bg-yellow-400 text-black p-0.5 rounded-full shadow">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      <Check className="w-2 h-2 sm:w-2.5 sm:h-2.5 stroke-[3]" />
                     </div>
                   )}
 
                   {/* Bettors Count Pill */}
-                  <div className="px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[9px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
+                  <div className="px-1.5 sm:px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[8px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
                     {taiBettors}
                   </div>
 
                   {/* Title & Range */}
-                  <div className="text-center my-0.5 sm:my-1">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFDF0] via-[#FDE48B] to-[#D99A26] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <div className="text-center my-0.5 w-full">
+                    <div className="text-lg sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFDF0] via-[#FDE48B] to-[#D99A26] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
                       TÀI
                     </div>
-                    <div className="text-[8px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
+                    <div className="text-[7px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
                       11 - 17
                     </div>
                   </div>
 
                   {/* Pool Amount */}
-                  <div className="text-[10px] sm:text-xs font-mono font-black text-amber-300 truncate max-w-full px-1">
+                  <div className="text-[9px] sm:text-xs font-mono font-black text-amber-300 truncate w-full text-center px-0.5">
                     {taiPool.toLocaleString()}
                   </div>
 
@@ -458,7 +458,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                         if (currentStake > 0) handlePlaceBet();
                       }
                     }}
-                    className={`mt-1.5 w-full max-w-[85px] sm:max-w-[105px] py-1 px-1 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
+                    className={`mt-1 w-full max-w-[75px] sm:max-w-[105px] py-1 px-0.5 rounded-md sm:rounded-lg text-[8px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
                       selectedSide === 'TÀI'
                         ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black border border-yellow-200 shadow-[0_0_8px_rgba(250,204,21,0.6)]'
                         : 'bg-gradient-to-r from-[#805018] via-[#B88628] to-[#693E0E] text-yellow-100 border border-yellow-600/50 hover:brightness-110'
@@ -474,18 +474,18 @@ export const SbobetTaiXiuView: React.FC = () => {
                   
                   {/* Floating Result Badge Perched on Top Edge (Reveal Phase) */}
                   {phase === 'REVEAL' && (
-                    <div className="absolute -top-3.5 z-30 px-2.5 sm:px-3 py-0.5 rounded-full bg-gradient-to-b from-[#593412] via-[#2D1807] to-[#120802] border-2 border-yellow-400 text-yellow-300 font-black text-xs sm:text-sm font-mono shadow-[0_4px_10px_rgba(0,0,0,0.7)] animate-bounce">
+                    <div className="absolute -top-3 z-30 px-2 sm:px-3 py-0.5 rounded-full bg-gradient-to-b from-[#593412] via-[#2D1807] to-[#120802] border border-yellow-400 text-yellow-300 font-black text-[10px] sm:text-sm font-mono shadow-[0_4px_10px_rgba(0,0,0,0.7)] animate-bounce">
                       {sum}
                     </div>
                   )}
 
                   {/* Outer Beveled Gold Ring */}
                   <div 
-                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#593412] shadow-[0_8px_20px_rgba(0,0,0,0.65)] flex items-center justify-center"
+                    className="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full p-1 sm:p-1.5 bg-gradient-to-b from-[#FFF2A8] via-[#D4AF37] to-[#593412] shadow-[0_8px_20px_rgba(0,0,0,0.65)] flex items-center justify-center shrink-0"
                   >
                     {/* Inner Deep Onyx Pit */}
                     <div 
-                      className="w-full h-full rounded-full bg-gradient-to-b from-[#1C0D07] via-[#0D0603] to-[#000000] border-2 border-[#4A2E14] flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-1"
+                      className="w-full h-full rounded-full bg-gradient-to-b from-[#1C0D07] via-[#0D0603] to-[#000000] border border-[#4A2E14] sm:border-2 flex flex-col items-center justify-center relative overflow-hidden shadow-inner p-1"
                     >
                       {/* Ambient radial lighting */}
                       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(212,175,55,0.15),transparent_70%)] pointer-events-none" />
@@ -494,7 +494,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                       {phase !== 'REVEAL' ? (
                         <div className="flex flex-col items-center justify-center z-10">
                           <span 
-                            className={`text-2xl sm:text-4xl font-black font-mono leading-none tracking-tight transition-colors ${
+                            className={`text-xl sm:text-3xl md:text-4xl font-black font-mono leading-none tracking-tight transition-colors ${
                               phase === 'WARNING'
                                 ? 'text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.9)] animate-pulse'
                                 : 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
@@ -503,7 +503,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                             {timeLeft}
                           </span>
                           <span 
-                            className={`mt-1 text-[7px] sm:text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full tracking-wider ${
+                            className={`mt-0.5 sm:mt-1 text-[6px] sm:text-[8px] font-black uppercase px-1 sm:px-1.5 py-0.5 rounded-full tracking-wider ${
                               phase === 'WARNING'
                                 ? 'bg-red-600 text-white animate-bounce'
                                 : 'bg-[#D4AF37]/25 text-amber-200 border border-[#D4AF37]/40'
@@ -516,9 +516,9 @@ export const SbobetTaiXiuView: React.FC = () => {
                         </div>
                       ) : (
                         /* 2. 3D DICE REVEAL STATE (TRIANGULAR FORMATION - 1 TOP, 2 BOTTOM) */
-                        <div className="flex flex-col items-center justify-center -space-y-0.5 sm:-space-y-1 z-10">
+                        <div className="flex flex-col items-center justify-center -space-y-0.5 z-10">
                           {/* Soft golden/red glow behind dice */}
-                          <div className="absolute w-14 h-14 rounded-full bg-red-500/25 blur-md pointer-events-none" />
+                          <div className="absolute w-12 h-12 rounded-full bg-red-500/25 blur-md pointer-events-none" />
                           
                           {/* Top Center Die */}
                           <div className="z-10 animate-fade-in">
@@ -526,7 +526,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                           </div>
 
                           {/* Bottom Two Dice Side-by-Side */}
-                          <div className="flex items-center gap-1 sm:gap-1.5 z-10 animate-fade-in">
+                          <div className="flex items-center gap-1 z-10 animate-fade-in">
                             {renderDiceFace(dice[1], 'compact')}
                             {renderDiceFace(dice[2], 'compact')}
                           </div>
@@ -540,39 +540,39 @@ export const SbobetTaiXiuView: React.FC = () => {
                 {/* ════════ RIGHT WING: XỈU GATE ════════ */}
                 <div 
                   onClick={() => (phase === 'BETTING' || phase === 'WARNING') && setSelectedSide('XỈU')}
-                  className={`flex-1 flex flex-col items-center justify-between py-2 px-1 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
+                  className={`flex-1 min-w-0 flex flex-col items-center justify-between py-1.5 sm:py-2 px-0.5 sm:px-2 rounded-xl sm:rounded-2xl transition-all cursor-pointer relative ${
                     selectedSide === 'XỈU'
                       ? 'bg-gradient-to-b from-blue-500/35 via-indigo-500/20 to-transparent border-2 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]'
                       : phase === 'REVEAL' && !isTai
                         ? 'bg-gradient-to-b from-amber-500/45 via-yellow-500/30 to-amber-700/25 border-2 border-yellow-300 shadow-[0_0_25px_rgba(250,204,21,0.9)] animate-pulse ring-2 ring-yellow-400'
                         : 'bg-gradient-to-b from-[#3E2312] via-[#241308] to-[#160A04] border border-[#855B25] hover:border-[#D4AF37]/80'
                   }`}
-                  style={{ minHeight: '122px' }}
+                  style={{ minHeight: '115px' }}
                 >
                   {/* Selected checkmark indicator */}
                   {selectedSide === 'XỈU' && (
                     <div className="absolute top-1 right-1 bg-yellow-400 text-black p-0.5 rounded-full shadow">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      <Check className="w-2 h-2 sm:w-2.5 sm:h-2.5 stroke-[3]" />
                     </div>
                   )}
 
                   {/* Bettors Count Pill */}
-                  <div className="px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[9px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
+                  <div className="px-1.5 sm:px-2 py-0.5 rounded-full bg-[#1A0C04] border border-[#855B25] text-[8px] sm:text-[10px] font-mono text-amber-200/90 font-semibold">
                     {xiuBettors}
                   </div>
 
                   {/* Title & Range */}
-                  <div className="text-center my-0.5 sm:my-1">
-                    <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#E2E8F0] to-[#94A3B8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  <div className="text-center my-0.5 w-full">
+                    <div className="text-lg sm:text-2xl md:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-b from-[#FFFFFF] via-[#E2E8F0] to-[#94A3B8] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
                       XỈU
                     </div>
-                    <div className="text-[8px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
+                    <div className="text-[7px] sm:text-[9px] text-amber-200/60 font-bold uppercase tracking-tight">
                       4 - 10
                     </div>
                   </div>
 
                   {/* Pool Amount */}
-                  <div className="text-[10px] sm:text-xs font-mono font-black text-amber-300 truncate max-w-full px-1">
+                  <div className="text-[9px] sm:text-xs font-mono font-black text-amber-300 truncate w-full text-center px-0.5">
                     {xiuPool.toLocaleString()}
                   </div>
 
@@ -586,7 +586,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                         if (currentStake > 0) handlePlaceBet();
                       }
                     }}
-                    className={`mt-1.5 w-full max-w-[85px] sm:max-w-[105px] py-1 px-1 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
+                    className={`mt-1 w-full max-w-[75px] sm:max-w-[105px] py-1 px-0.5 rounded-md sm:rounded-lg text-[8px] sm:text-[10px] font-black tracking-wider transition-all shadow-md active:scale-95 ${
                       selectedSide === 'XỈU'
                         ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black border border-yellow-200 shadow-[0_0_8px_rgba(250,204,21,0.6)]'
                         : 'bg-gradient-to-r from-[#805018] via-[#B88628] to-[#693E0E] text-yellow-100 border border-yellow-600/50 hover:brightness-110'
@@ -598,17 +598,17 @@ export const SbobetTaiXiuView: React.FC = () => {
 
               </div>
 
-              {/* 3. INTEGRATED BOTTOM BEAD HISTORY TRACK */}
-              <div className="mt-1 pt-1.5 border-t border-[#855B25]/50 flex items-center justify-between px-1">
-                <div className="flex items-center gap-1 overflow-x-hidden w-full py-0.5">
-                  {history.slice(-18).map((item, idx) => (
+              {/* 3. INTEGRATED BOTTOM BEAD HISTORY TRACK (NEVER OVERFLOWS MOBILE) */}
+              <div className="mt-1 pt-1 border-t border-[#855B25]/50 flex items-center justify-between px-0.5 w-full min-w-0">
+                <div className="flex items-center gap-0.5 sm:gap-1 overflow-hidden min-w-0 flex-1 py-0.5">
+                  {history.slice(-14).map((item, idx) => (
                     <div
                       key={idx}
-                      className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center text-[7px] sm:text-[8px] font-black shrink-0 transition-transform ${
+                      className={`w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex items-center justify-center text-[7px] font-black shrink-0 transition-transform ${
                         item === 'T'
-                          ? 'bg-gradient-to-b from-white to-gray-200 text-black border border-yellow-400 shadow-[0_0_4px_rgba(250,204,21,0.6)]'
+                          ? 'bg-gradient-to-b from-white to-gray-200 text-black border border-yellow-400 shadow-[0_0_3px_rgba(250,204,21,0.6)]'
                           : 'bg-gradient-to-b from-gray-900 to-black text-white border border-gray-600 shadow-sm'
-                      } ${idx === history.slice(-18).length - 1 ? 'ring-1 sm:ring-2 ring-yellow-400 scale-110' : ''}`}
+                      } ${idx === history.slice(-14).length - 1 ? 'ring-1 ring-yellow-400 scale-105' : ''}`}
                     >
                       {item}
                     </div>
@@ -616,7 +616,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                 </div>
 
                 {/* Mini Hand Icon / Stat Indicator */}
-                <div className="ml-1.5 shrink-0 px-1.5 py-0.5 rounded bg-[#1A0C04] border border-[#855B25] text-[8px] font-mono text-amber-300 flex items-center gap-0.5">
+                <div className="ml-1 shrink-0 px-1 py-0.5 rounded bg-[#1A0C04] border border-[#855B25] text-[8px] font-mono text-amber-300 flex items-center gap-0.5">
                   <span>✋</span>
                   <span className="font-bold">{history.length}</span>
                 </div>
@@ -627,24 +627,24 @@ export const SbobetTaiXiuView: React.FC = () => {
 
           {/* Outcome Result Notification Banner (Below Console on Reveal) */}
           {phase === 'REVEAL' && (
-            <div className="mt-2 text-center animate-fade-in">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/30 to-amber-500/20 border border-yellow-400/80 shadow-md">
-                <span className="text-xs font-black text-amber-900">
+            <div className="mt-2 text-center animate-fade-in w-full px-1">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-yellow-400/30 to-amber-500/20 border border-yellow-400/80 shadow-md max-w-full">
+                <span className="text-[10px] sm:text-xs font-black text-amber-900 shrink-0">
                   {language === 'vi' ? 'Kết quả:' : 'Result:'}
                 </span>
-                <span className="text-xs font-mono font-bold text-gray-900">
+                <span className="text-[10px] sm:text-xs font-mono font-bold text-gray-900 truncate">
                   {dice.join(' + ')} = {sum} Điểm
                 </span>
-                <span className={`text-xs font-black px-2 py-0.5 rounded ${isTai ? 'bg-red-600 text-white' : 'bg-[#0B4DA2] text-white'}`}>
-                  {isTai ? 'TÀI (LỚN)' : 'XỈU (NHỎ)'}
+                <span className={`text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 rounded shrink-0 ${isTai ? 'bg-red-600 text-white' : 'bg-[#0B4DA2] text-white'}`}>
+                  {isTai ? 'TÀI' : 'XỈU'}
                 </span>
               </div>
             </div>
           )}
 
           {/* 5-Second Buffer Notice */}
-          <div className="mt-2 text-[10px] sm:text-[11px] text-gray-500 flex items-center justify-center gap-1">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <div className="mt-1.5 text-[9px] sm:text-[11px] text-gray-500 flex items-center justify-center gap-1 px-1 text-center">
+            <ShieldAlert className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500 shrink-0" />
             <span className="truncate">
               {language === 'vi' 
                 ? 'Cổng cược tự động khóa ở 5 giây cuối trước khi mở phiên'
@@ -682,11 +682,11 @@ export const SbobetTaiXiuView: React.FC = () => {
         <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs space-y-2.5">
           
           {/* Custom Stake Input & Quick Multipliers Box */}
-          <div className="bg-slate-50 rounded-xl p-2.5 border border-slate-200 space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5">
-                <span className="text-gray-500">{language === 'vi' ? 'Cửa cược:' : 'Gate:'}</span>
-                <span className="font-black text-red-600">
+          <div className="bg-slate-50 rounded-xl p-2 sm:p-2.5 border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between gap-1 flex-wrap text-xs">
+              <div className="flex items-center gap-1">
+                <span className="text-gray-500 text-[11px] sm:text-xs">{language === 'vi' ? 'Cửa cược:' : 'Gate:'}</span>
+                <span className="font-black text-red-600 text-xs">
                   {selectedSide || (language === 'vi' ? 'Chưa chọn' : 'None')}
                 </span>
               </div>
@@ -694,7 +694,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStake(prev => Math.floor(prev / 2))}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors shadow-2xs"
+                  className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors shadow-2xs"
                   title="Giảm 1 nửa tiền cược"
                 >
                   1/2
@@ -702,7 +702,7 @@ export const SbobetTaiXiuView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStake(prev => (prev === 0 ? 50000 : prev * 2))}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[10px] font-bold text-[#0B4DA2] border border-gray-300 transition-colors shadow-2xs"
+                  className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-[#0B4DA2] border border-gray-300 transition-colors shadow-2xs"
                   title="Gấp đôi tiền cược"
                 >
                   2X
@@ -710,14 +710,14 @@ export const SbobetTaiXiuView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStake(prev => prev + 100000)}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[10px] font-bold text-amber-700 border border-gray-300 transition-colors shadow-2xs"
+                  className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-amber-700 border border-gray-300 transition-colors shadow-2xs"
                 >
                   +100K
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStake(1000000)}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[10px] font-bold text-emerald-600 border border-gray-300 transition-colors shadow-2xs"
+                  className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-emerald-600 border border-gray-300 transition-colors shadow-2xs"
                   title="Đặt mức tối đa"
                 >
                   {language === 'vi' ? 'TẤT TAY' : 'MAX'}
@@ -746,7 +746,7 @@ export const SbobetTaiXiuView: React.FC = () => {
           </div>
 
           {/* 3D Casino Chips Row for Fast Selection */}
-          <div className="flex items-center justify-between gap-1 sm:gap-2 px-0.5 sm:px-1 py-0.5">
+          <div className="flex items-center justify-between gap-1 px-0.5 py-0.5 w-full">
             {chips.map(chip => (
               <button
                 key={chip.value}
@@ -756,13 +756,13 @@ export const SbobetTaiXiuView: React.FC = () => {
                 }`}
               >
                 <div 
-                  className={`w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
+                  className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br ${chip.color} border-2 ${chip.border} flex items-center justify-center shadow-md relative cursor-pointer ${
                     activeChip === chip.value ? `ring-2 ${chip.ring} shadow-[0_0_12px_rgba(234,179,8,0.6)]` : ''
                   }`}
                 >
                   <div className="absolute inset-0.5 rounded-full border border-dashed border-white/40 pointer-events-none" />
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/40 border border-white/30 flex items-center justify-center">
-                    <span className="text-[9px] sm:text-[10px] font-black text-white drop-shadow font-mono">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/40 border border-white/30 flex items-center justify-center">
+                    <span className="text-[8px] sm:text-[10px] font-black text-white drop-shadow font-mono">
                       {chip.label}
                     </span>
                   </div>
