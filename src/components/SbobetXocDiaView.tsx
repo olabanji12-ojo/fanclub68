@@ -364,7 +364,7 @@ export const SbobetXocDiaView: React.FC = () => {
             )}
           </div>
 
-          {/* C. THE SCULPTED 3D DOME BOWL (LIFTS UP AND RIGHT TO FULLY CLEAR ALL 4 BALLS MATCHING REFERENCE VIDEO) */}
+          {/* C. THE SCULPTED 3D DOME BOWL (LIFTS COMPLETELY OFF THE PLATE WHEN OPENING SO ALL 4 COINS ARE 100% VISIBLE) */}
           <div 
             className={`absolute w-[92%] h-[92%] rounded-[50%] z-20 flex flex-col items-center justify-center pointer-events-none transition-all duration-700 ease-out ${
               gameState === 'SHAKING'
@@ -372,12 +372,14 @@ export const SbobetXocDiaView: React.FC = () => {
                 : ''
             } ${
               gameState === 'REVEAL'
-                ? 'translate-x-[45px] -translate-y-[65px] rotate-[24deg] scale-[0.85] sm:translate-x-[75px] sm:-translate-y-[90px] sm:rotate-[30deg] opacity-95'
+                ? 'translate-x-[90px] -translate-y-[105px] rotate-[30deg] scale-[0.62] sm:translate-x-[120px] sm:-translate-y-[120px] sm:rotate-[34deg] sm:scale-[0.66] opacity-95'
                 : 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100'
             }`}
             style={{
               background: 'radial-gradient(ellipse at 40% 22%, #FFF8D6 0%, #F5CE68 22%, #B38217 55%, #593C08 85%, #241602 100%)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.95), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)',
+              boxShadow: gameState === 'REVEAL'
+                ? '0 28px 50px rgba(0,0,0,0.85), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)'
+                : '0 20px 40px rgba(0,0,0,0.95), inset 0 4px 10px rgba(255,255,255,0.7), inset 0 -8px 18px rgba(0,0,0,0.95)',
               border: '4px solid #FCD34D'
             }}
           >

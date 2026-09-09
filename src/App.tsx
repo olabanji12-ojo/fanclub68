@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RotateCw, Shield, Trash2 } from 'lucide-react';
 import { useSbobetStore } from './stores/sbobetStore';
 import { SbobetHeader } from './components/SbobetHeader';
@@ -46,6 +46,14 @@ export default function App() {
   const [startY, setStartY] = useState<number>(0);
   const [pullDistance, setPullDistance] = useState<number>(0);
   const [isPulling, setIsPulling] = useState<boolean>(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get('view');
+    if (v === 'xocdia' || v === 'taixiu' || v === 'cockfight' || v === 'lobby') {
+      setCurrentView(v);
+    }
+  }, [setCurrentView]);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     const mainEl = e.currentTarget;
