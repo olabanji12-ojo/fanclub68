@@ -193,7 +193,7 @@ export const SbobetXocDiaView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070A12] text-white font-sans flex flex-col select-none relative overflow-x-hidden">
+    <div className="w-full max-w-full min-h-screen bg-[#070A12] text-white font-sans flex flex-col select-none relative overflow-x-hidden">
       
 
       {/* 1. TOP HEADER (DEEP CRIMSON WITH GOLD TRIM - MATCHING REFERENCE.PNG) */}
@@ -303,7 +303,7 @@ export const SbobetXocDiaView: React.FC = () => {
 
         {/* B. 3D PERSPECTIVE ELLIPTICAL PLATE (MATCHING REFERENCE.PNG & VIDEO) */}
         <div 
-          className="relative w-64 sm:w-84 h-40 sm:h-48 rounded-[50%] flex items-center justify-center p-2.5 sm:p-3 transition-all"
+          className="relative w-[88%] max-w-[320px] sm:max-w-[360px] h-42 sm:h-50 rounded-[50%] flex items-center justify-center p-2.5 sm:p-3 transition-all"
           style={{
             background: 'radial-gradient(ellipse at center, #263347 0%, #121824 60%, #060911 100%)',
             border: '4px solid #D4AF37',
@@ -372,7 +372,7 @@ export const SbobetXocDiaView: React.FC = () => {
                 : ''
             } ${
               gameState === 'REVEAL'
-                ? 'translate-x-[75px] -translate-y-[80px] rotate-[30deg] scale-[0.8] sm:translate-x-[125px] sm:-translate-y-[110px] sm:rotate-[36deg] sm:scale-[0.84] opacity-95'
+                ? 'translate-x-[45px] -translate-y-[65px] rotate-[24deg] scale-[0.85] sm:translate-x-[75px] sm:-translate-y-[90px] sm:rotate-[30deg] opacity-95'
                 : 'translate-x-0 translate-y-0 rotate-0 scale-100 opacity-100'
             }`}
             style={{
