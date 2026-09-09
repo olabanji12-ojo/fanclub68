@@ -16,8 +16,9 @@ export const SbobetSearchBar: React.FC = () => {
 
   const leagues = [
     { id: 'ALL', label: language === 'vi' ? 'Tất cả giải' : 'All Leagues', sport: 'football', tab: 'live' },
-    { id: 'LALIGA', label: 'La Liga', sport: 'football', tab: 'live' },
+    { id: 'SERIE_B', label: 'Serie B Brazil', sport: 'football', tab: 'live' },
     { id: 'PORTUGAL', label: 'Liga Portugal', sport: 'football', tab: 'matches' },
+    { id: 'LALIGA', label: 'La Liga', sport: 'football', tab: 'live' },
     { id: 'USOPEN', label: 'US Open', sport: 'tennis', tab: 'live' },
     { id: 'NBA', label: 'NBA', sport: 'basketball', tab: 'live' },
     { id: 'NFL', label: 'NFL', sport: 'nfl', tab: 'live' },
