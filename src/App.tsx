@@ -328,29 +328,62 @@ export default function App() {
               <SbobetNflView />
             )}
 
-            {/* VIEW D: FOOTBALL - LIVE TAB (SCREENSHOT 1: IMG-20260907-WA0009.jpg) */}
+            {/* VIEW D: FOOTBALL - LIVE TAB (MATCHING TEST2.JPG & TEST1.JPG) */}
             {activeSport === 'football' && activeTab === 'live' && (
-              <div className="space-y-2">
-                <div className="bg-[#DCE7F5] border border-[#BFD4EE] rounded px-3 py-1.5 flex items-center justify-between text-xs font-bold text-[#0B4DA2]">
-                  <span className="truncate">Giải La Liga Tây Ban Nha</span>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      onClick={() => refreshOdds()}
-                      disabled={isRefreshing}
-                      className="p-1 rounded hover:bg-white/50 text-[#0B4DA2] transition-all flex items-center justify-center active:scale-95"
-                      title="Làm mới tỷ lệ cược (Refresh live football odds)"
-                    >
-                      <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#0B4DA2]' : ''}`} />
-                    </button>
-                    <span className="bg-[#1877F2] text-white text-[10px] px-1.5 py-0.5 rounded font-black flex items-center gap-0.5">
-                      ▲ {t.top_league}
-                    </span>
-                    <span className="bg-[#0B4DA2] text-white text-[10px] px-1.5 py-0.5 rounded font-black">
-                      1 ▴
-                    </span>
-                  </div>
+              <div className="space-y-3">
+                {/* MATCH 1: CUIABA EC VS ATHLETIC CLUB MG (EXACT MATCH FROM TEST2.JPG) */}
+                <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
+                  <SbobetOddsTable
+                    matchId="match-cuiaba-athletic-01"
+                    homeTeam="Cuiaba EC"
+                    awayTeam="Athletic Club MG"
+                    scoreHome={1}
+                    scoreAway={0}
+                    liveTime="1H 49' (+6)"
+                    handicapTeam="home"
+                    leagueName="Giải Serie B Brazil"
+                    isLive={true}
+                    homeHandicap="-0.25"
+                    homeOdds={-0.91}
+                    awayHandicap="+0.25"
+                    awayOdds={0.81}
+                    ouGoal="2.00"
+                    ouOverOdds={0.87}
+                    ouUnderOdds={-0.99}
+                    oneXTwoHome={1.23}
+                    oneXTwoAway={13.50}
+                    oneXTwoDraw={4.66}
+                    moreCount={8}
+                  />
                 </div>
 
+                {/* MATCH 2: CRICIUMA EC VS EC JUVENTUDE (EXACT MATCH FROM TEST2.JPG) */}
+                <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
+                  <SbobetOddsTable
+                    matchId="match-criciuma-juventude-01"
+                    homeTeam="Criciuma EC"
+                    awayTeam="EC Juventude"
+                    scoreHome={0}
+                    scoreAway={0}
+                    liveTime="1H 16'"
+                    handicapTeam="home"
+                    leagueName="Giải Serie B Brazil"
+                    isLive={true}
+                    homeHandicap="-0.25"
+                    homeOdds={0.89}
+                    awayHandicap="+0.25"
+                    awayOdds={-0.79}
+                    ouGoal="1.50"
+                    ouOverOdds={0.95}
+                    ouUnderOdds={-0.79}
+                    oneXTwoHome={2.25}
+                    oneXTwoAway={3.80}
+                    oneXTwoDraw={2.95}
+                    moreCount={8}
+                  />
+                </div>
+
+                {/* MATCH 3: BARCELONA VS REAL MADRID (LA LIGA LIVE) */}
                 <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
                   <SbobetOddsTable
                     matchId="match-barca-real-01"
@@ -359,6 +392,20 @@ export default function App() {
                     scoreHome={2}
                     scoreAway={0}
                     liveTime="43' (H1)"
+                    handicapTeam="home"
+                    leagueName="Giải La Liga Tây Ban Nha"
+                    isLive={true}
+                    homeHandicap="-0.50"
+                    homeOdds={-0.75}
+                    awayHandicap="+0.50"
+                    awayOdds={0.65}
+                    ouGoal="3.50"
+                    ouOverOdds={0.92}
+                    ouUnderOdds={0.88}
+                    oneXTwoHome={1.65}
+                    oneXTwoAway={4.80}
+                    oneXTwoDraw={3.90}
+                    moreCount={12}
                   />
 
                   <SbobetBetBuilder
@@ -382,27 +429,6 @@ export default function App() {
             {/* VIEW E: FOOTBALL - TODAY TAB (SCREENSHOT 4: IMG-20260907-WA0012.jpg) */}
             {activeSport === 'football' && activeTab === 'today' && (
               <div className="space-y-2">
-                {/* LA LIGA BANNER WITH 'ĐỨNG ĐẦU' PILL (SCREENSHOT 4) */}
-                <div className="bg-[#DCE7F5] border border-[#BFD4EE] rounded px-3 py-1.5 flex items-center justify-between text-xs font-bold text-[#0B4DA2]">
-                  <span className="truncate">Giải La Liga Tây Ban Nha</span>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button
-                      onClick={() => refreshOdds()}
-                      disabled={isRefreshing}
-                      className="p-1 rounded hover:bg-white/50 text-[#0B4DA2] transition-all flex items-center justify-center active:scale-95"
-                      title="Làm mới tỷ lệ cược (Refresh odds)"
-                    >
-                      <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#0B4DA2]' : ''}`} />
-                    </button>
-                    <span className="bg-[#1877F2] text-white text-[10px] px-1.5 py-0.5 rounded font-black flex items-center gap-0.5">
-                      ▲ {t.top_league}
-                    </span>
-                    <span className="bg-[#0B4DA2] text-white text-[10px] px-1.5 py-0.5 rounded font-black">
-                      1 ▴
-                    </span>
-                  </div>
-                </div>
-
                 <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
                   <SbobetOddsTable
                     matchId="match-atletico-sevilla-01"
@@ -411,9 +437,23 @@ export default function App() {
                     scoreHome={0}
                     scoreAway={0}
                     liveTime="Hôm nay 21:00"
+                    handicapTeam="home"
+                    leagueName="Giải La Liga Tây Ban Nha"
+                    isLive={false}
+                    homeHandicap="-0.50"
+                    homeOdds={0.85}
+                    awayHandicap="+0.50"
+                    awayOdds={0.95}
+                    ouGoal="2.50"
+                    ouOverOdds={0.90}
+                    ouUnderOdds={0.90}
+                    oneXTwoHome={1.85}
+                    oneXTwoAway={4.20}
+                    oneXTwoDraw={3.40}
+                    moreCount={14}
                   />
 
-                  {/* FULL EXTENDED SUB-MARKET ACCORDIONS (SCREENSHOT 4: HT/TT, Double Chance, Corners 1x2, Props) */}
+                  {/* FULL EXTENDED SUB-MARKET ACCORDIONS */}
                   <div className="p-2">
                     <SbobetTodayAccordion
                       matchId="match-atletico-sevilla-01"
@@ -425,7 +465,7 @@ export default function App() {
               </div>
             )}
 
-            {/* VIEW F: FOOTBALL - MATCHES / LEAGUES TAB (SCREENSHOT 3: IMG-20260907-WA0011.jpg) */}
+            {/* VIEW F: FOOTBALL - MATCHES / LEAGUES TAB (SCREENSHOT 3 & TEST1.JPG) */}
             {activeSport === 'football' && activeTab === 'matches' && (
               <div className="space-y-2">
                 <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
@@ -436,6 +476,20 @@ export default function App() {
                     scoreHome={1}
                     scoreAway={0}
                     liveTime="38' (H1)"
+                    handicapTeam="home"
+                    leagueName="Giải Liga Portugal"
+                    isLive={true}
+                    homeHandicap="-0.25"
+                    homeOdds={-0.54}
+                    awayHandicap="+0.25"
+                    awayOdds={0.46}
+                    ouGoal="3.50"
+                    ouOverOdds={-0.61}
+                    ouUnderOdds={0.51}
+                    oneXTwoHome={2.10}
+                    oneXTwoAway={3.40}
+                    oneXTwoDraw={3.20}
+                    moreCount={17}
                   />
 
                   {/* POPULAR BET BUILDER @4.133 MATCHING SCREENSHOT 3 */}

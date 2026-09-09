@@ -64,22 +64,26 @@ export const SbobetBasketballView: React.FC = () => {
 
       {/* Main Odds Table Card */}
       <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
-        {/* Match Header */}
-        <div className="bg-gray-50 border-b border-gray-200 p-3 flex items-center justify-between">
-          <div>
-            <div className="font-black text-gray-900 text-sm flex items-center gap-2">
-              <span>{homeTeam}</span>
-              <span className="text-red-600 font-mono text-base">88 : 84</span>
-              <span>{awayTeam}</span>
+        {/* Match Header (Reference test2.jpg layout with red handicap team) */}
+        <div className="px-3 pt-3 pb-2.5 bg-white flex items-center justify-between border-b border-gray-100">
+          <div className="flex-1 text-left pr-2 min-w-0 text-[#D32F2F] font-black">
+            <span className="text-xs sm:text-sm tracking-tight block truncate">
+              {homeTeam}
+            </span>
+          </div>
+
+          <div className="shrink-0 text-center px-1.5 sm:px-2 min-w-[76px] sm:min-w-[90px]">
+            <div className="text-[10px] sm:text-[11px] font-bold text-gray-500 leading-tight">
+              Hiệp 3 (Q3) • 04:12
             </div>
-            <div className="text-[11px] text-red-600 font-bold flex items-center gap-1 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping"></span>
-              <span>Trực tiếp - Hiệp 3 (Q3) • 04:12</span>
+            <div className="text-base sm:text-lg font-black text-gray-900 leading-tight mt-0.5 tracking-wider font-sans">
+              88 : 84
             </div>
           </div>
-          <div className="text-right">
-            <span className="bg-blue-100 text-[#0B4DA2] font-black text-[10px] px-2 py-0.5 rounded">
-              28 Kèo
+
+          <div className="flex-1 text-right pl-2 min-w-0 text-gray-900 font-extrabold">
+            <span className="text-xs sm:text-sm tracking-tight block truncate">
+              {awayTeam}
             </span>
           </div>
         </div>

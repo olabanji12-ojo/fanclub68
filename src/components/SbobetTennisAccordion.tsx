@@ -68,13 +68,13 @@ export const SbobetTennisAccordion: React.FC = () => {
 
       {/* PLAYERS & SET SCORES */}
       <div className="bg-white p-3 border border-gray-200 rounded shadow-sm">
-        <div className="flex items-center justify-between text-xs sm:text-sm font-black text-gray-900 mb-2 gap-1.5">
-          <div className="flex-1 text-left truncate">{playerHome}</div>
+        <div className="flex items-center justify-between text-xs sm:text-sm font-black mb-2 gap-1.5">
+          <div className="flex-1 text-left truncate text-[#D32F2F] font-black">{playerHome}</div>
           <div className="text-center px-2 shrink-0">
             <div className="text-[10px] text-gray-500 font-semibold whitespace-nowrap">Set 2 : 0</div>
-            <div className="text-sm sm:text-base text-red-600 font-black tracking-widest whitespace-nowrap">2 : 2</div>
+            <div className="text-sm sm:text-base text-gray-900 font-black tracking-widest whitespace-nowrap">2 : 2</div>
           </div>
-          <div className="flex-1 text-right truncate">{playerAway}</div>
+          <div className="flex-1 text-right truncate text-gray-900 font-extrabold">{playerAway}</div>
         </div>
 
         {/* MAIN ODDS ROW: SET MONEY LINE / GAME HANDICAP / TOTAL GAMES */}
