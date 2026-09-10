@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Trash2, ShieldCheck, CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
+import { ApiService } from '../services/api';
 
 export const SbobetBetSlipDrawer: React.FC = () => {
   const {
@@ -42,9 +43,32 @@ export const SbobetBetSlipDrawer: React.FC = () => {
       return;
     }
 
-    // Initiate 8-Second Anti-Latency Delay Queue (Milestone 4 Rule)
+    // Initiate Anti-Latency Delay Queue (Milestone 2/4 Rule)
     setIsProcessing(true);
     setCountdown(8);
+
+    // Dispatch to Backend Staging Delay Queue
+    ApiService.placeBet({
+      userId: user?.username || 'SbobetTrader_88',
+      type: slipSelections.length > 1 ? 'Mix Parlay' : 'Single',
+      stake,
+      selections: slipSelections.map(s => ({
+        matchId: s.matchId,
+        type: s.selectionName,
+        oddsAtPlacement: s.odds > 0 ? s.odds : 1.90
+      }))
+    }).then(({ data, error }) => {
+      if (error && !data) {
+        if (error.includes('Vượt quá') || error.includes('Giới hạn') || error.includes('Số dư')) {
+          setIsProcessing(false);
+          setErrorMsg(error);
+          return;
+        }
+      }
+      if (data?.bet?.delaySeconds) {
+        setCountdown(data.bet.delaySeconds);
+      }
+    });
 
     const interval = setInterval(() => {
       setCountdown(prev => {

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Shield, Activity, Bot, DollarSign, Cpu, CheckCircle2, AlertTriangle, RefreshCw, Layers } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
+import { ApiService, QuotaMetricsData } from '../services/api';
 
 export const SbobetAdminModal: React.FC = () => {
   const {
@@ -21,6 +22,25 @@ export const SbobetAdminModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'TIER' | 'QUOTA' | 'RNG' | 'WALLET'>('TIER');
   const [depositInput, setDepositInput] = useState<string>('500');
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [liveQuota, setLiveQuota] = useState<QuotaMetricsData | null>(null);
+  const [backendStatus, setBackendStatus] = useState<string>('Line 1-3 Active');
+
+  useEffect(() => {
+    if (isAdminModalOpen) {
+      ApiService.getQuotaMetrics().then(({ data }) => {
+        if (data?.metrics) {
+          setLiveQuota(data.metrics);
+        }
+      });
+      ApiService.checkHealth().then(({ data, error }) => {
+        if (data?.status === 'HEALTHY') {
+          setBackendStatus('Line 1-3 Live');
+        } else if (error) {
+          setBackendStatus('Simulation Mode');
+        }
+      });
+    }
+  }, [isAdminModalOpen, activeTab]);
 
   if (!isAdminModalOpen) return null;
 
@@ -29,8 +49,21 @@ export const SbobetAdminModal: React.FC = () => {
     const amt = parseFloat(depositInput);
     if (!isNaN(amt) && amt > 0) {
       depositBalance(amt);
+      ApiService.depositWallet(amt);
       setSuccessMsg(`Đã cộng $${amt.toFixed(2)} vào ví!`);
       setTimeout(() => setSuccessMsg(null), 3000);
+    }
+  };
+
+  const handleTierChange = (tier: 1 | 2 | 3) => {
+    setPlatformTier(tier);
+    ApiService.setPlatformTier(tier);
+  };
+
+  const handleOverrideChange = (target: 'tai' | 'xiu' | null) => {
+    setCasinoOverride(target);
+    if (target) {
+      ApiService.setAdminOverride('taixiu', target.toUpperCase());
     }
   };
 
@@ -48,7 +81,7 @@ export const SbobetAdminModal: React.FC = () => {
               <div className="text-sm font-black tracking-wide flex items-center gap-2">
                 <span>SBOBET ADMIN ENGINE</span>
                 <span className="text-[10px] bg-emerald-500 text-black px-1.5 py-0.2 rounded font-bold uppercase">
-                  Line 1-3 Active
+                  {backendStatus}
                 </span>
               </div>
               <div className="text-[10px] text-blue-200">
@@ -141,7 +174,7 @@ export const SbobetAdminModal: React.FC = () => {
                   ].map(item => (
                     <button
                       key={item.tier}
-                      onClick={() => setPlatformTier(item.tier)}
+                      onClick={() => handleTierChange(item.tier)}
                       className={`p-2.5 rounded-lg border text-left transition-all ${
                         platformTier === item.tier
                           ? 'border-[#0B4DA2] bg-blue-50/80 ring-2 ring-blue-400'
@@ -185,22 +218,31 @@ export const SbobetAdminModal: React.FC = () => {
                 <div className="p-3 bg-white border border-gray-200 rounded-lg">
                   <div className="text-[10px] text-gray-500 uppercase font-bold">Quota Tháng Này</div>
                   <div className="text-lg font-black text-gray-900 mt-1">
-                    {quotaUsed.toLocaleString()} <span className="text-xs text-gray-400 font-normal">/ 100,000</span>
+                    {(liveQuota ? liveQuota.usedCalls : quotaUsed).toLocaleString()}{' '}
+                    <span className="text-xs text-gray-400 font-normal">
+                      / {(liveQuota ? liveQuota.monthlyLimit : 100000).toLocaleString()}
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2 mt-2 overflow-hidden">
                     <div
                       className="bg-blue-600 h-2 rounded-full"
-                      style={{ width: `${(quotaUsed / 100000) * 100}%` }}
+                      style={{
+                        width: `${((liveQuota ? liveQuota.usedCalls : quotaUsed) / (liveQuota ? liveQuota.monthlyLimit : 100000)) * 100}%`
+                      }}
                     ></div>
                   </div>
                   <div className="text-[10px] text-emerald-600 font-bold mt-1">
-                    {((1 - quotaUsed / 100000) * 100).toFixed(1)}% Còn Lại
+                    {liveQuota
+                      ? `${((1 - liveQuota.usedCalls / liveQuota.monthlyLimit) * 100).toFixed(1)}% Còn Lại`
+                      : `${((1 - quotaUsed / 100000) * 100).toFixed(1)}% Còn Lại`}
                   </div>
                 </div>
 
                 <div className="p-3 bg-white border border-gray-200 rounded-lg">
                   <div className="text-[10px] text-gray-500 uppercase font-bold">Tỷ Lệ Trúng Cache (RAM)</div>
-                  <div className="text-lg font-black text-emerald-600 mt-1">98.4%</div>
+                  <div className="text-lg font-black text-emerald-600 mt-1">
+                    {liveQuota ? `${liveQuota.cacheHitRate}%` : '98.4%'}
+                  </div>
                   <div className="text-[10px] text-gray-500 mt-2">
                     Tần suất: 15s (Live), 15m (Pre), 120m (Sớm)
                   </div>
@@ -241,7 +283,7 @@ export const SbobetAdminModal: React.FC = () => {
                 <label className="font-bold text-gray-800 block">Lệnh Ghi Đè Ván Kế Tiếp:</label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
-                    onClick={() => setCasinoOverride(null)}
+                    onClick={() => handleOverrideChange(null)}
                     className={`py-2 px-2 rounded-lg font-bold border text-center transition-all ${
                       casinoOverride === null
                         ? 'bg-gray-900 text-white border-gray-900 shadow-xs'
@@ -251,7 +293,7 @@ export const SbobetAdminModal: React.FC = () => {
                     🎲 Tự Nhiên (RNG)
                   </button>
                   <button
-                    onClick={() => setCasinoOverride('tai')}
+                    onClick={() => handleOverrideChange('tai')}
                     className={`py-2 px-2 rounded-lg font-bold border text-center transition-all ${
                       casinoOverride === 'tai'
                         ? 'bg-red-600 text-white border-red-600 ring-2 ring-red-300'
@@ -261,7 +303,7 @@ export const SbobetAdminModal: React.FC = () => {
                     🔴 Ép Ra TÀI (11-17)
                   </button>
                   <button
-                    onClick={() => setCasinoOverride('xiu')}
+                    onClick={() => handleOverrideChange('xiu')}
                     className={`py-2 px-2 rounded-lg font-bold border text-center transition-all ${
                       casinoOverride === 'xiu'
                         ? 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300'
