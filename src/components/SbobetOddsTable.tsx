@@ -178,14 +178,20 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
           {/* Row N (Home) */}
           <button
             onClick={() => handleBetClick('Handicap FT', `${homeTeam} ${homeHandicap}`, homeOdds, homeHandicap)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('Handicap FT', `${homeTeam} ${homeHandicap}`)
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-blue-600 font-black truncate">{homeHandicap}</span>
-            <span className={`text-xs font-black shrink-0 ${homeOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'}`}>
+            <span className={`text-[10px] font-black truncate ${
+              isSelected('Handicap FT', `${homeTeam} ${homeHandicap}`) ? 'text-yellow-300' : 'text-blue-600'
+            }`}>{homeHandicap}</span>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('Handicap FT', `${homeTeam} ${homeHandicap}`)
+                ? 'text-white'
+                : homeOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'
+            }`}>
               {homeOdds > 0 ? homeOdds.toFixed(2) : homeOdds.toFixed(2)}
             </span>
           </button>
@@ -193,14 +199,20 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
           {/* Row K (Away) */}
           <button
             onClick={() => handleBetClick('Handicap FT', `${awayTeam} ${awayHandicap}`, awayOdds, awayHandicap)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('Handicap FT', `${awayTeam} ${awayHandicap}`)
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-blue-600 font-black truncate">{awayHandicap}</span>
-            <span className={`text-xs font-black shrink-0 ${awayOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'}`}>
+            <span className={`text-[10px] font-black truncate ${
+              isSelected('Handicap FT', `${awayTeam} ${awayHandicap}`) ? 'text-yellow-300' : 'text-blue-600'
+            }`}>{awayHandicap}</span>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('Handicap FT', `${awayTeam} ${awayHandicap}`)
+                ? 'text-white'
+                : awayOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'
+            }`}>
               {awayOdds > 0 ? awayOdds.toFixed(2) : awayOdds.toFixed(2)}
             </span>
           </button>
@@ -215,16 +227,22 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
           {/* Row T (Over) */}
           <button
             onClick={() => handleBetClick('Total Goals FT', `Tài ${ouGoal}`, ouOverOdds, ouGoal)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('Total Goals FT', `Tài ${ouGoal}`)
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-gray-600 font-bold truncate">
+            <span className={`text-[10px] font-bold truncate ${
+              isSelected('Total Goals FT', `Tài ${ouGoal}`) ? 'text-yellow-300' : 'text-gray-600'
+            }`}>
               {ouGoal.startsWith('T') || ouGoal.startsWith('X') ? ouGoal : `T ${ouGoal}`}
             </span>
-            <span className={`text-xs font-black shrink-0 ${ouOverOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'}`}>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('Total Goals FT', `Tài ${ouGoal}`)
+                ? 'text-white'
+                : ouOverOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'
+            }`}>
               {ouOverOdds > 0 ? ouOverOdds.toFixed(2) : ouOverOdds.toFixed(2)}
             </span>
           </button>
@@ -232,16 +250,22 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
           {/* Row X (Under) */}
           <button
             onClick={() => handleBetClick('Total Goals FT', `Xỉu ${ouGoal}`, ouUnderOdds, ouGoal)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('Total Goals FT', `Xỉu ${ouGoal}`)
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-gray-600 font-bold truncate">
+            <span className={`text-[10px] font-bold truncate ${
+              isSelected('Total Goals FT', `Xỉu ${ouGoal}`) ? 'text-yellow-300' : 'text-gray-600'
+            }`}>
               {ouGoal.startsWith('T') || ouGoal.startsWith('X') ? ouGoal : `X ${ouGoal}`}
             </span>
-            <span className={`text-xs font-black shrink-0 ${ouUnderOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'}`}>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('Total Goals FT', `Xỉu ${ouGoal}`)
+                ? 'text-white'
+                : ouUnderOdds < 0 ? 'text-[#D32F2F]' : 'text-gray-900'
+            }`}>
               {ouUnderOdds > 0 ? ouUnderOdds.toFixed(2) : ouUnderOdds.toFixed(2)}
             </span>
           </button>
@@ -256,27 +280,35 @@ export const SbobetOddsTable: React.FC<OddsTableProps> = ({
           {/* Row 1 (Home) */}
           <button
             onClick={() => handleBetClick('1X2 FT', 'Home', oneXTwoHome)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('1X2 FT', 'Home')
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold truncate">1</span>
-            <span className="text-gray-900 font-black text-xs shrink-0">{oneXTwoHome.toFixed(2)}</span>
+            <span className={`text-[10px] font-bold truncate ${
+              isSelected('1X2 FT', 'Home') ? 'text-yellow-300' : 'text-gray-500'
+            }`}>1</span>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('1X2 FT', 'Home') ? 'text-white' : 'text-gray-900'
+            }`}>{oneXTwoHome.toFixed(2)}</span>
           </button>
 
           {/* Row 2 (Away) */}
           <button
             onClick={() => handleBetClick('1X2 FT', 'Away', oneXTwoAway)}
-            className={`w-full px-1.5 py-1.5 sm:px-2 rounded bg-white border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
+            className={`w-full px-1.5 py-1.5 sm:px-2 rounded border flex items-center justify-between gap-1 shadow-xs transition-all active:scale-98 ${
               isSelected('1X2 FT', 'Away')
-                ? 'border-blue-600 bg-blue-50 ring-1 ring-blue-500'
-                : 'border-gray-200 hover:border-blue-400'
+                ? 'border-[#08356E] bg-[#0B4DA2] text-white shadow-md ring-2 ring-blue-400 font-black scale-[1.02]'
+                : 'bg-white border-gray-200 hover:border-blue-400'
             }`}
           >
-            <span className="text-[10px] text-gray-500 font-bold truncate">2</span>
-            <span className="text-gray-900 font-black text-xs shrink-0">{oneXTwoAway.toFixed(2)}</span>
+            <span className={`text-[10px] font-bold truncate ${
+              isSelected('1X2 FT', 'Away') ? 'text-yellow-300' : 'text-gray-500'
+            }`}>2</span>
+            <span className={`text-xs font-black shrink-0 ${
+              isSelected('1X2 FT', 'Away') ? 'text-white' : 'text-gray-900'
+            }`}>{oneXTwoAway.toFixed(2)}</span>
           </button>
         </div>
       </div>

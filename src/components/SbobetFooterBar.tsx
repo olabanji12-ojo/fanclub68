@@ -93,14 +93,32 @@ export const SbobetFooterBar: React.FC<FooterBarProps> = ({ subMarketCount = 13 
             {/* Bet Slip Drawer Trigger */}
             <button
               onClick={() => setIsBetSlipOpen(true)}
-              className="flex-1 py-2 sm:py-2.5 px-2.5 sm:px-4 bg-[#FFC800] hover:bg-[#F0BB00] text-black font-black text-[11px] sm:text-xs uppercase rounded-lg shadow flex items-center justify-center gap-1.5 whitespace-nowrap transition-transform active:scale-98"
+              className="flex-1 py-2 sm:py-2.5 px-2.5 sm:px-4 bg-gradient-to-r from-[#FFC800] to-[#E6B400] hover:brightness-105 text-black font-black text-[11px] sm:text-xs uppercase rounded-lg shadow-md flex items-center justify-center gap-1.5 whitespace-nowrap transition-transform active:scale-98 ring-2 ring-yellow-400/40"
             >
               <Layers className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               <span>{t.bet_slip} ({slipSelections.length})</span>
             </button>
           </div>
+        ) : slipSelections.length > 0 ? (
+          /* Guest with active selections: Highlight prominent golden Bet Slip button */
+          <div className="flex-1 flex items-center gap-2">
+            <button
+              onClick={() => openAuthModal('login')}
+              className="py-2.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs uppercase rounded-lg border border-gray-300 shadow-xs transition-all active:scale-98 text-center shrink-0"
+            >
+              {t.login}
+            </button>
+
+            <button
+              onClick={() => setIsBetSlipOpen(true)}
+              className="flex-1 py-2.5 px-3 bg-gradient-to-r from-[#FFC800] via-[#FFD026] to-[#E6B400] text-black font-black text-xs uppercase rounded-lg shadow-md flex items-center justify-center gap-2 transition-all active:scale-98 ring-2 ring-yellow-400 animate-pulse"
+            >
+              <Layers className="w-4 h-4 shrink-0" />
+              <span>{t.bet_slip} ({slipSelections.length})</span>
+            </button>
+          </div>
         ) : (
-          /* User is guest: Show Đăng ký (White) and Đăng nhập (Blue) matching screenshots */
+          /* User is guest with 0 bets: Show standard Đăng ký & Đăng nhập */
           <>
             <button
               onClick={() => openAuthModal('register')}
