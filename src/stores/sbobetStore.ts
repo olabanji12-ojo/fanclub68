@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { Language, SportType, SbobetNavTab, BetSlipItem } from '../types';
+import { ApiService } from '../services/api';
 
 interface SbobetState {
   language: Language;
@@ -62,6 +63,8 @@ interface SbobetState {
   casinoOverride: 'tai' | 'xiu' | null;
   setCasinoOverride: (val: 'tai' | 'xiu' | null) => void;
   depositBalance: (amount: number) => void;
+  liveApiMatches: any[];
+  setLiveApiMatches: (matches: any[]) => void;
 }
 
 export const useSbobetStore = create<SbobetState>((set, get) => ({
@@ -167,14 +170,23 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
     set({ isLoggedIn: false, user: null });
   },
 
+  liveApiMatches: [],
+  setLiveApiMatches: (matches) => set({ liveApiMatches: matches }),
+
   isRefreshing: false,
   lastRefreshedTime: '13:34:05',
   refreshOdds: async () => {
     if (get().isRefreshing) return;
     set({ isRefreshing: true });
     
-    // Simulate live data fetch latency
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const { data } = await ApiService.getLiveMatches('soccer');
+      if (data?.matches && data.matches.length > 0) {
+        set({ liveApiMatches: data.matches });
+      }
+    } catch {
+      // Handled cleanly
+    }
 
     const now = new Date();
     const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;

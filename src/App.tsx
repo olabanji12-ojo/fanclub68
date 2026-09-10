@@ -40,12 +40,18 @@ export default function App() {
     setIsBetSlipOpen,
     setIsAZModalOpen,
     setIsAdminModalOpen,
-    searchTerm
+    searchTerm,
+    liveApiMatches
   } = useSbobetStore();
 
   const [startY, setStartY] = useState<number>(0);
   const [pullDistance, setPullDistance] = useState<number>(0);
   const [isPulling, setIsPulling] = useState<boolean>(false);
+
+  // Fetch live odds from backend on initial mount
+  useEffect(() => {
+    refreshOdds();
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -339,6 +345,48 @@ export default function App() {
             {/* VIEW D: FOOTBALL - LIVE TAB (MATCHING TEST2.JPG & TEST1.JPG) */}
             {activeSport === 'football' && activeTab === 'live' && (
               <div className="space-y-3">
+                {/* LIVE INGEST MATCHES FROM THE ODDS-API */}
+                {liveApiMatches && liveApiMatches.length > 0 && (
+                  <div className="space-y-3 mb-2">
+                    <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-[#071E3D] via-[#0B4DA2] to-[#08356E] rounded text-xs text-white shadow-xs">
+                      <span className="font-extrabold flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        {language === 'vi' ? 'KÈO TRỰC TIẾP (THE ODDS-API INGEST)' : 'LIVE MATCHES (THE ODDS-API)'}
+                      </span>
+                      <span className="text-[10px] bg-yellow-400 text-black font-black px-2 py-0.5 rounded-full">
+                        RAM Cache: 15s • {liveApiMatches.length} trận
+                      </span>
+                    </div>
+
+                    {liveApiMatches.slice(0, 4).map((m: any) => (
+                      <div key={m.id} className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
+                        <SbobetOddsTable
+                          matchId={m.id}
+                          homeTeam={m.homeTeam}
+                          awayTeam={m.awayTeam}
+                          scoreHome={m.score?.home ?? 0}
+                          scoreAway={m.score?.away ?? 0}
+                          liveTime={m.currentMinute ? `${m.currentMinute}'` : "Trực tiếp"}
+                          handicapTeam="home"
+                          leagueName={m.league}
+                          isLive={true}
+                          homeHandicap={m.odds?.spread ? String(m.odds.spread) : "-0.50"}
+                          awayHandicap={m.odds?.spread ? `+${Math.abs(m.odds.spread)}` : "+0.50"}
+                          homeOdds={m.odds?.spreadHomeOdds ?? -0.75}
+                          awayOdds={m.odds?.spreadAwayOdds ?? 0.65}
+                          ouGoal={m.odds?.overUnder ? String(m.odds.overUnder) : "2.50"}
+                          ouOverOdds={m.odds?.overOdds ?? 1.88}
+                          ouUnderOdds={m.odds?.underOdds ?? 1.92}
+                          oneXTwoHome={m.odds?.homeWin ?? 2.10}
+                          oneXTwoAway={m.odds?.awayWin ?? 3.20}
+                          oneXTwoDraw={m.odds?.draw ?? 3.30}
+                          moreCount={15}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 {/* MATCH 1: CUIABA EC VS ATHLETIC CLUB MG (EXACT MATCH FROM TEST2.JPG) */}
                 <div className="bg-white border border-gray-200 rounded overflow-hidden shadow-xs">
                   <SbobetOddsTable
