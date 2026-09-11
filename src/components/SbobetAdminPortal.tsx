@@ -64,10 +64,10 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
     resetQuota
   } = useSbobetStore();
 
-  // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); // Pre-authenticated for immediate staging test, but login gate can be toggled
-  const [loginEmail, setLoginEmail] = useState<string>('superadmin@sbobet.com');
-  const [loginPassword, setLoginPassword] = useState<string>('SuperAdmin2026!');
+  // Authentication State - Defaults to false so the user is prompted to enter credentials first
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loginEmail, setLoginEmail] = useState<string>('');
+  const [loginPassword, setLoginPassword] = useState<string>('');
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Active Tab
@@ -273,9 +273,11 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = loginEmail.trim().toLowerCase();
+    const cleanPass = loginPassword.trim();
     if (
-      (loginEmail === 'superadmin@sbobet.com' || loginEmail === 'superadmin') &&
-      loginPassword === 'SuperAdmin2026!'
+      (cleanEmail === 'superadmin@sbobet.com' || cleanEmail === 'superadmin') &&
+      cleanPass === 'SuperAdmin2026!'
     ) {
       setIsAuthenticated(true);
       setLoginError(null);
@@ -474,9 +476,10 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
               <label className="block text-xs font-semibold text-blue-200 mb-1">Admin Email / Username</label>
               <input
                 type="text"
+                placeholder="superadmin@sbobet.com"
                 value={loginEmail}
                 onChange={e => setLoginEmail(e.target.value)}
-                className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 font-mono"
+                className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 font-mono"
                 required
               />
             </div>
@@ -485,9 +488,10 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
               <label className="block text-xs font-semibold text-blue-200 mb-1">Password</label>
               <input
                 type="password"
+                placeholder="SuperAdmin2026!"
                 value={loginPassword}
                 onChange={e => setLoginPassword(e.target.value)}
-                className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-yellow-400 font-mono"
+                className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 font-mono"
                 required
               />
             </div>
@@ -590,7 +594,12 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
             </button>
 
             <button
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {
+                setIsAuthenticated(false);
+                setLoginEmail('');
+                setLoginPassword('');
+                setLoginError(null);
+              }}
               className="px-2.5 py-1.5 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-200 hover:text-white rounded-lg transition-all flex items-center gap-1.5 text-xs font-bold cursor-pointer"
               title="Logout / Switch Account"
             >
