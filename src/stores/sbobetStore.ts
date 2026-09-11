@@ -77,8 +77,26 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
   activeTab: 'live',
   setActiveTab: (tab) => set({ activeTab: tab }),
 
-  currentView: 'sbobet',
-  setCurrentView: (view) => set({ currentView: view }),
+  currentView: (() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.replace(/^\//, '').toLowerCase();
+      if (path === 'admin') return 'admin';
+      if (path === 'taixiu' || path === 'casino') return 'taixiu';
+      if (path === 'cockfight') return 'cockfight';
+      if (path === 'xocdia') return 'xocdia';
+      if (path === 'lobby') return 'lobby';
+    }
+    return 'sbobet';
+  })(),
+  setCurrentView: (view) => {
+    set({ currentView: view });
+    if (typeof window !== 'undefined') {
+      const targetPath = view === 'sbobet' ? '/' : `/${view}`;
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState(null, '', targetPath);
+      }
+    }
+  },
 
   slipSelections: [],
   isBetSlipOpen: false,
