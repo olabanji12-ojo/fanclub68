@@ -22,10 +22,15 @@ import {
   Lock,
   Layers,
   ArrowRight,
-  UserPlus
+  UserPlus,
+  Radio,
+  Eye,
+  Unlock
 } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { ApiService, QuotaMetricsData } from '../services/api';
+import { LiveSportsService } from '../services/liveSportsService';
+import { ALL_FOOTBALL_FIXTURES } from '../data/sportsFixtures';
 
 export interface AdminPortalAccount {
   id: string;
@@ -61,7 +66,11 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
     setCasinoOverride,
     quotaUsed,
     simulateQuota,
-    resetQuota
+    resetQuota,
+    liveApiMatches,
+    todayApiMatches,
+    apiStatus,
+    refreshOdds
   } = useSbobetStore();
 
   // Authentication State - Defaults to false so the user is prompted to enter credentials first
@@ -71,7 +80,16 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
   const [loginError, setLoginError] = useState<string | null>(null);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'HIERARCHY' | 'CREDIT' | 'SUSPENSION' | 'ANTILATENCY' | 'RNG'>('HIERARCHY');
+  const [activeTab, setActiveTab] = useState<'HIERARCHY' | 'CREDIT' | 'SUSPENSION' | 'ODDS' | 'ANTILATENCY' | 'RNG'>('HIERARCHY');
+
+  // Odds Surveillance State
+  const [oddsSearch, setOddsSearch] = useState<string>('');
+  const [oddsFilter, setOddsFilter] = useState<'ALL' | 'LIVE' | 'TODAY' | 'EPL' | 'LALIGA' | 'UCL'>('ALL');
+  const [frozenMatches, setFrozenMatches] = useState<string[]>([]);
+  const [allMarketsFrozen, setAllMarketsFrozen] = useState<boolean>(false);
+  const [apiKeyInput, setApiKeyInput] = useState<string>(LiveSportsService.getApiKey());
+  const [apiKeyMessage, setApiKeyMessage] = useState<string | null>(null);
+  const [isTestingApiKey, setIsTestingApiKey] = useState<boolean>(false);
 
   // Hierarchy Data
   const [accounts, setAccounts] = useState<AdminPortalAccount[]>([
@@ -617,6 +635,7 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
             { id: 'HIERARCHY' as const, label: 'Master / Agent Hierarchy', icon: Users, count: accounts.length },
             { id: 'CREDIT' as const, label: 'Virtual Credit Distribution', icon: DollarSign },
             { id: 'SUSPENSION' as const, label: 'User Suspension Toggle', icon: Ban, count: accounts.filter(a => a.status === 'SUSPENDED').length },
+            { id: 'ODDS' as const, label: 'Market Odds Surveillance', icon: TrendingUp, count: ((liveApiMatches?.length || 0) + (todayApiMatches?.length || 0)) || ALL_FOOTBALL_FIXTURES.length },
             { id: 'ANTILATENCY' as const, label: 'Anti-Latency Delay (Redis)', icon: Activity },
             { id: 'RNG' as const, label: '5s Buffer RNG Overrule', icon: Bot }
           ].map(tab => {
@@ -1295,6 +1314,318 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
 
           </div>
         )}
+
+        {/* ════════ TAB 6: MARKET ODDS SURVEILLANCE & CONTROLS ════════ */}
+        {activeTab === 'ODDS' && (() => {
+          const allOddsPool = [
+            ...(liveApiMatches || []),
+            ...(todayApiMatches || [])
+          ];
+          const masterList = allOddsPool.length > 0 ? allOddsPool : ALL_FOOTBALL_FIXTURES;
+
+          const filteredOdds = masterList.filter(m => {
+            const matchesSearch = 
+              m.homeTeam.toLowerCase().includes(oddsSearch.toLowerCase()) ||
+              m.awayTeam.toLowerCase().includes(oddsSearch.toLowerCase()) ||
+              m.leagueName.toLowerCase().includes(oddsSearch.toLowerCase());
+            
+            if (!matchesSearch) return false;
+            if (oddsFilter === 'LIVE') return m.isLive;
+            if (oddsFilter === 'TODAY') return !m.isLive;
+            if (oddsFilter === 'EPL') return m.leagueId === 'EPL';
+            if (oddsFilter === 'LALIGA') return m.leagueId === 'LALIGA';
+            if (oddsFilter === 'UCL') return m.leagueId === 'UCL';
+            return true;
+          });
+
+          const liveCount = masterList.filter(m => m.isLive).length;
+          const todayCount = masterList.filter(m => !m.isLive).length;
+
+          const handleSaveKey = async (e: React.FormEvent) => {
+            e.preventDefault();
+            if (!apiKeyInput.trim()) return;
+            setIsTestingApiKey(true);
+            setApiKeyMessage('Testing key with upstream The Odds API...');
+            
+            const res = await LiveSportsService.testApiKey(apiKeyInput.trim());
+            setIsTestingApiKey(false);
+            
+            if (res.success) {
+              LiveSportsService.setApiKey(apiKeyInput.trim());
+              setApiKeyMessage(`✅ Key Verified & Active! ${res.message}`);
+              setDistributionSuccess('Upstream The Odds API key successfully updated. Refreshing live feed...');
+              setTimeout(() => setDistributionSuccess(null), 4000);
+              await refreshOdds();
+            } else {
+              setApiKeyMessage(`❌ Validation failed: ${res.message}`);
+            }
+          };
+
+          const toggleFreeze = (matchId: string) => {
+            setFrozenMatches(prev => {
+              const exists = prev.includes(matchId);
+              const updated = exists ? prev.filter(id => id !== matchId) : [...prev, matchId];
+              setDistributionSuccess(
+                exists 
+                  ? `Market trading for Match #${matchId.slice(-8)} has been RE-OPENED.` 
+                  : `Market trading for Match #${matchId.slice(-8)} has been FROZEN / SUSPENDED.`
+              );
+              setTimeout(() => setDistributionSuccess(null), 3500);
+              return updated;
+            });
+          };
+
+          return (
+            <div className="space-y-4">
+              {/* Upstream Provider & Live API Key Control Card */}
+              <div className="bg-[#0D1A3B] border border-blue-900/80 rounded-xl p-4 sm:p-5 shadow-xl space-y-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-blue-900/60 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400">
+                      <Radio className="w-5 h-5 animate-pulse" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-black text-sm text-white">The Odds API Upstream Feed</span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-black border ${
+                          apiStatus?.status === 'LIVE_CONNECTED'
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                            : 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50'
+                        }`}>
+                          {apiStatus?.status === 'LIVE_CONNECTED' ? '● LIVE STREAMING' : '⚡ DYNAMIC IN-PLAY'}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-blue-200 mt-0.5">
+                        {apiStatus?.message || 'Ingesting real-time Asian handicap, Over/Under & 1X2 odds from global bookmakers.'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => refreshOdds()}
+                      className="px-3 py-1.5 bg-[#070D1F] hover:bg-blue-900 border border-blue-800 text-blue-200 hover:text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                      title="Force Re-sync Live Odds"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Re-sync Feed</span>
+                    </button>
+
+                    <button
+                      onClick={() => setAllMarketsFrozen(!allMarketsFrozen)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer ${
+                        allMarketsFrozen
+                          ? 'bg-red-600 text-white shadow-lg ring-2 ring-red-400'
+                          : 'bg-blue-950/80 hover:bg-red-950 border border-red-800 text-red-300 hover:text-white'
+                      }`}
+                    >
+                      {allMarketsFrozen ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                      <span>{allMarketsFrozen ? 'UNLOCK ALL' : 'MASTER FREEZE'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* API Key Configuration Bar */}
+                <form onSubmit={handleSaveKey} className="bg-[#070D1F] border border-blue-900/60 rounded-lg p-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                  <div className="text-xs font-bold text-gray-300 flex items-center gap-1.5 shrink-0">
+                    <Key className="w-3.5 h-3.5 text-yellow-400" />
+                    <span>The Odds API Key:</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={apiKeyInput}
+                    onChange={e => setApiKeyInput(e.target.value)}
+                    placeholder="Enter The Odds API key (e.g. 8ba50f3775f004dc011c39700a4f0a16)"
+                    className="flex-1 bg-black/50 border border-blue-800 rounded px-3 py-1.5 text-xs text-white font-mono placeholder-gray-500 focus:outline-none focus:border-yellow-400"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isTestingApiKey}
+                    className="px-4 py-1.5 bg-gradient-to-r from-yellow-500 to-amber-600 hover:brightness-110 text-black font-black text-xs rounded transition-all shadow shrink-0 cursor-pointer disabled:opacity-50"
+                  >
+                    {isTestingApiKey ? 'Testing...' : 'Test & Save Key'}
+                  </button>
+                </form>
+                {apiKeyMessage && (
+                  <div className="text-[11px] font-mono text-yellow-300 px-1">
+                    {apiKeyMessage}
+                  </div>
+                )}
+              </div>
+
+              {/* Metric Overview */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-[#0D1A3B] border border-blue-900/80 rounded-xl p-3 sm:p-4">
+                  <div className="text-[11px] text-blue-300 font-bold uppercase">Total Markets</div>
+                  <div className="text-xl sm:text-2xl font-black text-white mt-1 font-mono">{masterList.length}</div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">Monitored Lines</div>
+                </div>
+
+                <div className="bg-[#0D1A3B] border border-blue-900/80 rounded-xl p-3 sm:p-4">
+                  <div className="text-[11px] text-blue-300 font-bold uppercase">Live In-Play</div>
+                  <div className="text-xl sm:text-2xl font-black text-red-400 mt-1 font-mono flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                    <span>{liveCount}</span>
+                  </div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">Active In-Match</div>
+                </div>
+
+                <div className="bg-[#0D1A3B] border border-blue-900/80 rounded-xl p-3 sm:p-4">
+                  <div className="text-[11px] text-blue-300 font-bold uppercase">Today Scheduled</div>
+                  <div className="text-xl sm:text-2xl font-black text-blue-400 mt-1 font-mono">{todayCount}</div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">Kicking off Today</div>
+                </div>
+
+                <div className="bg-[#0D1A3B] border border-blue-900/80 rounded-xl p-3 sm:p-4">
+                  <div className="text-[11px] text-blue-300 font-bold uppercase">Markets Frozen</div>
+                  <div className={`text-xl sm:text-2xl font-black mt-1 font-mono ${frozenMatches.length > 0 || allMarketsFrozen ? 'text-amber-400' : 'text-emerald-400'}`}>
+                    {allMarketsFrozen ? 'ALL' : frozenMatches.length}
+                  </div>
+                  <div className="text-[10px] text-gray-400 mt-0.5">Trading Suspended</div>
+                </div>
+              </div>
+
+              {/* Filters & Search Toolbar */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-[#0D1A3B] border border-blue-900/60 p-3 rounded-xl">
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                  {[
+                    { id: 'ALL', label: 'All Markets' },
+                    { id: 'LIVE', label: '🔴 Live In-Play' },
+                    { id: 'TODAY', label: '📅 Today Scheduled' },
+                    { id: 'EPL', label: 'Premier League' },
+                    { id: 'LALIGA', label: 'La Liga' },
+                    { id: 'UCL', label: 'Champions League' }
+                  ].map(f => (
+                    <button
+                      key={f.id}
+                      onClick={() => setOddsFilter(f.id as any)}
+                      className={`px-2.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                        oddsFilter === f.id
+                          ? 'bg-blue-600 text-white shadow'
+                          : 'bg-[#070D1F] hover:bg-blue-950 text-blue-200 border border-blue-900'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="relative shrink-0 sm:w-64">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    value={oddsSearch}
+                    onChange={e => setOddsSearch(e.target.value)}
+                    placeholder="Search fixture or league..."
+                    className="w-full bg-[#070D1F] border border-blue-900 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Match Odds Surveillance Cards */}
+              <div className="space-y-2.5">
+                {filteredOdds.map(match => {
+                  const isFrozen = allMarketsFrozen || frozenMatches.includes(match.matchId);
+                  return (
+                    <div 
+                      key={match.matchId}
+                      className={`bg-[#0D1A3B] border rounded-xl p-3.5 transition-all shadow-md ${
+                        isFrozen ? 'border-red-600/70 bg-red-950/20' : 'border-blue-900/80 hover:border-blue-700'
+                      }`}
+                    >
+                      {/* Match Header Row */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-blue-900/50 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-blue-300">
+                            {match.leagueName}
+                          </span>
+                          <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
+                            match.isLive 
+                              ? 'bg-red-500/20 text-red-300 border border-red-500/40' 
+                              : 'bg-blue-900/60 text-blue-200 border border-blue-700/40'
+                          }`}>
+                            {match.liveTime}
+                          </span>
+                          {isFrozen && (
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded bg-red-600 text-white animate-pulse">
+                              🔒 FROZEN / SUSPENDED
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleFreeze(match.matchId)}
+                            className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                              isFrozen
+                                ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                                : 'bg-red-950 hover:bg-red-900 text-red-300 border border-red-800'
+                            }`}
+                          >
+                            {isFrozen ? <Unlock className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                            <span>{isFrozen ? 'Re-open' : 'Freeze Line'}</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Teams & Score Row */}
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 py-2.5 items-center">
+                        <div className="md:col-span-5 flex items-center justify-between font-sans">
+                          <div className="font-extrabold text-white text-sm truncate">{match.homeTeam}</div>
+                          <div className="font-black text-amber-400 text-base font-mono px-3">
+                            {match.scoreHome} : {match.scoreAway}
+                          </div>
+                          <div className="font-extrabold text-white text-sm truncate text-right">{match.awayTeam}</div>
+                        </div>
+
+                        {/* Odds Snapshot Grid */}
+                        <div className="md:col-span-7 grid grid-cols-3 gap-2 text-xs font-mono">
+                          {/* Asian Handicap */}
+                          <div className="bg-[#070D1F] border border-blue-900/70 rounded p-2 text-center">
+                            <div className="text-[10px] text-gray-400 font-sans uppercase">Asian Handicap</div>
+                            <div className="font-bold text-yellow-400 mt-0.5">
+                              {match.homeHandicap} ({match.homeOdds > 0 ? `+${match.homeOdds}` : match.homeOdds})
+                            </div>
+                            <div className="text-gray-300 text-[11px]">
+                              {match.awayHandicap} ({match.awayOdds > 0 ? `+${match.awayOdds}` : match.awayOdds})
+                            </div>
+                          </div>
+
+                          {/* Over / Under */}
+                          <div className="bg-[#070D1F] border border-blue-900/70 rounded p-2 text-center">
+                            <div className="text-[10px] text-gray-400 font-sans uppercase">Over / Under</div>
+                            <div className="font-bold text-emerald-400 mt-0.5">
+                              O {match.ouGoal} ({match.ouOverOdds > 0 ? `+${match.ouOverOdds}` : match.ouOverOdds})
+                            </div>
+                            <div className="text-gray-300 text-[11px]">
+                              U {match.ouGoal} ({match.ouUnderOdds > 0 ? `+${match.ouUnderOdds}` : match.ouUnderOdds})
+                            </div>
+                          </div>
+
+                          {/* 1X2 European */}
+                          <div className="bg-[#070D1F] border border-blue-900/70 rounded p-2 text-center">
+                            <div className="text-[10px] text-gray-400 font-sans uppercase">1X2 Full Time</div>
+                            <div className="text-white font-bold mt-0.5 flex justify-around text-[11px]">
+                              <span>1: {match.oneXTwoHome}</span>
+                              <span className="text-gray-400">X: {match.oneXTwoDraw}</span>
+                              <span>2: {match.oneXTwoAway}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {filteredOdds.length === 0 && (
+                  <div className="p-8 text-center text-gray-400 bg-[#0D1A3B] border border-blue-900/60 rounded-xl">
+                    No fixtures matching current filter.
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
       </main>
 

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { Language, SportType, SbobetNavTab, BetSlipItem } from '../types';
 import { ApiService } from '../services/api';
+import { LiveSportsService, ApiStatusInfo } from '../services/liveSportsService';
+import { FootballFixture } from '../data/sportsFixtures';
 
 interface SbobetState {
   language: Language;
@@ -63,8 +65,15 @@ interface SbobetState {
   casinoOverride: 'tai' | 'xiu' | null;
   setCasinoOverride: (val: 'tai' | 'xiu' | null) => void;
   depositBalance: (amount: number) => void;
-  liveApiMatches: any[];
-  setLiveApiMatches: (matches: any[]) => void;
+  liveApiMatches: FootballFixture[];
+  setLiveApiMatches: (matches: FootballFixture[]) => void;
+  todayApiMatches: FootballFixture[];
+  setTodayApiMatches: (matches: FootballFixture[]) => void;
+  matchesApiFixtures: FootballFixture[];
+  setMatchesApiFixtures: (matches: FootballFixture[]) => void;
+  otherSportsApiMatches: Record<string, any[]>;
+  apiStatus: ApiStatusInfo;
+  setApiStatus: (status: ApiStatusInfo) => void;
 }
 
 export const useSbobetStore = create<SbobetState>((set, get) => ({
@@ -190,6 +199,13 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
 
   liveApiMatches: [],
   setLiveApiMatches: (matches) => set({ liveApiMatches: matches }),
+  todayApiMatches: [],
+  setTodayApiMatches: (matches) => set({ todayApiMatches: matches }),
+  matchesApiFixtures: [],
+  setMatchesApiFixtures: (matches) => set({ matchesApiFixtures: matches }),
+  otherSportsApiMatches: {},
+  apiStatus: LiveSportsService.getApiStatus(),
+  setApiStatus: (status) => set({ apiStatus: status }),
 
   isRefreshing: false,
   lastRefreshedTime: '13:34:05',
@@ -198,12 +214,24 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
     set({ isRefreshing: true });
     
     try {
-      const { data } = await ApiService.getLiveMatches('soccer');
-      if (data?.matches && data.matches.length > 0) {
-        set({ liveApiMatches: data.matches });
+      const liveData = await LiveSportsService.fetchAllSportsData();
+      if (liveData.liveMatches && liveData.liveMatches.length > 0) {
+        set({ liveApiMatches: liveData.liveMatches });
       }
-    } catch {
-      // Handled cleanly
+      if (liveData.todayMatches && liveData.todayMatches.length > 0) {
+        set({ todayApiMatches: liveData.todayMatches });
+      }
+      if (liveData.matchesFixtures && liveData.matchesFixtures.length > 0) {
+        set({ matchesApiFixtures: liveData.matchesFixtures });
+      }
+      if (liveData.otherSports) {
+        set({ otherSportsApiMatches: liveData.otherSports });
+      }
+      if (liveData.apiStatus) {
+        set({ apiStatus: liveData.apiStatus });
+      }
+    } catch (err) {
+      console.warn('[STORE] Live odds refresh error:', err);
     }
 
     const now = new Date();

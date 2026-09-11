@@ -21,269 +21,27 @@ import { SbobetAZModal } from './SbobetAZModal';
 import { SbobetAdminModal } from './SbobetAdminModal';
 import { translations } from '../locales/translations';
 
-export interface FootballFixture {
-  matchId: string;
-  leagueId: 'EPL' | 'LALIGA' | 'UCL' | 'SERIE_B' | 'PORTUGAL';
-  leagueName: string;
-  homeTeam: string;
-  awayTeam: string;
-  scoreHome: number;
-  scoreAway: number;
-  liveTime: string;
-  isLive: boolean;
-  handicapTeam?: 'home' | 'away';
-  homeHandicap: string;
-  homeOdds: number;
-  awayHandicap: string;
-  awayOdds: number;
-  ouGoal: string;
-  ouOverOdds: number;
-  ouUnderOdds: number;
-  oneXTwoHome: number;
-  oneXTwoAway: number;
-  oneXTwoDraw: number;
-  moreCount: number;
-  hasBetBuilder?: boolean;
-  hasAccordion?: boolean;
-  cornerScore?: string;
-  hasTodayAccordion?: boolean;
-  hasLigaAccordion?: boolean;
-}
+import {
+  FootballFixture,
+  LIVE_FOOTBALL_FIXTURES,
+  TODAY_FOOTBALL_FIXTURES,
+  MATCHES_FOOTBALL_FIXTURES,
+  ALL_FOOTBALL_FIXTURES,
+  FOOTBALL_FIXTURES,
+  matchesLeague,
+  matchesSearch
+} from '../data/sportsFixtures';
 
-export const FOOTBALL_FIXTURES: FootballFixture[] = [
-  // --- PREMIER LEAGUE (EPL) ---
-  {
-    matchId: 'match-arsenal-chelsea-01',
-    leagueId: 'EPL',
-    leagueName: 'Giải Ngoại Hạng Anh (Premier League)',
-    homeTeam: 'Arsenal',
-    awayTeam: 'Chelsea',
-    scoreHome: 2,
-    scoreAway: 1,
-    liveTime: "64' (H2)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-0.50',
-    homeOdds: -0.84,
-    awayHandicap: '+0.50',
-    awayOdds: 0.76,
-    ouGoal: '3.50',
-    ouOverOdds: 0.91,
-    ouUnderOdds: -0.99,
-    oneXTwoHome: 1.72,
-    oneXTwoAway: 4.40,
-    oneXTwoDraw: 3.60,
-    moreCount: 22,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[5:3]'
-  },
-  {
-    matchId: 'match-mancity-tottenham-01',
-    leagueId: 'EPL',
-    leagueName: 'Giải Ngoại Hạng Anh (Premier League)',
-    homeTeam: 'Manchester City',
-    awayTeam: 'Tottenham Hotspur',
-    scoreHome: 1,
-    scoreAway: 0,
-    liveTime: "28' (H1)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-1.25',
-    homeOdds: 0.95,
-    awayHandicap: '+1.25',
-    awayOdds: -0.85,
-    ouGoal: '3.25',
-    ouOverOdds: -0.92,
-    ouUnderOdds: 0.82,
-    oneXTwoHome: 1.45,
-    oneXTwoAway: 6.20,
-    oneXTwoDraw: 4.80,
-    moreCount: 26,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[2:1]'
-  },
-  {
-    matchId: 'match-liverpool-astonvilla-01',
-    leagueId: 'EPL',
-    leagueName: 'Giải Ngoại Hạng Anh (Premier League)',
-    homeTeam: 'Liverpool',
-    awayTeam: 'Aston Villa',
-    scoreHome: 0,
-    scoreAway: 0,
-    liveTime: "12' (H1)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-0.75',
-    homeOdds: 0.88,
-    awayHandicap: '+0.75',
-    awayOdds: -0.96,
-    ouGoal: '2.75',
-    ouOverOdds: 0.85,
-    ouUnderOdds: -0.95,
-    oneXTwoHome: 1.60,
-    oneXTwoAway: 5.10,
-    oneXTwoDraw: 4.10,
-    moreCount: 18,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[1:1]'
-  },
-  {
-    matchId: 'match-manutd-newcastle-01',
-    leagueId: 'EPL',
-    leagueName: 'Giải Ngoại Hạng Anh (Premier League)',
-    homeTeam: 'Manchester United',
-    awayTeam: 'Newcastle United',
-    scoreHome: 1,
-    scoreAway: 1,
-    liveTime: "52' (H2)",
-    isLive: true,
-    handicapTeam: 'away',
-    homeHandicap: '+0.25',
-    homeOdds: -0.90,
-    awayHandicap: '-0.25',
-    awayOdds: 0.82,
-    ouGoal: '3.00',
-    ouOverOdds: 0.94,
-    ouUnderOdds: -0.88,
-    oneXTwoHome: 2.85,
-    oneXTwoAway: 2.45,
-    oneXTwoDraw: 3.30,
-    moreCount: 20,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[4:4]'
-  },
-
-  // --- LA LIGA ---
-  {
-    matchId: 'match-realmadrid-barcelona-01',
-    leagueId: 'LALIGA',
-    leagueName: 'Giải Tây Ban Nha (La Liga)',
-    homeTeam: 'Real Madrid',
-    awayTeam: 'Barcelona',
-    scoreHome: 1,
-    scoreAway: 2,
-    liveTime: "78' (H2)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '0.00',
-    homeOdds: 0.98,
-    awayHandicap: '0.00',
-    awayOdds: -0.92,
-    ouGoal: '4.50',
-    ouOverOdds: 0.89,
-    ouUnderOdds: -0.97,
-    oneXTwoHome: 2.60,
-    oneXTwoAway: 2.50,
-    oneXTwoDraw: 3.50,
-    moreCount: 30,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[6:5]'
-  },
-  {
-    matchId: 'match-atletico-sevilla-01',
-    leagueId: 'LALIGA',
-    leagueName: 'Giải Tây Ban Nha (La Liga)',
-    homeTeam: 'Atletico Madrid',
-    awayTeam: 'Sevilla',
-    scoreHome: 2,
-    scoreAway: 0,
-    liveTime: "88' (H2)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-1.00',
-    homeOdds: -0.75,
-    awayHandicap: '+1.00',
-    awayOdds: 0.65,
-    ouGoal: '2.50',
-    ouOverOdds: -0.95,
-    ouUnderOdds: 0.85,
-    oneXTwoHome: 1.35,
-    oneXTwoAway: 8.50,
-    oneXTwoDraw: 4.90,
-    moreCount: 15,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[7:2]'
-  },
-
-  // --- UEFA CHAMPIONS LEAGUE (UCL) ---
-  {
-    matchId: 'match-bayern-psg-01',
-    leagueId: 'UCL',
-    leagueName: 'Cúp C1 Châu Âu (Champions League)',
-    homeTeam: 'Bayern Munich',
-    awayTeam: 'Paris Saint-Germain',
-    scoreHome: 0,
-    scoreAway: 1,
-    liveTime: "34' (H1)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-0.25',
-    homeOdds: 0.90,
-    awayHandicap: '+0.25',
-    awayOdds: -0.98,
-    ouGoal: '3.25',
-    ouOverOdds: 0.88,
-    ouUnderOdds: -0.96,
-    oneXTwoHome: 2.15,
-    oneXTwoAway: 3.10,
-    oneXTwoDraw: 3.65,
-    moreCount: 28,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[3:2]'
-  },
-  {
-    matchId: 'match-inter-real-01',
-    leagueId: 'UCL',
-    leagueName: 'Cúp C1 Châu Âu (Champions League)',
-    homeTeam: 'Inter Milan',
-    awayTeam: 'Borussia Dortmund',
-    scoreHome: 2,
-    scoreAway: 2,
-    liveTime: "71' (H2)",
-    isLive: true,
-    handicapTeam: 'home',
-    homeHandicap: '-0.50',
-    homeOdds: -0.80,
-    awayHandicap: '+0.50',
-    awayOdds: 0.70,
-    ouGoal: '4.75',
-    ouOverOdds: -0.86,
-    ouUnderOdds: 0.76,
-    oneXTwoHome: 1.85,
-    oneXTwoAway: 3.90,
-    oneXTwoDraw: 3.50,
-    moreCount: 24,
-    hasBetBuilder: true,
-    hasAccordion: true,
-    cornerScore: '[5:6]'
-  }
-];
-
-export const matchesLeague = (leagueId: string, leagueName: string, selectedLeague: string): boolean => {
-  if (selectedLeague === 'ALL') return true;
-  if (selectedLeague === 'EPL') return leagueId === 'EPL' || (leagueName || '').toLowerCase().includes('premier') || (leagueName || '').toLowerCase().includes('anh');
-  if (selectedLeague === 'LALIGA') return leagueId === 'LALIGA' || (leagueName || '').toLowerCase().includes('la liga') || (leagueName || '').toLowerCase().includes('spain');
-  if (selectedLeague === 'UCL') return leagueId === 'UCL' || (leagueName || '').toLowerCase().includes('champions') || (leagueName || '').toLowerCase().includes('cúp c1');
-  if (selectedLeague === 'SERIE_B') return leagueId === 'SERIE_B' || (leagueName || '').toLowerCase().includes('serie b') || (leagueName || '').toLowerCase().includes('ý');
-  if (selectedLeague === 'PORTUGAL') return leagueId === 'PORTUGAL' || (leagueName || '').toLowerCase().includes('portugal') || (leagueName || '').toLowerCase().includes('bồ đào nha');
-  return true;
-};
-
-export const matchesSearch = (homeTeam: string, awayTeam: string, leagueName: string, searchTerm: string): boolean => {
-  if (!searchTerm || !searchTerm.trim()) return true;
-  const q = searchTerm.trim().toLowerCase();
-  return (
-    (homeTeam || '').toLowerCase().includes(q) ||
-    (awayTeam || '').toLowerCase().includes(q) ||
-    (leagueName || '').toLowerCase().includes(q)
-  );
+// Re-export for external consumers
+export type { FootballFixture };
+export {
+  LIVE_FOOTBALL_FIXTURES,
+  TODAY_FOOTBALL_FIXTURES,
+  MATCHES_FOOTBALL_FIXTURES,
+  ALL_FOOTBALL_FIXTURES,
+  FOOTBALL_FIXTURES,
+  matchesLeague,
+  matchesSearch
 };
 
 export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ showLobbyOnMount = false }) => {
@@ -304,26 +62,43 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
     setSearchTerm,
     selectedLeague,
     setSelectedLeague,
-    liveApiMatches
+    liveApiMatches,
+    todayApiMatches,
+    matchesApiFixtures,
+    apiStatus
   } = useSbobetStore();
 
   const [startY, setStartY] = useState<number>(0);
   const [pullDistance, setPullDistance] = useState<number>(0);
   const [isPulling, setIsPulling] = useState<boolean>(false);
 
-  // Filtered fixtures
-  const filteredLiveApiMatches = (liveApiMatches || []).filter((m: any) =>
-    matchesLeague(m.leagueId || '', m.league || m.sport_title || '', selectedLeague) &&
-    matchesSearch(m.homeTeam || '', m.awayTeam || '', m.league || m.sport_title || '', searchTerm)
+  // Live and Today fixture pools: prioritize live API data, seamlessly fallback to structured fixtures
+  const livePool = (liveApiMatches && liveApiMatches.length > 0) ? liveApiMatches : LIVE_FOOTBALL_FIXTURES;
+  const todayPool = (todayApiMatches && todayApiMatches.length > 0) ? todayApiMatches : TODAY_FOOTBALL_FIXTURES;
+  const matchesPool = (matchesApiFixtures && matchesApiFixtures.length > 0) ? matchesApiFixtures : MATCHES_FOOTBALL_FIXTURES;
+
+  const filteredLiveMatches = livePool.filter(m =>
+    matchesLeague(m.leagueId, m.leagueName, selectedLeague) &&
+    matchesSearch(m.homeTeam, m.awayTeam, m.leagueName, searchTerm)
   );
 
-  const filteredFootballMatches = FOOTBALL_FIXTURES.filter(m =>
+  const filteredTodayMatches = todayPool.filter(m =>
+    matchesLeague(m.leagueId, m.leagueName, selectedLeague) &&
+    matchesSearch(m.homeTeam, m.awayTeam, m.leagueName, searchTerm)
+  );
+
+  const filteredMatchesFixtures = matchesPool.filter(m =>
     matchesLeague(m.leagueId, m.leagueName, selectedLeague) &&
     matchesSearch(m.homeTeam, m.awayTeam, m.leagueName, searchTerm)
   );
 
   useEffect(() => {
     refreshOdds();
+    // Live ticking refresh interval every 25s
+    const timer = setInterval(() => {
+      refreshOdds();
+    }, 25000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
@@ -490,37 +265,108 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
 
             {activeSport === 'football' && (
               <>
-                <div className="px-2 pt-2">
-                  <SbobetBetBuilder
-                    matchId="match-benfica-sporting-01"
-                    homeTeam="Benfica"
-                    awayTeam="Sporting CP"
-                  />
+                {/* UPSTREAM API STATUS BANNER */}
+                <div className="px-2 pt-1.5 pb-0.5">
+                  <div className={`px-2.5 py-1 rounded text-[10px] flex items-center justify-between font-semibold border ${
+                    apiStatus?.status === 'LIVE_CONNECTED'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : 'bg-blue-50 text-blue-800 border-blue-200'
+                  }`}>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${
+                        apiStatus?.status === 'LIVE_CONNECTED' ? 'bg-emerald-500 animate-pulse' : 'bg-blue-500 animate-ping'
+                      }`} />
+                      <span className="truncate">
+                        {apiStatus?.status === 'LIVE_CONNECTED'
+                          ? 'Trực tiếp The Odds API • Dữ liệu bảng cược thời gian thực'
+                          : 'Bảng cược trực tiếp thời gian thực • Live In-Play Stream'}
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-mono text-gray-500 shrink-0">
+                      Key: ...{apiStatus?.activeKey?.slice(-6) || '8ba50f'}
+                    </span>
+                  </div>
                 </div>
 
+                {/* 1. TAB: TRỰC TIẾP (LIVE IN-PLAY FIXTURES) */}
                 {activeTab === 'live' && (
                   <div className="space-y-2 mt-1">
-                    {filteredLiveApiMatches.length > 0 && (
-                      <div className="space-y-2">
-                        {filteredLiveApiMatches.map((m: any) => (
-                          <SbobetOddsTable key={m.matchId || m.id} {...m} />
-                        ))}
-                      </div>
-                    )}
-                    {filteredFootballMatches.map(fixture => (
+                    {filteredLiveMatches.map(fixture => (
                       <SbobetOddsTable key={fixture.matchId} {...fixture} />
                     ))}
+                    {filteredLiveMatches.length === 0 && (
+                      <div className="p-8 text-center text-gray-500 bg-white rounded-lg border m-2">
+                        {language === 'vi' ? 'Không có trận đấu trực tiếp nào hiện tại.' : 'No live matches in play.'}
+                      </div>
+                    )}
                   </div>
                 )}
 
+                {/* 2. TAB: HÔM NAY (TODAY SCHEDULED ODDS & EXTENDED SUB-MARKETS) */}
+                {/* Milestone 1 Reference: Atlético Madrid vs Sevilla (IMG-20260907-WA0012) */}
                 {activeTab === 'today' && (
-                  <SbobetTodayAccordion
-                    matchId="match-atletico-sevilla-01"
-                    homeTeam="Atlético Madrid"
-                    awayTeam="Sevilla"
-                  />
+                  <div className="space-y-2 mt-1">
+                    {filteredTodayMatches.map(fixture => (
+                      <div key={fixture.matchId} className="space-y-1">
+                        <SbobetOddsTable {...fixture} />
+                        {/* 18 Extended Sub-Markets Accordion for Atlético Madrid vs Sevilla */}
+                        {fixture.hasTodayAccordion && (
+                          <div className="px-2 pb-2">
+                            <SbobetTodayAccordion
+                              matchId={fixture.matchId}
+                              homeTeam={fixture.homeTeam}
+                              awayTeam={fixture.awayTeam}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {filteredTodayMatches.length === 0 && (
+                      <div className="p-8 text-center text-gray-500 bg-white rounded-lg border m-2">
+                        {language === 'vi' 
+                          ? 'Không tìm thấy trận đấu nào cho Hôm nay với bộ lọc hiện tại.' 
+                          : 'No scheduled matches found for Today.'}
+                      </div>
+                    )}
+                  </div>
                 )}
-                {activeTab === 'matches' && <SbobetLigaPortugalAccordion />}
+
+                {/* 3. TAB: TRẬN ĐẤU (FEATURED & EARLY MARKETS) */}
+                {/* Milestone 1 Reference: Benfica vs Sporting CP (IMG-20260907-WA0011) */}
+                {activeTab === 'matches' && (
+                  <div className="space-y-2 mt-1">
+                    <div className="px-2 pt-1">
+                      <SbobetBetBuilder
+                        matchId="match-benfica-sporting-01"
+                        homeTeam="Benfica"
+                        awayTeam="Sporting CP"
+                      />
+                    </div>
+                    {filteredMatchesFixtures.map(fixture => (
+                      <div key={fixture.matchId} className="space-y-1">
+                        <SbobetOddsTable {...fixture} />
+                        {fixture.hasLigaAccordion && (
+                          <div className="px-2 pb-2">
+                            <SbobetLigaPortugalAccordion
+                              matchId={fixture.matchId}
+                              homeTeam={fixture.homeTeam}
+                              awayTeam={fixture.awayTeam}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    {filteredMatchesFixtures.length === 0 && (
+                      <div className="p-8 text-center text-gray-500 bg-white rounded-lg border m-2">
+                        {language === 'vi' 
+                          ? 'Không tìm thấy trận đấu nào với bộ lọc hiện tại.' 
+                          : 'No matches found.'}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 4. TAB: CƯỢC XIÊN / VÔ ĐỊCH (PARLAY / OUTRIGHT) */}
                 {activeTab === 'parlay' && (
                   <div className="p-3">
                     <div className="bg-white rounded-lg border p-3">
