@@ -431,9 +431,10 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-[#0B4DA2] hover:from-blue-500 hover:to-blue-700 text-white font-bold rounded-lg transition-all shadow-md text-sm cursor-pointer"
+              className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-[#0B4DA2] hover:from-blue-500 hover:to-blue-700 text-white font-bold rounded-lg transition-all shadow-md text-sm cursor-pointer flex items-center justify-center gap-2"
             >
-              Sign In to Admin Portal
+              <Key className="w-4 h-4" />
+              <span>Login to Admin Portal</span>
             </button>
 
             <button
@@ -516,15 +517,16 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
               className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all shadow cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>SBOBET Thể Thao</span>
+              <span>SBOBET Sports</span>
             </button>
 
             <button
               onClick={() => setIsAuthenticated(false)}
-              className="p-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 hover:text-white rounded-lg transition-colors"
-              title="Logout"
+              className="px-2.5 py-1.5 bg-red-950/70 hover:bg-red-900 border border-red-800 text-red-200 hover:text-white rounded-lg transition-all flex items-center gap-1.5 text-xs font-bold cursor-pointer"
+              title="Logout / Switch Account"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Logout</span>
             </button>
           </div>
         </div>

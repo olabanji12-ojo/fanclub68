@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, ChevronDown, Globe, LayoutGrid, RotateCw, Shield } from 'lucide-react';
+import { Menu, ChevronDown, Globe, LayoutGrid, RotateCw, Shield, User } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 import { SportType } from '../types';
@@ -14,7 +14,10 @@ export const SbobetHeader: React.FC = () => {
     currentView,
     isRefreshing,
     refreshOdds,
-    setIsAdminModalOpen
+    setIsAdminModalOpen,
+    isLoggedIn,
+    user,
+    openAuthModal
   } = useSbobetStore();
 
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -73,14 +76,32 @@ export const SbobetHeader: React.FC = () => {
             <span className="hidden sm:inline text-[11px] font-bold">4-Grid Hub</span>
           </button>
 
-          {/* Super Admin Dashboard Trigger (/admin) */}
+          {/* Super Admin Command Portal Trigger with clear "ADMIN" text */}
           <button
             onClick={() => setCurrentView('admin')}
-            className="p-1.5 bg-[#07254D] hover:bg-[#061E3F] rounded text-yellow-400 border border-yellow-500/30 transition-all flex items-center justify-center active:scale-95"
+            className="flex items-center gap-1 bg-[#07254D] hover:bg-[#061E3F] px-2 py-1 rounded text-xs font-black text-yellow-400 border border-yellow-500/40 transition-all active:scale-95 shadow-xs"
             title="SBOBET Super Admin Command Portal (/admin)"
           >
-            <Shield className="w-3.5 h-3.5" />
+            <Shield className="w-3.5 h-3.5 text-yellow-400" />
+            <span className="text-[11px] font-black tracking-wide">ADMIN</span>
           </button>
+
+          {/* User Login Button with clear "LOGIN" text */}
+          {isLoggedIn && user ? (
+            <div className="flex items-center gap-1 bg-[#08356E] border border-[#165AB8] px-2 py-1 rounded text-xs">
+              <User className="w-3 h-3 text-yellow-300" />
+              <span className="text-yellow-300 font-bold max-w-[65px] truncate text-[11px]">{user.username}</span>
+            </div>
+          ) : (
+            <button
+              onClick={() => openAuthModal('login')}
+              className="flex items-center gap-1 bg-[#FFC800] hover:bg-[#F0BB00] text-black px-2 py-1 rounded text-xs font-black transition-all active:scale-95 shadow-xs border border-yellow-400"
+              title="Member Sign In / Login"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-black">LOGIN</span>
+            </button>
+          )}
 
           {/* Language Selector Dropdown */}
           <div className="relative">
