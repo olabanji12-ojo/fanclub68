@@ -12,8 +12,8 @@ interface SbobetState {
   activeTab: SbobetNavTab;
   setActiveTab: (tab: SbobetNavTab) => void;
 
-  currentView: 'sbobet' | 'lobby' | 'cockfight' | 'taixiu' | 'xocdia';
-  setCurrentView: (view: 'sbobet' | 'lobby' | 'cockfight' | 'taixiu' | 'xocdia') => void;
+  currentView: 'sbobet' | 'lobby' | 'cockfight' | 'taixiu' | 'xocdia' | 'admin';
+  setCurrentView: (view: 'sbobet' | 'lobby' | 'cockfight' | 'taixiu' | 'xocdia' | 'admin') => void;
 
   // Bet Slip
   slipSelections: BetSlipItem[];

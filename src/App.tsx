@@ -22,6 +22,7 @@ import { SbobetAuthModal } from './components/SbobetAuthModal';
 import { SbobetPullToRefresh } from './components/SbobetPullToRefresh';
 import { SbobetAZModal } from './components/SbobetAZModal';
 import { SbobetAdminModal } from './components/SbobetAdminModal';
+import { SbobetAdminPortal } from './components/SbobetAdminPortal';
 import { translations } from './locales/translations';
 
 interface FootballFixture {
@@ -419,7 +420,10 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const v = params.get('view');
-    if (v === 'xocdia' || v === 'taixiu' || v === 'cockfight' || v === 'lobby') {
+    const pathname = window.location.pathname;
+    if (v === 'admin' || pathname === '/admin') {
+      setCurrentView('admin');
+    } else if (v === 'xocdia' || v === 'taixiu' || v === 'cockfight' || v === 'lobby') {
       setCurrentView(v);
     }
   }, [setCurrentView]);
@@ -454,6 +458,11 @@ export default function App() {
   };
 
   const t = translations[language];
+
+  // Dedicated Milestone 2 Admin Portal Route
+  if (currentView === 'admin') {
+    return <SbobetAdminPortal onClose={() => setCurrentView('sbobet')} />;
+  }
 
   // Isolated View Routes for Cockfight and 3D Virtual Casino
   if (currentView === 'cockfight') {

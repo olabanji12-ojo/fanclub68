@@ -199,5 +199,75 @@ export const ApiService = {
     }>('/api/wallet/reset', {
       method: 'POST'
     });
+  },
+
+  // Milestone 2 Admin Management & Agent Hierarchy
+  async getHierarchy() {
+    return safeFetch<{
+      success: boolean;
+      totalAccounts: number;
+      summary: {
+        masters: number;
+        agents: number;
+        members: number;
+        activeAccounts: number;
+        suspendedAccounts: number;
+      };
+      accounts: Array<{
+        id: string;
+        username: string;
+        name: string;
+        role: 'SUPER_ADMIN' | 'MASTER' | 'AGENT' | 'MEMBER';
+        uplineId: string | null;
+        creditLimit: number;
+        balance: number;
+        status: 'ACTIVE' | 'SUSPENDED';
+        activePlayersCount?: number;
+        phone?: string;
+        createdAt: string;
+      }>;
+    }>('/api/admin/hierarchy');
+  },
+
+  async distributeCredit(targetAccountId: string, amount: number, type: 'ALLOCATE' | 'RECALL' = 'ALLOCATE', note?: string) {
+    return safeFetch<{
+      success: boolean;
+      message: string;
+      targetAccount: any;
+      transaction: any;
+    }>('/api/admin/credit/distribute', {
+      method: 'POST',
+      body: JSON.stringify({ targetAccountId, amount, type, note })
+    });
+  },
+
+  async toggleUserSuspension(accountId: string, reason?: string) {
+    return safeFetch<{
+      success: boolean;
+      message: string;
+      account: any;
+      reason?: string;
+    }>('/api/admin/users/toggle-suspend', {
+      method: 'POST',
+      body: JSON.stringify({ accountId, reason })
+    });
+  },
+
+  async getAuditLogs() {
+    return safeFetch<{
+      success: boolean;
+      count: number;
+      logs: Array<{
+        id: string;
+        timestamp: string;
+        sourceAccount: string;
+        targetAccount: string;
+        amount: number;
+        type: 'ALLOCATE' | 'RECALL';
+        note: string;
+        executedBy: string;
+      }>;
+    }>('/api/admin/audit-logs');
   }
 };
+
