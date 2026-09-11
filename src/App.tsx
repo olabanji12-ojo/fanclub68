@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { useSbobetStore } from './stores/sbobetStore';
 import { SbobetSportsView } from './components/SbobetSportsView';
 import { SbobetAdminPortal } from './components/SbobetAdminPortal';
 import { SbobetCockfightView } from './components/SbobetCockfightView';
@@ -9,9 +10,47 @@ import { SbobetBetSlipDrawer } from './components/SbobetBetSlipDrawer';
 import { SbobetAuthModal } from './components/SbobetAuthModal';
 import { SbobetAdminModal } from './components/SbobetAdminModal';
 
+function NavigationBridge() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentView, setCurrentView } = useSbobetStore();
+
+  // 1. Sync React Router location when store currentView changes
+  useEffect(() => {
+    const routeMap: Record<string, string> = {
+      sbobet: '/',
+      lobby: '/lobby',
+      taixiu: '/taixiu',
+      cockfight: '/cockfight',
+      xocdia: '/xocdia',
+      admin: '/admin',
+    };
+    const target = routeMap[currentView] || '/';
+    // Don't re-navigate if already on matching root or alias
+    if (target === '/' && (location.pathname === '/' || location.pathname === '/sports')) return;
+    if (location.pathname !== target) {
+      navigate(target);
+    }
+  }, [currentView, navigate, location.pathname]);
+
+  // 2. Sync store when browser URL changes directly (e.g. direct load, refresh, back/forward)
+  useEffect(() => {
+    const path = location.pathname.replace(/^\//, '').toLowerCase();
+    if (path === 'admin' && currentView !== 'admin') setCurrentView('admin');
+    else if ((path === 'taixiu' || path === 'casino') && currentView !== 'taixiu') setCurrentView('taixiu');
+    else if (path === 'cockfight' && currentView !== 'cockfight') setCurrentView('cockfight');
+    else if (path === 'xocdia' && currentView !== 'xocdia') setCurrentView('xocdia');
+    else if (path === 'lobby' && currentView !== 'lobby') setCurrentView('lobby');
+    else if ((path === '' || path === 'sports') && currentView !== 'sbobet') setCurrentView('sbobet');
+  }, [location.pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <NavigationBridge />
       <Routes>
         {/* 1. Main Sportsbook Routes */}
         <Route path="/" element={<SbobetSportsView />} />

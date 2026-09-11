@@ -73,11 +73,11 @@ export const SbobetHeader: React.FC = () => {
             <span className="hidden sm:inline text-[11px] font-bold">4-Grid Hub</span>
           </button>
 
-          {/* Admin Dashboard Trigger */}
+          {/* Super Admin Dashboard Trigger (/admin) */}
           <button
-            onClick={() => setIsAdminModalOpen(true)}
+            onClick={() => setCurrentView('admin')}
             className="p-1.5 bg-[#07254D] hover:bg-[#061E3F] rounded text-yellow-400 border border-yellow-500/30 transition-all flex items-center justify-center active:scale-95"
-            title="SBOBET Admin Engine (Anti-Latency, Quota, Overrule)"
+            title="SBOBET Super Admin Command Portal (/admin)"
           >
             <Shield className="w-3.5 h-3.5" />
           </button>
