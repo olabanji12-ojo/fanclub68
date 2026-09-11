@@ -486,12 +486,16 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <SbobetPullToRefresh pullDistance={pullDistance} isRefreshing={isRefreshing} />
+            <SbobetPullToRefresh pullDistance={pullDistance} isPulling={isPulling} />
 
             {activeSport === 'football' && (
               <>
                 <div className="px-2 pt-2">
-                  <SbobetBetBuilder />
+                  <SbobetBetBuilder
+                    matchId="match-benfica-sporting-01"
+                    homeTeam="Benfica"
+                    awayTeam="Sporting CP"
+                  />
                 </div>
 
                 {activeTab === 'live' && (
@@ -499,19 +503,25 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
                     {filteredLiveApiMatches.length > 0 && (
                       <div className="space-y-2">
                         {filteredLiveApiMatches.map((m: any) => (
-                          <SbobetOddsTable key={m.matchId || m.id} fixture={m} />
+                          <SbobetOddsTable key={m.matchId || m.id} {...m} />
                         ))}
                       </div>
                     )}
                     {filteredFootballMatches.map(fixture => (
-                      <SbobetOddsTable key={fixture.matchId} fixture={fixture} />
+                      <SbobetOddsTable key={fixture.matchId} {...fixture} />
                     ))}
                   </div>
                 )}
 
-                {activeTab === 'today' && <SbobetTodayAccordion />}
+                {activeTab === 'today' && (
+                  <SbobetTodayAccordion
+                    matchId="match-atletico-sevilla-01"
+                    homeTeam="Atlético Madrid"
+                    awayTeam="Sevilla"
+                  />
+                )}
                 {activeTab === 'matches' && <SbobetLigaPortugalAccordion />}
-                {activeTab === 'outright' && (
+                {activeTab === 'parlay' && (
                   <div className="p-3">
                     <div className="bg-white rounded-lg border p-3">
                       <div className="font-black text-[#0B4DA2] text-sm mb-2">Cược Vô Địch (Outright)</div>
