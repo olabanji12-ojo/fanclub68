@@ -229,6 +229,24 @@ export const ApiService = {
     }>('/api/admin/hierarchy');
   },
 
+  async createAccount(payload: {
+    username: string;
+    name: string;
+    role: 'MASTER' | 'AGENT' | 'MEMBER';
+    uplineId?: string;
+    creditLimit?: number;
+    initialBalance?: number;
+  }) {
+    return safeFetch<{
+      success: boolean;
+      message: string;
+      account: any;
+    }>('/api/admin/accounts/create', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
   async distributeCredit(targetAccountId: string, amount: number, type: 'ALLOCATE' | 'RECALL' = 'ALLOCATE', note?: string) {
     return safeFetch<{
       success: boolean;

@@ -21,7 +21,8 @@ import {
   History,
   Lock,
   Layers,
-  ArrowRight
+  ArrowRight,
+  UserPlus
 } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { ApiService, QuotaMetricsData } from '../services/api';
@@ -230,6 +231,16 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [roleFilter, setRoleFilter] = useState<'ALL' | 'MASTER' | 'AGENT' | 'MEMBER'>('ALL');
 
+  // Simulated Account Creation Modal State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [newAccName, setNewAccName] = useState<string>('');
+  const [newAccUsername, setNewAccUsername] = useState<string>('');
+  const [newAccRole, setNewAccRole] = useState<'MASTER' | 'AGENT' | 'MEMBER'>('AGENT');
+  const [newAccUplineId, setNewAccUplineId] = useState<string>('ACC_ROOT_001');
+  const [newAccCreditLimit, setNewAccCreditLimit] = useState<string>('50000');
+  const [newAccInitialBalance, setNewAccInitialBalance] = useState<string>('10000');
+  const [isCreatingAccount, setIsCreatingAccount] = useState<boolean>(false);
+
   // Quota & Health
   const [liveQuota, setLiveQuota] = useState<QuotaMetricsData | null>(null);
   const [backendHealth, setBackendHealth] = useState<string>('Connecting...');
@@ -348,6 +359,64 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
     setDistributionSuccess(
       res.data?.message || `Successfully ${creditType === 'ALLOCATE' ? 'allocated' : 'recalled'} $${amt.toLocaleString()} for ${target.name} (${target.username})!`
     );
+    setTimeout(() => setDistributionSuccess(null), 4000);
+  };
+
+  // Create Simulated Account (Milestone 2 User Verification)
+  const handleCreateSimulatedAccount = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAccUsername.trim() || !newAccName.trim()) {
+      alert('Please fill in Account Name and Username.');
+      return;
+    }
+
+    setIsCreatingAccount(true);
+    const limit = parseFloat(newAccCreditLimit) || 50000;
+    const balance = parseFloat(newAccInitialBalance) || 0;
+
+    const res = await ApiService.createAccount({
+      username: newAccUsername,
+      name: newAccName,
+      role: newAccRole,
+      uplineId: newAccUplineId,
+      creditLimit: limit,
+      initialBalance: balance
+    });
+
+    const cleanUser = newAccUsername.trim().toLowerCase().replace(/\s+/g, '_');
+    const created: AdminPortalAccount = (res.data?.account as AdminPortalAccount) || {
+      id: `ACC_${newAccRole.slice(0, 3)}_${Math.floor(100 + Math.random() * 900)}`,
+      username: cleanUser,
+      name: newAccName.trim(),
+      role: newAccRole,
+      uplineId: newAccUplineId,
+      creditLimit: limit,
+      balance: balance,
+      status: 'ACTIVE',
+      createdAt: new Date().toISOString()
+    };
+
+    setAccounts(prev => [created, ...prev]);
+
+    if (balance > 0) {
+      const tx: CreditAuditItem = {
+        id: `TX_CRD_${Date.now()}`,
+        timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
+        sourceAccount: newAccUplineId || 'superadmin',
+        targetAccount: created.username,
+        amount: balance,
+        type: 'ALLOCATE',
+        note: 'Initial simulated account creation grant',
+        executedBy: 'Super Admin'
+      };
+      setAuditLogs(prev => [tx, ...prev]);
+    }
+
+    setIsCreatingAccount(false);
+    setIsCreateModalOpen(false);
+    setNewAccName('');
+    setNewAccUsername('');
+    setDistributionSuccess(`Simulated account "${created.name}" (@${created.username}) created successfully!`);
     setTimeout(() => setDistributionSuccess(null), 4000);
   };
 
@@ -666,6 +735,15 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
                     {rf}
                   </button>
                 ))}
+
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="ml-2 px-3 py-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white font-bold text-xs rounded-lg flex items-center gap-1.5 transition-all shadow-md cursor-pointer whitespace-nowrap shrink-0 active:scale-95"
+                  title="Create a new simulated Master, Agent, or Member account"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>+ Create Account</span>
+                </button>
               </div>
             </div>
 
@@ -1210,6 +1288,127 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
         )}
 
       </main>
+
+      {/* ════════ MODAL: CREATE SIMULATED ACCOUNT ════════ */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0B1530] border border-blue-800/80 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-blue-900/70 pb-3">
+              <div className="flex items-center gap-2 text-white font-black text-sm">
+                <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+                  <UserPlus className="w-4 h-4" />
+                </div>
+                <span>Create Simulated Account</span>
+              </div>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="text-gray-400 hover:text-white text-xs font-bold px-2 py-1 rounded-md hover:bg-white/10"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSimulatedAccount} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-blue-200 font-semibold mb-1">Account Display Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Agent Hanoi Central Hub"
+                  value={newAccName}
+                  onChange={e => setNewAccName(e.target.value)}
+                  className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-blue-200 font-semibold mb-1">Account Username</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">@</span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="agent_hanoi_test"
+                    value={newAccUsername}
+                    onChange={e => setNewAccUsername(e.target.value)}
+                    className="w-full bg-[#070D1F] border border-blue-800 rounded-lg pl-7 pr-3 py-2 text-white placeholder-gray-500 font-mono focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-blue-200 font-semibold mb-1">Account Tier / Role</label>
+                  <select
+                    value={newAccRole}
+                    onChange={e => setNewAccRole(e.target.value as any)}
+                    className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="MASTER">MASTER Agent</option>
+                    <option value="AGENT">Sub-AGENT</option>
+                    <option value="MEMBER">Player / MEMBER</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-blue-200 font-semibold mb-1">Parent Upline Master</label>
+                  <select
+                    value={newAccUplineId}
+                    onChange={e => setNewAccUplineId(e.target.value)}
+                    className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                  >
+                    {accounts.filter(a => a.role !== 'MEMBER').map(a => (
+                      <option key={a.id} value={a.id}>
+                        {a.name} ({a.role})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-blue-200 font-semibold mb-1">Credit Limit ($)</label>
+                  <input
+                    type="number"
+                    value={newAccCreditLimit}
+                    onChange={e => setNewAccCreditLimit(e.target.value)}
+                    className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-white font-mono focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-blue-200 font-semibold mb-1">Initial Starting Credit ($)</label>
+                  <input
+                    type="number"
+                    value={newAccInitialBalance}
+                    onChange={e => setNewAccInitialBalance(e.target.value)}
+                    className="w-full bg-[#070D1F] border border-blue-800 rounded-lg px-3 py-2 text-white font-mono focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg font-bold transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isCreatingAccount}
+                  className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-white rounded-lg font-black transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>{isCreatingAccount ? 'Creating...' : 'Create Simulated Account'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
