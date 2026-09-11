@@ -54,13 +54,13 @@ export const SbobetHeader: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Master 4-Grid Lobby Switcher, Circular Refresh, & Language Dropdown */}
-        <div className="flex items-center gap-1.5">
+        {/* Right: Master 4-Grid Lobby Switcher, Circular Refresh, Admin, & Language Dropdown */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           {/* Circular Refresh Button (Circle Stuff) */}
           <button
             onClick={() => refreshOdds()}
             disabled={isRefreshing}
-            className="p-1.5 bg-[#08356E] hover:bg-[#072B59] rounded text-white border border-[#165AB8] transition-all flex items-center justify-center active:scale-95"
+            className="p-1.5 bg-[#08356E] hover:bg-[#072B59] rounded text-white border border-[#165AB8] transition-all flex items-center justify-center active:scale-95 shrink-0"
             title="Làm mới tỷ lệ cược (Refresh live odds)"
           >
             <RotateCw className={`w-3.5 h-3.5 text-white ${isRefreshing ? 'animate-spin text-yellow-300' : ''}`} />
@@ -69,7 +69,7 @@ export const SbobetHeader: React.FC = () => {
           {/* Master 4-Grid Lobby Shortcut */}
           <button
             onClick={() => setCurrentView('lobby')}
-            className="flex items-center gap-1 bg-[#08356E] hover:bg-[#072B59] px-2 py-1 rounded text-xs font-semibold text-yellow-300 border border-[#165AB8] transition-all"
+            className="flex items-center gap-1 bg-[#08356E] hover:bg-[#072B59] px-1.5 sm:px-2 py-1 rounded text-xs font-semibold text-yellow-300 border border-[#165AB8] transition-all shrink-0"
             title="4-Grid Main Lobby (Sports, Cockfight, Tài Xỉu, Xóc Đĩa)"
           >
             <LayoutGrid className="w-3.5 h-3.5" />
@@ -79,23 +79,23 @@ export const SbobetHeader: React.FC = () => {
           {/* Super Admin Command Portal Trigger with clear "ADMIN" text */}
           <button
             onClick={() => setCurrentView('admin')}
-            className="flex items-center gap-1 bg-[#07254D] hover:bg-[#061E3F] px-2 py-1 rounded text-xs font-black text-yellow-400 border border-yellow-500/40 transition-all active:scale-95 shadow-xs"
+            className="flex items-center gap-1 bg-[#07254D] hover:bg-[#061E3F] px-1.5 sm:px-2 py-1 rounded text-xs font-black text-yellow-400 border border-yellow-500/40 transition-all active:scale-95 shadow-xs shrink-0 whitespace-nowrap"
             title="SBOBET Super Admin Command Portal (/admin)"
           >
-            <Shield className="w-3.5 h-3.5 text-yellow-400" />
+            <Shield className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
             <span className="text-[11px] font-black tracking-wide">ADMIN</span>
           </button>
 
-          {/* User Login Button with clear "LOGIN" text */}
+          {/* User Login Button (Desktop / Tablet view; mobile uses sticky bottom bar) */}
           {isLoggedIn && user ? (
-            <div className="flex items-center gap-1 bg-[#08356E] border border-[#165AB8] px-2 py-1 rounded text-xs">
+            <div className="hidden sm:flex items-center gap-1 bg-[#08356E] border border-[#165AB8] px-2 py-1 rounded text-xs shrink-0">
               <User className="w-3 h-3 text-yellow-300" />
               <span className="text-yellow-300 font-bold max-w-[65px] truncate text-[11px]">{user.username}</span>
             </div>
           ) : (
             <button
               onClick={() => openAuthModal('login')}
-              className="flex items-center gap-1 bg-[#FFC800] hover:bg-[#F0BB00] text-black px-2 py-1 rounded text-xs font-black transition-all active:scale-95 shadow-xs border border-yellow-400"
+              className="hidden sm:flex items-center gap-1 bg-[#FFC800] hover:bg-[#F0BB00] text-black px-2 py-1 rounded text-xs font-black transition-all active:scale-95 shadow-xs border border-yellow-400 shrink-0 whitespace-nowrap"
               title="Member Sign In / Login"
             >
               <User className="w-3.5 h-3.5" />
@@ -104,14 +104,15 @@ export const SbobetHeader: React.FC = () => {
           )}
 
           {/* Language Selector Dropdown */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-1 bg-[#08356E] hover:bg-[#072B59] px-2 py-1 rounded text-xs text-white border border-[#165AB8] transition-all"
+              className="flex items-center gap-1 bg-[#08356E] hover:bg-[#072B59] px-1.5 sm:px-2 py-1 rounded text-xs text-white border border-[#165AB8] transition-all shrink-0 whitespace-nowrap"
             >
-              <Globe className="w-3 h-3 text-[#A8CEFC]" />
-              <span className="font-semibold">{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
-              <ChevronDown className="w-3 h-3 text-white" />
+              <Globe className="w-3 h-3 text-[#A8CEFC] shrink-0" />
+              <span className="font-semibold hidden sm:inline">{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
+              <span className="font-bold sm:hidden text-[11px] uppercase">{language}</span>
+              <ChevronDown className="w-3 h-3 text-white shrink-0" />
             </button>
 
             {isLangOpen && (
