@@ -1435,7 +1435,7 @@ export const SbobetAdminPortal: React.FC<{ isModal?: boolean; onClose?: () => vo
                     type="text"
                     value={apiKeyInput}
                     onChange={e => setApiKeyInput(e.target.value)}
-                    placeholder="Enter The Odds API key (e.g. 8ba50f3775f004dc011c39700a4f0a16)"
+                    placeholder="Enter The Odds API key (e.g. 0c6133a9999fc461ae990c6dbaa55579)"
                     className="flex-1 bg-black/50 border border-blue-800 rounded px-3 py-1.5 text-xs text-white font-mono placeholder-gray-500 focus:outline-none focus:border-yellow-400"
                   />
                   <button

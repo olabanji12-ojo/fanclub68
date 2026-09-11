@@ -283,7 +283,7 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
                       </span>
                     </div>
                     <span className="text-[9px] font-mono text-gray-500 shrink-0">
-                      Key: ...{apiStatus?.activeKey?.slice(-6) || '8ba50f'}
+                      Key: ...{apiStatus?.activeKey?.slice(-6) || 'a55579'}
                     </span>
                   </div>
                 </div>

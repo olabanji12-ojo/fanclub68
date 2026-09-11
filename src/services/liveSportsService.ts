@@ -9,7 +9,7 @@ import {
 // Ingests live odds and in-play fixtures from The Odds API using the configured provider key
 // Features dual-mode resilience: Live upstream ingestion + intelligent simulated ticking when quota exhausted
 
-const DEFAULT_API_KEY = '8ba50f3775f004dc011c39700a4f0a16';
+const DEFAULT_API_KEY = '0c6133a9999fc461ae990c6dbaa55579';
 const BASE_URL = 'https://api.the-odds-api.com/v4';
 
 interface CacheStore {
@@ -51,6 +51,11 @@ export class LiveSportsService {
   public static getApiKey(): string {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('the_odds_api_key');
+      // Auto-migrate if user had the previous exhausted key saved in browser localStorage
+      if (stored === '8ba50f3775f004dc011c39700a4f0a16') {
+        localStorage.setItem('the_odds_api_key', DEFAULT_API_KEY);
+        return DEFAULT_API_KEY;
+      }
       if (stored && stored.trim()) return stored.trim();
     }
     const envKey = (import.meta as any).env?.VITE_THE_ODDS_API_KEY;
