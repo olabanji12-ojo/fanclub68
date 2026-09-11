@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { ArrowLeft, Dice5, ShieldAlert, Globe, ChevronDown, ChevronUp, RotateCcw, Sparkles, Check } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 
@@ -30,6 +30,14 @@ export const SbobetTaiXiuView: React.FC = () => {
   const [placedBetSide, setPlacedBetSide] = useState<'TÀI' | 'XỈU' | null>(null);
   const [placedBetAmount, setPlacedBetAmount] = useState<number>(0);
   const [betFeedback, setBetFeedback] = useState<string | null>(null);
+
+  // Synchronized refs to prevent interval recreation
+  const placedBetSideRef = useRef(placedBetSide);
+  placedBetSideRef.current = placedBetSide;
+  const placedBetAmountRef = useRef(placedBetAmount);
+  placedBetAmountRef.current = placedBetAmount;
+  const languageRef = useRef(language);
+  languageRef.current = language;
 
   // 4. USER STATS
   const [userStats, setUserStats] = useState({ total: 0, wins: 0, losses: 0 });
@@ -73,20 +81,24 @@ export const SbobetTaiXiuView: React.FC = () => {
           setHistory(h => [...h.slice(-19), wonTai ? 'T' : 'X']);
 
           // Settle bet if placed
-          if (placedBetSide) {
-            const won = (wonTai && placedBetSide === 'TÀI') || (!wonTai && placedBetSide === 'XỈU');
+          const currentSide = placedBetSideRef.current;
+          const currentAmt = placedBetAmountRef.current;
+          const curLang = languageRef.current;
+
+          if (currentSide) {
+            const won = (wonTai && currentSide === 'TÀI') || (!wonTai && currentSide === 'XỈU');
             setUserStats(s => ({
               total: s.total + 1,
               wins: won ? s.wins + 1 : s.wins,
               losses: !won ? s.losses + 1 : s.losses,
             }));
             if (won) {
-              setBetFeedback(language === 'vi' 
-                ? `🎉 Thắng lớn! +${(placedBetAmount * 1.98).toLocaleString()} VND`
-                : `🎉 Big Win! +$${((placedBetAmount * 1.98) / 25000).toFixed(2)}`
+              setBetFeedback(curLang === 'vi' 
+                ? `🎉 Thắng lớn! +${(currentAmt * 1.98).toLocaleString()} VND`
+                : `🎉 Big Win! +$${((currentAmt * 1.98) / 25000).toFixed(2)}`
               );
             } else {
-              setBetFeedback(language === 'vi'
+              setBetFeedback(curLang === 'vi'
                 ? `Rất tiếc! Phiên này về ${wonTai ? 'TÀI' : 'XỈU'} (${finalSum} điểm).`
                 : `Result was ${wonTai ? 'TÀI (OVER)' : 'XỈU (UNDER)'} (${finalSum} pts).`
               );
@@ -128,7 +140,7 @@ export const SbobetTaiXiuView: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [phase, placedBetSide, placedBetAmount, language]);
+  }, [phase]);
 
   // Chip click adds to stake
   const handleChipClick = (val: number) => {
