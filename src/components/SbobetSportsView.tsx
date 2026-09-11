@@ -53,6 +53,7 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
     language,
     isRefreshing,
     refreshOdds,
+    tickLiveClocks,
     slipSelections,
     clearSlip,
     setIsBetSlipOpen,
@@ -93,12 +94,13 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
   );
 
   useEffect(() => {
-    refreshOdds();
-    // Live ticking refresh interval every 25s
-    const timer = setInterval(() => {
-      refreshOdds();
-    }, 25000);
-    return () => clearInterval(timer);
+    // Initial mount: load cached/dynamic fixtures (0 API credits consumed)
+    refreshOdds(false);
+    // Dynamic in-memory ticking every 15s (zero API credits consumed)
+    const ticker = setInterval(() => {
+      tickLiveClocks();
+    }, 15000);
+    return () => clearInterval(ticker);
   }, []);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
@@ -125,7 +127,7 @@ export const SbobetSportsView: React.FC<{ showLobbyOnMount?: boolean }> = ({ sho
     setIsPulling(false);
     if (pullDistance >= 45) {
       setPullDistance(45);
-      await refreshOdds();
+      await refreshOdds(false);
     }
     setPullDistance(0);
   };

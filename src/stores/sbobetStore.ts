@@ -44,7 +44,9 @@ interface SbobetState {
   // Live Odds Refresh & Pull-to-Refresh
   isRefreshing: boolean;
   lastRefreshedTime: string;
-  refreshOdds: () => Promise<void>;
+  refreshOdds: (forceUpstream?: boolean) => Promise<void>;
+  syncUpstreamOdds: () => Promise<{ success: boolean; message: string; remaining?: number }>;
+  tickLiveClocks: () => void;
 
   // Search & A-Z Sorting
   searchTerm: string;
@@ -209,12 +211,12 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
 
   isRefreshing: false,
   lastRefreshedTime: '13:34:05',
-  refreshOdds: async () => {
+  refreshOdds: async (forceUpstream: boolean = false) => {
     if (get().isRefreshing) return;
     set({ isRefreshing: true });
     
     try {
-      const liveData = await LiveSportsService.fetchAllSportsData();
+      const liveData = await LiveSportsService.fetchAllSportsData(forceUpstream);
       if (liveData.liveMatches && liveData.liveMatches.length > 0) {
         set({ liveApiMatches: liveData.liveMatches });
       }
@@ -241,6 +243,51 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
       isRefreshing: false,
       lastRefreshedTime: timeString
     });
+  },
+
+  syncUpstreamOdds: async () => {
+    set({ isRefreshing: true });
+    try {
+      const res = await LiveSportsService.manualSyncUpstream();
+      await get().refreshOdds(true);
+      return res;
+    } finally {
+      set({ isRefreshing: false });
+    }
+  },
+
+  tickLiveClocks: () => {
+    const { liveApiMatches } = get();
+    if (!liveApiMatches || liveApiMatches.length === 0) return;
+
+    const nowSeconds = new Date().getSeconds();
+    const updated = liveApiMatches.map((match, idx) => {
+      // Parse current minute e.g. "32' (H1)"
+      const minuteMatch = match.liveTime.match(/(\d+)'/);
+      let currentMinute = minuteMatch ? parseInt(minuteMatch[1], 10) : 25 + idx * 7;
+
+      // Advance minute smoothly every 30s tick cycle
+      if (nowSeconds % 30 < 15 && currentMinute < 90) {
+        currentMinute = Math.min(90, currentMinute + 1);
+      }
+      const isH2 = currentMinute > 45;
+      const newLiveTime = `${currentMinute}' (${isH2 ? 'H2' : 'H1'})`;
+
+      // Micro odds drift (±0.01) to simulate active bookmaker trading without external API calls
+      const shouldDrift = (nowSeconds + idx) % 4 === 0;
+      const drift = shouldDrift ? (Math.random() > 0.5 ? 0.01 : -0.01) : 0;
+      const newHomeOdds = Number(Math.max(0.2, match.homeOdds + drift).toFixed(2));
+      const newAwayOdds = Number(Math.max(0.2, match.awayOdds - drift).toFixed(2));
+
+      return {
+        ...match,
+        liveTime: newLiveTime,
+        homeOdds: newHomeOdds,
+        awayOdds: newAwayOdds
+      };
+    });
+
+    set({ liveApiMatches: updated });
   },
 
   // Search & A-Z Sorting
