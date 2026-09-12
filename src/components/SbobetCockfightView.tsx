@@ -11,7 +11,8 @@ import {
   VolumeX,
   Radio,
   CheckCircle2,
-  AlertOctagon
+  AlertOctagon,
+  Play
 } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
@@ -84,6 +85,16 @@ const ARENA_MATCHES: Record<string, ArenaMatchStream[]> = {
   ]
 };
 
+const ARENA_YOUTUBE_STREAMS: Record<string, string> = {
+  CPC1: 'gkW4a0awqZU',
+  CPC2: 'mAEbl-oJ6bQ',
+  CPC3: 'YlFAY7ONdcQ',
+  CPC4: 'pPUHtor817s',
+  PH1: 'gkW4a0awqZU',
+  PH2: 'mAEbl-oJ6bQ',
+  PH3: 'YlFAY7ONdcQ'
+};
+
 export const SbobetCockfightView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user, depositBalance } = useSbobetStore();
   const t = translations[language];
@@ -93,6 +104,7 @@ export const SbobetCockfightView: React.FC = () => {
   const [selectedRound, setSelectedRound] = useState<number>(1);
   const [arenasData, setArenasData] = useState<ArenaInfo[]>(DEFAULT_ARENAS);
   const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [selectedStake, setSelectedStake] = useState<number>(100);
   const [betFeedback, setBetFeedback] = useState<{ text: string; isError: boolean } | null>(null);
   const [isLangOpen, setIsLangOpen] = useState<boolean>(false);
@@ -405,10 +417,10 @@ export const SbobetCockfightView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F2F5] text-gray-900 font-sans flex flex-col">
+    <div className="min-h-screen bg-[#F0F2F5] text-gray-900 font-sans flex flex-col w-full max-w-full overflow-x-hidden">
       {/* 1. SBOBET ROYAL BLUE HEADER */}
-      <header className="bg-[#0B4DA2] text-white shadow-md sticky top-0 z-40">
-        <div className="flex items-center justify-between px-3 py-2 border-b border-[#0A3E82]">
+      <header className="bg-[#0B4DA2] text-white shadow-md sticky top-0 z-40 w-full">
+        <div className="flex items-center justify-between px-2.5 sm:px-3 py-2 border-b border-[#0A3E82]">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentView('sbobet')}
@@ -466,7 +478,7 @@ export const SbobetCockfightView: React.FC = () => {
         </div>
 
         {/* TITLE BAR */}
-        <div className="bg-[#0A438D] px-3 py-1.5 flex items-center justify-between text-xs font-bold text-white gap-2">
+        <div className="bg-[#0A438D] px-2.5 sm:px-3 py-1.5 flex items-center justify-between text-xs font-bold text-white gap-2">
           <div className="flex items-center gap-1.5 text-red-300 min-w-0">
             <Swords className="w-4 h-4 text-red-400 shrink-0" />
             <span className="truncate text-[11px] sm:text-xs">ĐÁ GÀ SV388 (7 BỒ ĐẤU LIVE THOMO & PASAY)</span>
@@ -481,7 +493,7 @@ export const SbobetCockfightView: React.FC = () => {
       </header>
 
       {/* 2. 7-ARENA RESPONSIVE TAB BAR */}
-      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1.5 sm:px-2 py-1.5 flex items-center justify-between gap-1 w-full shadow-inner">
+      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-2 py-1.5 flex items-center gap-1.5 w-full shadow-inner overflow-x-auto no-scrollbar">
         {arenaKeys.map((arenaId) => {
           const arenaObj = arenasData.find(a => a.id === arenaId);
           const isArenaLocked = arenaObj && (arenaObj.status === 'GATE_LOCKED' || arenaObj.status === 'FIGHTING' || arenaObj.timeRemainingSeconds <= 3);
@@ -490,11 +502,10 @@ export const SbobetCockfightView: React.FC = () => {
             <button
               key={arenaId}
               onClick={() => { setActiveArena(arenaId); setSelectedRound(1); setBetFeedback(null); }}
-              className={`flex-1 min-w-0 py-2 px-0.5 sm:px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${
-                activeArena === arenaId
-                  ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
-                  : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
-              }`}
+              className={`flex-1 min-w-[44px] py-1.5 sm:py-2 px-1 rounded-md text-[11px] sm:text-xs font-black text-center transition-all whitespace-nowrap shrink-0 relative ${activeArena === arenaId
+                ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
+                : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
+                }`}
             >
               <span>{arenaId}</span>
               {isArenaLocked && (
@@ -506,30 +517,27 @@ export const SbobetCockfightView: React.FC = () => {
       </div>
 
       {/* 3. MAIN COCKFIGHT ARENA VIEWPORT & BETTING BOARD */}
-      <main className="flex-1 p-2.5 sm:p-3 space-y-2.5 sm:space-y-3 overflow-y-auto max-w-4xl mx-auto w-full">
-        
+      <main className="flex-1 p-2 sm:p-3 space-y-2.5 sm:space-y-3 overflow-y-auto max-w-4xl mx-auto w-full overflow-x-hidden">
+
         {/* VIDEO VIEWPORT CONTAINER WITH BROADCAST HUD */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md">
-          {/* Header of Video Box */}
-          <div className="p-2.5 bg-[#FAFAFA] border-b border-gray-100 flex items-center justify-between text-xs font-bold gap-1.5">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md w-full max-w-full">
+          {/* Responsive Header of Video Box */}
+          <div className="p-2 sm:p-2.5 bg-[#FAFAFA] border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold gap-2">
             <div className="flex items-center gap-1.5 text-red-600 min-w-0">
               <span className="w-2 h-2 rounded-full bg-red-600 animate-ping shrink-0" />
               <span className="truncate text-[11px] sm:text-xs font-black uppercase">
                 BỒ {activeArena} • {currentArena.name} ({currentArena.location})
               </span>
             </div>
-            
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              {/* Camera Switcher: Live Video Feed vs 3D Arena Radar */}
+
+            <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 flex-wrap">
+              {/* Camera Switcher: SV388 Video Feed vs 3D Arena Radar */}
               <div className="flex items-center bg-gray-200/80 p-0.5 rounded-md border border-gray-300 text-[9px] sm:text-[10px] font-bold">
                 <button
                   type="button"
                   onClick={() => setViewMode('video')}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-1 ${
-                    viewMode === 'video'
-                      ? 'bg-[#0B4DA2] text-white shadow-xs'
-                      : 'text-gray-700 hover:text-gray-900'
-                  }`}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-1 ${viewMode === 'video' ? 'bg-[#0B4DA2] text-white shadow-xs' : 'text-gray-700 hover:text-gray-900'
+                    }`}
                   title="Xem luồng phát sóng video SV388 trực tiếp"
                 >
                   <span>🎥 SV388 Feed</span>
@@ -537,16 +545,27 @@ export const SbobetCockfightView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setViewMode('radar')}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-1 ${
-                    viewMode === 'radar'
-                      ? 'bg-[#0B4DA2] text-white shadow-xs'
-                      : 'text-gray-700 hover:text-gray-900'
-                  }`}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-1 ${viewMode === 'radar' ? 'bg-[#0B4DA2] text-white shadow-xs' : 'text-gray-700 hover:text-gray-900'
+                    }`}
                   title="Xem mô phỏng sàn đấu 3D Radar"
                 >
                   <span>🎯 3D Radar</span>
                 </button>
               </div>
+
+              {/* Play / Pause Toggle Button */}
+              {viewMode === 'video' && (
+                <button
+                  type="button"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className={`px-2 py-1 rounded text-xs font-bold transition-all flex items-center gap-1 shadow-xs ${isPlaying ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white animate-pulse'
+                    }`}
+                  title={isPlaying ? 'Tạm dừng video' : 'Bật phát video'}
+                >
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>{isPlaying ? 'Tạm Dừng' : 'Phát Video'}</span>
+                </button>
+              )}
 
               <button
                 onClick={() => setIsAudioActive(!isAudioActive)}
@@ -556,47 +575,45 @@ export const SbobetCockfightView: React.FC = () => {
                 {isAudioActive ? <Volume2 className="w-3.5 h-3.5 text-blue-600" /> : <VolumeX className="w-3.5 h-3.5" />}
               </button>
 
-              <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black shrink-0 ${
-                isGateLocked
-                  ? 'bg-red-100 border border-red-300 text-red-700 animate-pulse'
-                  : 'bg-emerald-100 border border-emerald-300 text-emerald-800'
-              }`}>
+              <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black shrink-0 ${isGateLocked
+                ? 'bg-red-100 border border-red-300 text-red-700 animate-pulse'
+                : 'bg-emerald-100 border border-emerald-300 text-emerald-800'
+                }`}>
                 {isGateLocked ? <Lock className="w-3 h-3 text-red-600" /> : <ShieldAlert className="w-3 h-3 text-emerald-600" />}
-                <span>{isGateLocked ? 'CỔNG KHÓA 3S' : `MỞ CƯỢC: ${currentArena.timeRemainingSeconds}s`}</span>
+                <span>{isGateLocked ? 'CỔNG KHÓA 3S' : `MỞ: ${currentArena.timeRemainingSeconds}s`}</span>
               </div>
             </div>
           </div>
 
           {/* SV388 Match Round Selector Bar */}
           {viewMode === 'video' && (
-            <div className="bg-[#0A2A54] text-white px-2.5 py-1.5 flex items-center justify-between text-[11px] gap-2 border-b border-[#082245] overflow-x-auto">
+            <div className="bg-[#0A2A54] text-white px-2.5 py-1.5 flex items-center gap-2 border-b border-[#082245] overflow-x-auto no-scrollbar w-full max-w-full">
               <div className="flex items-center gap-1 shrink-0 text-yellow-300 font-bold text-[10px]">
                 <span>Trận đấu hôm nay:</span>
               </div>
-              <div className="flex items-center gap-1.5 overflow-x-auto">
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                 {(ARENA_MATCHES[activeArena] || ARENA_MATCHES['CPC2']).map((m) => (
                   <button
                     key={m.round}
                     type="button"
-                    onClick={() => setSelectedRound(m.round)}
-                    className={`px-2 py-0.5 rounded text-[10px] font-black transition-all shrink-0 ${
-                      selectedRound === m.round
-                        ? 'bg-[#FFC800] text-black shadow-xs font-black'
-                        : 'bg-white/15 text-gray-200 hover:bg-white/25'
-                    }`}
+                    onClick={() => { setSelectedRound(m.round); setIsPlaying(true); }}
+                    className={`px-2 py-0.5 rounded text-[10px] font-black transition-all shrink-0 ${selectedRound === m.round
+                      ? 'bg-[#FFC800] text-black shadow-xs font-black'
+                      : 'bg-white/15 text-gray-200 hover:bg-white/25'
+                      }`}
                   >
                     Trận #{m.round}
                   </button>
                 ))}
               </div>
-              <div className="shrink-0 text-[9px] text-gray-400 font-mono hidden md:block">
+              <div className="shrink-0 text-[9px] text-gray-400 font-mono hidden md:block ml-auto">
                 Feed: player.videosv388.com
               </div>
             </div>
           )}
 
           {/* Active Live Video Stream or 3D Canvas with Full Broadcast HUD Overlay */}
-          <div className="relative aspect-video bg-black overflow-hidden select-none">
+          <div className="relative aspect-video bg-black overflow-hidden select-none w-full max-w-full">
             {viewMode === 'video' ? (
               <div className="w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
                 {(() => {
@@ -607,12 +624,33 @@ export const SbobetCockfightView: React.FC = () => {
                       key={`${activeArena}-${currentMatch.playUrl}`}
                       src={currentMatch.playUrl}
                       title={`SV388 Cockfight Live Player ${activeArena} Trận ${currentMatch.round}`}
-                      className="w-full h-full border-0 object-cover"
+                      className="w-full h-full border-0"
                       allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                      referrerPolicy="no-referrer"
                       allowFullScreen
                     />
                   );
                 })()}
+
+                {/* Big Prominent Center Play Button Overlay */}
+                {!isPlaying && (
+                  <div
+                    onClick={() => setIsPlaying(true)}
+                    className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-20 transition-all hover:bg-black/50 group"
+                  >
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl ring-4 ring-white/40 group-hover:scale-110 transition-transform duration-200">
+                      <Play className="w-8 h-8 sm:w-10 sm:h-10 fill-white translate-x-0.5" />
+                    </div>
+                    <div className="mt-3 flex flex-col items-center gap-1">
+                      <span className="text-white font-black text-xs sm:text-sm tracking-wider uppercase bg-black/80 px-4 py-1.5 rounded-full border border-white/20 shadow-lg">
+                        ▶ PHÁT VIDEO TRẬN ĐẤU
+                      </span>
+                      <span className="text-gray-300 text-[10px] font-semibold">
+                        Bấm để bắt đầu xem video SV388
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <canvas
@@ -623,8 +661,8 @@ export const SbobetCockfightView: React.FC = () => {
               />
             )}
 
-            {/* Live Broadcast HUD - Top Left */}
-            <div className="absolute top-2.5 left-3 flex items-center gap-2 pointer-events-none">
+            {/* Live Broadcast HUD - Top Left (pointer-events-none so video is 100% clickable) */}
+            <div className="absolute top-2.5 left-3 flex items-center gap-2 pointer-events-none z-10">
               <div className="flex items-center gap-1 bg-red-600/90 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-black shadow-xs">
                 <Radio className="w-3 h-3 animate-pulse" />
                 <span>TRỰC TIẾP</span>
@@ -635,43 +673,25 @@ export const SbobetCockfightView: React.FC = () => {
             </div>
 
             {/* Live Broadcast HUD - Top Right Match & Round Info */}
-            <div className="absolute top-2.5 right-3 flex items-center gap-2 pointer-events-none">
+            <div className="absolute top-2.5 right-3 flex items-center gap-2 pointer-events-none z-10">
               <div className="bg-yellow-500/90 text-black px-2 py-0.5 rounded text-[10px] font-black shadow-xs font-mono">
                 TRẬN #{currentArena.currentMatch}
               </div>
             </div>
 
             {/* Corner Indicators Inside Broadcast */}
-            <div className="absolute bottom-10 left-3 bg-red-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-red-500/50 shadow-md">
+            <div className="absolute bottom-10 left-3 bg-red-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-red-500/50 shadow-md pointer-events-none z-10">
               🔴 MERON: @{currentArena.meronOdds.toFixed(2)}
             </div>
-            <div className="absolute bottom-10 right-3 bg-blue-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-blue-500/50 shadow-md">
+            <div className="absolute bottom-10 right-3 bg-blue-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-blue-500/50 shadow-md pointer-events-none z-10">
               🔵 WALA: @{currentArena.walaOdds.toFixed(2)}
             </div>
 
-            {/* 3-Second Anti-Vét Referee Lock Overlay */}
-            {isGateLocked && (
-              <div className="absolute inset-0 bg-black/65 backdrop-blur-xs flex flex-col items-center justify-center text-center p-4 animate-fade-in z-20">
-                <div className="p-3 bg-red-950/90 border-2 border-red-500 rounded-xl shadow-2xl max-w-sm space-y-1.5 text-white">
-                  <div className="flex items-center justify-center gap-2 text-red-400 font-black text-sm uppercase tracking-wide">
-                    <AlertOctagon className="w-5 h-5 text-red-500 animate-bounce" />
-                    <span>CỔNG CƯỢC ĐÃ KHÓA</span>
-                  </div>
-                  <p className="text-xs text-yellow-300 font-bold">
-                    Trọng tài đã thả gà / khóa sổ (Anti-Vét Gate Lock).
-                  </p>
-                  <p className="text-[10px] text-gray-300 font-medium">
-                    Hệ thống tạm ngưng nhận vé cược cho tới lượt đấu tiếp theo.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Bottom Stream Status Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-8 flex items-center justify-between text-[10px] sm:text-[11px] bg-gradient-to-t from-black/90 via-black/60 to-transparent px-3 text-gray-200">
+            {/* Bottom Stream Status Bar (Unobtrusive & Non-blocking) */}
+            <div className="absolute bottom-0 left-0 right-0 h-8 flex items-center justify-between text-[10px] sm:text-[11px] bg-gradient-to-t from-black/90 via-black/60 to-transparent px-3 text-gray-200 pointer-events-none z-10">
               <span className="font-semibold">Bồ: {currentArena.name}</span>
               <span className="font-mono text-yellow-400 font-bold">
-                {currentArena.status === 'FIGHTING' ? 'GÀ ĐANG THẢ ĐẤU' : currentArena.status === 'GATE_LOCKED' ? 'KHÓA CỔNG TRỌNG TÀI' : `ĐẾM NGƯỢC: ${currentArena.timeRemainingSeconds}s`}
+                {currentArena.status === 'FIGHTING' ? 'GÀ ĐANG THẢ ĐẤU' : currentArena.status === 'GATE_LOCKED' ? 'KHÓA CỔNG TRỌNG TÀI (ANTI-VÉT)' : `ĐẾM NGƯỢC: ${currentArena.timeRemainingSeconds}s`}
               </span>
             </div>
           </div>
@@ -688,9 +708,8 @@ export const SbobetCockfightView: React.FC = () => {
                 key={val}
                 type="button"
                 onClick={() => setSelectedStake(val)}
-                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${
-                  selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
-                }`}
+                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
+                  }`}
               >
                 {val}
               </button>
@@ -700,9 +719,8 @@ export const SbobetCockfightView: React.FC = () => {
 
         {/* Bet Feedback Alert */}
         {betFeedback && (
-          <div className={`p-2.5 rounded-lg text-xs font-bold flex items-center gap-2 ${
-            betFeedback.isError ? 'bg-red-100 border border-red-300 text-red-800' : 'bg-emerald-100 border border-emerald-300 text-emerald-800'
-          }`}>
+          <div className={`p-2.5 rounded-lg text-xs font-bold flex items-center gap-2 ${betFeedback.isError ? 'bg-red-100 border border-red-300 text-red-800' : 'bg-emerald-100 border border-emerald-300 text-emerald-800'
+            }`}>
             {betFeedback.isError ? <AlertOctagon className="w-4 h-4 shrink-0" /> : <CheckCircle2 className="w-4 h-4 shrink-0" />}
             <span>{betFeedback.text}</span>
           </div>
@@ -714,11 +732,10 @@ export const SbobetCockfightView: React.FC = () => {
           <button
             onClick={() => handlePlaceCockfightBet('MERON', currentArena.meronOdds)}
             disabled={isGateLocked}
-            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${
-              isGateLocked
-                ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
-                : 'bg-white border-red-500 hover:bg-red-50 text-gray-900 active:scale-98'
-            }`}
+            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${isGateLocked
+              ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
+              : 'bg-white border-red-500 hover:bg-red-50 text-gray-900 active:scale-98'
+              }`}
           >
             <div className="flex items-center justify-between w-full">
               <span className="text-[10px] sm:text-[11px] uppercase font-black text-red-600 tracking-wider">MERON</span>
@@ -736,11 +753,10 @@ export const SbobetCockfightView: React.FC = () => {
           <button
             onClick={() => handlePlaceCockfightBet('BDD', currentArena.bddOdds)}
             disabled={isGateLocked}
-            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${
-              isGateLocked
-                ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
-                : 'bg-white border-emerald-500 hover:bg-emerald-50 text-gray-900 active:scale-98'
-            }`}
+            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${isGateLocked
+              ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
+              : 'bg-white border-emerald-500 hover:bg-emerald-50 text-gray-900 active:scale-98'
+              }`}
           >
             <div className="flex items-center justify-between w-full">
               <span className="text-[10px] sm:text-[11px] uppercase font-black text-emerald-600 tracking-wider">BDD (HÒA)</span>
@@ -758,11 +774,10 @@ export const SbobetCockfightView: React.FC = () => {
           <button
             onClick={() => handlePlaceCockfightBet('WALA', currentArena.walaOdds)}
             disabled={isGateLocked}
-            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${
-              isGateLocked
-                ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
-                : 'bg-white border-[#0B4DA2] hover:bg-blue-50 text-gray-900 active:scale-98'
-            }`}
+            className={`p-3 sm:p-4 rounded-xl border-2 shadow-xs transition-all flex flex-col justify-between h-full min-h-[105px] ${isGateLocked
+              ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed opacity-60'
+              : 'bg-white border-[#0B4DA2] hover:bg-blue-50 text-gray-900 active:scale-98'
+              }`}
           >
             <div className="flex items-center justify-between w-full">
               <span className="text-[10px] sm:text-[11px] uppercase font-black text-[#0B4DA2] tracking-wider">WALA</span>
