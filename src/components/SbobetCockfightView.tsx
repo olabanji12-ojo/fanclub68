@@ -698,7 +698,7 @@ export const SbobetCockfightView: React.FC = () => {
         </div>
 
         {/* Stake Quick Selection */}
-        <div className="bg-white p-3 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between gap-2">
+        <div className="bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
           <div className="text-xs font-bold text-gray-700 shrink-0">
             <span>Tiền cược (Điểm):</span>
           </div>

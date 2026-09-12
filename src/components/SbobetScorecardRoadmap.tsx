@@ -122,7 +122,7 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs font-sans space-y-2.5">
+    <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs font-sans space-y-2.5 w-full max-w-full overflow-x-hidden">
       {/* 1. Header with Stats Bar matching Asian Casino Boards */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-gray-100 pb-2">
         <div className="flex items-center gap-1.5">
@@ -133,7 +133,7 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
         </div>
 
         {/* Dynamic Percentage Stats */}
-        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold">
+        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-bold flex-wrap">
           {gameType === 'xocdia' && (
             <>
               <span className="text-[#0B4DA2] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
