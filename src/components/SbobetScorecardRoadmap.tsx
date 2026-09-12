@@ -66,7 +66,7 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
       return (
         <div
           key={`${rIdx}-${cIdx}`}
-          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-gray-200 bg-gray-50/50 flex items-center justify-center shrink-0"
+          className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full border border-gray-200 bg-gray-50/50 flex items-center justify-center shrink-0"
         />
       );
     }
@@ -111,7 +111,7 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
       <button
         key={`${rIdx}-${cIdx}`}
         onClick={() => setSelectedItem(isSelected ? null : item)}
-        className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex flex-col items-center justify-center text-[10px] sm:text-[11px] font-black shadow-xs border-2 transition-transform transform active:scale-90 hover:scale-105 shrink-0 ${bgClass} ${ringClass} ${
+        className={`w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex flex-col items-center justify-center text-[9px] sm:text-[10px] md:text-[11px] font-black shadow-xs border-2 transition-transform transform active:scale-90 hover:scale-105 shrink-0 ${bgClass} ${ringClass} ${
           isSelected ? 'ring-2 ring-yellow-400 scale-110' : ''
         }`}
         title={`Ván #${item.round}: ${item.detail}`}
@@ -122,7 +122,7 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-3 shadow-xs font-sans space-y-2.5 w-full max-w-full overflow-x-hidden">
+    <div className="bg-white border border-gray-200 rounded-xl p-2.5 sm:p-3 shadow-xs font-sans space-y-2.5 w-full max-w-full overflow-x-hidden min-w-0">
       {/* 1. Header with Stats Bar matching Asian Casino Boards */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-gray-100 pb-2">
         <div className="flex items-center gap-1.5">
@@ -181,10 +181,10 @@ export const SbobetScorecardRoadmap: React.FC<ScorecardProps> = ({
       </div>
 
       {/* 2. Authentic 6-Row Bead Road Matrix Table */}
-      <div className="overflow-x-auto no-scrollbar py-1">
-        <div className="inline-grid gap-1 bg-[#F4F6F9] p-2 rounded-lg border border-gray-200 shadow-inner">
+      <div className="overflow-x-auto no-scrollbar py-1 w-full max-w-full min-w-0">
+        <div className="inline-grid gap-0.5 sm:gap-1 bg-[#F4F6F9] p-1.5 sm:p-2 rounded-lg border border-gray-200 shadow-inner">
           {matrix.map((row, rIdx) => (
-            <div key={rIdx} className="flex gap-1">
+            <div key={rIdx} className="flex gap-0.5 sm:gap-1">
               {row.map((item, cIdx) => renderBead(item, rIdx, cIdx))}
             </div>
           ))}

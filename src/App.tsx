@@ -87,7 +87,7 @@ export default function App() {
         <Route 
           path="/cockfight" 
           element={
-            <div className="max-w-md md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl">
+            <div className="w-full max-w-full md:max-w-xl lg:max-w-2xl mx-auto min-h-screen bg-[#F0F2F5] border-x border-gray-200 shadow-2xl overflow-x-hidden">
               <SbobetCockfightView />
               <SbobetBetSlipDrawer />
               <SbobetAuthModal />
