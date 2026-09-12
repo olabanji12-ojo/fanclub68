@@ -5,7 +5,7 @@ import { useSbobetStore } from '../stores/sbobetStore';
 type GamePhase = 'BETTING' | 'WARNING' | 'REVEAL';
 
 export const SbobetTaiXiuView: React.FC = () => {
-  const { setCurrentView, language, setLanguage, user, openAuthModal } = useSbobetStore();
+  const { setCurrentView, language, setLanguage, user, openAuthModal, depositBalance } = useSbobetStore();
 
   // 1. TIMING STATE MACHINE (30s Cycle)
   const [timeLeft, setTimeLeft] = useState<number>(30);
@@ -23,10 +23,10 @@ export const SbobetTaiXiuView: React.FC = () => {
   const [xiuPool, setXiuPool] = useState<number>(700721500);
   const [xiuBettors, setXiuBettors] = useState<number>(887);
 
-  // 3. WAGERING & CHIPS
+  // 3. WAGERING & CHIPS (Harmonized to SBOBET Points)
   const [selectedSide, setSelectedSide] = useState<'TÀI' | 'XỈU' | null>(null);
-  const [activeChip, setActiveChip] = useState<number>(50000);
-  const [currentStake, setCurrentStake] = useState<number>(0);
+  const [activeChip, setActiveChip] = useState<number>(50);
+  const [currentStake, setCurrentStake] = useState<number>(50);
   const [placedBetSide, setPlacedBetSide] = useState<'TÀI' | 'XỈU' | null>(null);
   const [placedBetAmount, setPlacedBetAmount] = useState<number>(0);
   const [betFeedback, setBetFeedback] = useState<string | null>(null);
@@ -42,13 +42,13 @@ export const SbobetTaiXiuView: React.FC = () => {
   // 4. USER STATS
   const [userStats, setUserStats] = useState({ total: 0, wins: 0, losses: 0 });
 
-  // Casino Chips definitions
+  // Casino Chips definitions (Points: 10, 25, 50, 100, 200 pts)
   const chips = [
-    { value: 10000, label: '10K', color: 'from-[#1E56A0] via-[#153B75] to-[#0D254C]', border: 'border-[#3B82F6]', ring: 'ring-blue-400' },
-    { value: 50000, label: '50K', color: 'from-[#6D28D9] via-[#581C87] to-[#3B0764]', border: 'border-[#A855F7]', ring: 'ring-purple-400' },
-    { value: 100000, label: '100K', color: 'from-[#059669] via-[#047857] to-[#064E3B]', border: 'border-[#34D399]', ring: 'ring-emerald-400' },
-    { value: 200000, label: '200K', color: 'from-[#D97706] via-[#B45309] to-[#78350F]', border: 'border-[#FBBF24]', ring: 'ring-amber-400' },
-    { value: 500000, label: '500K', color: 'from-[#DC2626] via-[#B91C1C] to-[#7F1D1D]', border: 'border-[#F87171]', ring: 'ring-red-400' },
+    { value: 10, label: '10', color: 'from-[#1E56A0] via-[#153B75] to-[#0D254C]', border: 'border-[#3B82F6]', ring: 'ring-blue-400' },
+    { value: 25, label: '25', color: 'from-[#6D28D9] via-[#581C87] to-[#3B0764]', border: 'border-[#A855F7]', ring: 'ring-purple-400' },
+    { value: 50, label: '50', color: 'from-[#059669] via-[#047857] to-[#064E3B]', border: 'border-[#34D399]', ring: 'ring-emerald-400' },
+    { value: 100, label: '100', color: 'from-[#D97706] via-[#B45309] to-[#78350F]', border: 'border-[#FBBF24]', ring: 'ring-amber-400' },
+    { value: 200, label: '200', color: 'from-[#DC2626] via-[#B91C1C] to-[#7F1D1D]', border: 'border-[#F87171]', ring: 'ring-red-400' },
   ];
 
   // Sum calculations
@@ -93,14 +93,16 @@ export const SbobetTaiXiuView: React.FC = () => {
               losses: !won ? s.losses + 1 : s.losses,
             }));
             if (won) {
+              const winPayout = Math.round(currentAmt * 1.98 * 100) / 100;
+              depositBalance(winPayout);
               setBetFeedback(curLang === 'vi' 
-                ? `🎉 Thắng lớn! +${(currentAmt * 1.98).toLocaleString()} VND`
-                : `🎉 Big Win! +$${((currentAmt * 1.98) / 25000).toFixed(2)}`
+                ? `🎉 Thắng lớn! +$${winPayout.toFixed(2)} (+${winPayout} pts)`
+                : `🎉 Big Win! +$${winPayout.toFixed(2)} (+${winPayout} pts)`
               );
             } else {
               setBetFeedback(curLang === 'vi'
-                ? `Rất tiếc! Phiên này về ${wonTai ? 'TÀI' : 'XỈU'} (${finalSum} điểm).`
-                : `Result was ${wonTai ? 'TÀI (OVER)' : 'XỈU (UNDER)'} (${finalSum} pts).`
+                ? `Rất tiếc! Phiên này về ${wonTai ? 'TÀI' : 'XỈU'} (${finalSum} điểm) (-$${currentAmt.toFixed(2)}).`
+                : `Result was ${wonTai ? 'TÀI (OVER)' : 'XỈU (UNDER)'} (${finalSum} pts) (-$${currentAmt.toFixed(2)}).`
               );
             }
           }
@@ -159,23 +161,34 @@ export const SbobetTaiXiuView: React.FC = () => {
   // Confirm bet
   const handlePlaceBet = () => {
     if (phase !== 'BETTING' && phase !== 'WARNING') {
-      alert(language === 'vi' ? 'Cổng cược đang đóng hoặc phiên đang mở bát!' : 'Betting gate is closed!');
+      setBetFeedback(language === 'vi' ? 'Cổng cược đang đóng hoặc phiên đang mở bát!' : 'Betting gate is closed!');
       return;
     }
     if (!selectedSide) {
-      alert(language === 'vi' ? 'Vui lòng chọn cửa cược: TÀI hoặc XỈU!' : 'Please select TÀI or XỈU!');
+      setBetFeedback(language === 'vi' ? 'Vui lòng chọn cửa cược: TÀI hoặc XỈU!' : 'Please select TÀI or XỈU!');
       return;
     }
     if (currentStake <= 0) {
-      alert(language === 'vi' ? 'Vui lòng chọn số tiền cược bằng các chip bên dưới!' : 'Please select chip stake amount!');
+      setBetFeedback(language === 'vi' ? 'Vui lòng chọn số điểm cược!' : 'Please select stake points!');
       return;
     }
+    if (currentStake > 300) {
+      setBetFeedback(language === 'vi' ? 'Vượt quá giới hạn cược tối đa 300 điểm!' : 'Max stake limit is 300 points!');
+      return;
+    }
+    if (user && user.balance < currentStake) {
+      setBetFeedback(language === 'vi' ? 'Số dư ví không đủ để đặt cược!' : 'Insufficient wallet balance!');
+      return;
+    }
+
+    // Immediate wallet deduction upon bet placement
+    depositBalance(-currentStake);
 
     setPlacedBetSide(selectedSide);
     setPlacedBetAmount(currentStake);
     setBetFeedback(language === 'vi'
-      ? `✅ Đã đặt cược thành công: ${selectedSide} (${currentStake.toLocaleString()} VND)`
-      : `✅ Bet confirmed: ${selectedSide} (${currentStake.toLocaleString()} VND)`
+      ? `✅ Đã đặt cược thành công: ${selectedSide} (-$${currentStake.toFixed(2)})`
+      : `✅ Bet confirmed: ${selectedSide} (-$${currentStake.toFixed(2)})`
     );
   };
 
@@ -674,32 +687,32 @@ export const SbobetTaiXiuView: React.FC = () => {
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  onClick={() => setCurrentStake(prev => Math.floor(prev / 2))}
+                  onClick={() => setCurrentStake(prev => Math.max(10, Math.floor(prev / 2)))}
                   className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors shadow-2xs"
-                  title="Giảm 1 nửa tiền cược"
+                  title="Giảm 1 nửa điểm cược"
                 >
                   1/2
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCurrentStake(prev => (prev === 0 ? 50000 : prev * 2))}
+                  onClick={() => setCurrentStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
                   className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-[#0B4DA2] border border-gray-300 transition-colors shadow-2xs"
-                  title="Gấp đôi tiền cược"
+                  title="Gấp đôi điểm cược"
                 >
                   2X
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCurrentStake(prev => prev + 100000)}
+                  onClick={() => setCurrentStake(prev => Math.min(300, prev + 50))}
                   className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-amber-700 border border-gray-300 transition-colors shadow-2xs"
                 >
-                  +100K
+                  +50
                 </button>
                 <button
                   type="button"
-                  onClick={() => setCurrentStake(1000000)}
+                  onClick={() => setCurrentStake(Math.min(300, Math.floor(user?.balance || 300)))}
                   className="px-1.5 sm:px-2 py-0.5 rounded bg-white hover:bg-slate-100 text-[9px] sm:text-[10px] font-bold text-emerald-600 border border-gray-300 transition-colors shadow-2xs"
-                  title="Đặt mức tối đa"
+                  title="Đặt mức tối đa (Max 300 pts)"
                 >
                   {language === 'vi' ? 'TẤT TAY' : 'MAX'}
                 </button>
@@ -711,17 +724,18 @@ export const SbobetTaiXiuView: React.FC = () => {
               <input
                 type="text"
                 inputMode="numeric"
-                value={currentStake > 0 ? currentStake.toLocaleString() : ''}
+                value={currentStake > 0 ? currentStake.toString() : ''}
                 onChange={(e) => {
                   const raw = e.target.value.replace(/\D/g, '');
-                  setCurrentStake(raw ? parseInt(raw, 10) : 0);
+                  const val = raw ? parseInt(raw, 10) : 0;
+                  setCurrentStake(Math.min(300, val));
                 }}
-                placeholder={language === 'vi' ? 'Nhập tiền cược (VND)...' : 'Enter stake amount...'}
+                placeholder={language === 'vi' ? 'Nhập điểm cược (pts)...' : 'Enter stake amount...'}
                 disabled={phase === 'REVEAL'}
                 className="w-full bg-white border border-slate-300 focus:border-[#0B4DA2] rounded-lg py-1.5 sm:py-2 pl-3 pr-12 text-sm font-black text-[#0B4DA2] font-mono tracking-wider outline-none shadow-xs transition-colors"
               />
               <span className="absolute right-3 text-xs font-black text-gray-500 pointer-events-none">
-                VND
+                pts
               </span>
             </div>
           </div>

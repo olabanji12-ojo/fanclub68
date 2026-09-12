@@ -6,7 +6,7 @@ type TokenColor = 'R' | 'W';
 type GameState = 'BETTING' | 'WARNING' | 'SHAKING' | 'REVEAL';
 
 export const SbobetXocDiaView: React.FC = () => {
-  const { setCurrentView, user, openAuthModal } = useSbobetStore();
+  const { setCurrentView, user, openAuthModal, depositBalance } = useSbobetStore();
 
   // 1. TIMING STATE MACHINE (30s Cycle)
   const [timeLeft, setTimeLeft] = useState<number>(30);
@@ -22,10 +22,10 @@ export const SbobetXocDiaView: React.FC = () => {
   const [lePool, setLePool] = useState<number>(502064579);
   const [leBettors, setLeBettors] = useState<number>(263);
 
-  // 3. USER WAGERING STATE
+  // 3. USER WAGERING STATE (Harmonized to SBOBET Points)
   const [selectedSide, setSelectedSide] = useState<'CHẴN' | 'LẺ' | null>(null);
-  const [activeChip, setActiveChip] = useState<number>(50000);
-  const [currentStake, setCurrentStake] = useState<number>(0);
+  const [activeChip, setActiveChip] = useState<number>(50);
+  const [currentStake, setCurrentStake] = useState<number>(50);
   const [hasPlacedBet, setHasPlacedBet] = useState<boolean>(false);
   const [placedBetSide, setPlacedBetSide] = useState<'CHẴN' | 'LẺ' | null>(null);
   const [placedBetAmount, setPlacedBetAmount] = useState<number>(0);
@@ -41,13 +41,13 @@ export const SbobetXocDiaView: React.FC = () => {
   // 5. ACCORDION / EXPANDABLE RULES
   const [isRulesExpanded, setIsRulesExpanded] = useState<boolean>(false);
 
-  // Casino Chips definitions matching reference.png
+  // Casino Chips definitions (Points: 10, 25, 50, 100, 200 pts)
   const chips = [
-    { value: 10000, label: '10K', color: 'from-[#1E56A0] via-[#153B75] to-[#0D254C]', border: 'border-[#3B82F6]', ring: 'ring-blue-400' },
-    { value: 50000, label: '50K', color: 'from-[#6D28D9] via-[#581C87] to-[#3B0764]', border: 'border-[#A855F7]', ring: 'ring-purple-400' },
-    { value: 100000, label: '100K', color: 'from-[#059669] via-[#047857] to-[#064E3B]', border: 'border-[#34D399]', ring: 'ring-emerald-400' },
-    { value: 200000, label: '200K', color: 'from-[#D97706] via-[#B45309] to-[#78350F]', border: 'border-[#FBBF24]', ring: 'ring-amber-400' },
-    { value: 500000, label: '500K', color: 'from-[#DC2626] via-[#B91C1C] to-[#7F1D1D]', border: 'border-[#F87171]', ring: 'ring-red-400' },
+    { value: 10, label: '10', color: 'from-[#1E56A0] via-[#153B75] to-[#0D254C]', border: 'border-[#3B82F6]', ring: 'ring-blue-400' },
+    { value: 25, label: '25', color: 'from-[#6D28D9] via-[#581C87] to-[#3B0764]', border: 'border-[#A855F7]', ring: 'ring-purple-400' },
+    { value: 50, label: '50', color: 'from-[#059669] via-[#047857] to-[#064E3B]', border: 'border-[#34D399]', ring: 'ring-emerald-400' },
+    { value: 100, label: '100', color: 'from-[#D97706] via-[#B45309] to-[#78350F]', border: 'border-[#FBBF24]', ring: 'ring-amber-400' },
+    { value: 200, label: '200', color: 'from-[#DC2626] via-[#B91C1C] to-[#7F1D1D]', border: 'border-[#F87171]', ring: 'ring-red-400' },
   ];
 
   // Derived calculations
@@ -89,9 +89,11 @@ export const SbobetXocDiaView: React.FC = () => {
                 losses: !userWon ? s.losses + 1 : s.losses,
               }));
               if (userWon) {
-                setBetFeedback(`🎉 Thắng lớn! +${(placedBetAmount * 1.96).toLocaleString()} VND`);
+                const winPayout = Math.round(placedBetAmount * 1.96 * 100) / 100;
+                depositBalance(winPayout);
+                setBetFeedback(`🎉 Thắng lớn! +$${winPayout.toFixed(2)} (+${winPayout} pts)`);
               } else {
-                setBetFeedback(`Rất tiếc! Bạn chưa trúng phiên này.`);
+                setBetFeedback(`Rất tiếc! Phiên này về ${newIsEven ? 'CHẴN' : 'LẺ'} (-$${placedBetAmount.toFixed(2)}).`);
               }
             }
 
@@ -138,7 +140,7 @@ export const SbobetXocDiaView: React.FC = () => {
   // Handle Chip Click
   const handleChipClick = (value: number) => {
     setActiveChip(value);
-    setCurrentStake(prev => prev + value);
+    setCurrentStake(prev => Math.min(300, prev + value));
   };
 
   // Clear Selection
@@ -151,23 +153,34 @@ export const SbobetXocDiaView: React.FC = () => {
 
   // Place Bet Action
   const handleConfirmBet = () => {
-    if (gameState !== 'BETTING') {
-      alert('Cổng cược đã đóng hoặc phiên đang xóc!');
+    if (gameState !== 'BETTING' && gameState !== 'WARNING') {
+      setBetFeedback('Cổng cược đã đóng hoặc phiên đang xóc!');
       return;
     }
     if (!selectedSide) {
-      alert('Vui lòng chọn cửa cược (CHẴN hoặc LẺ) trước khi đặt!');
+      setBetFeedback('Vui lòng chọn cửa cược (CHẴN hoặc LẺ) trước khi đặt!');
       return;
     }
     if (currentStake <= 0) {
-      alert('Vui lòng chọn chip cược!');
+      setBetFeedback('Vui lòng chọn chip cược!');
       return;
     }
+    if (currentStake > 300) {
+      setBetFeedback('Vượt quá giới hạn cược tối đa 300 điểm!');
+      return;
+    }
+    if (user && user.balance < currentStake) {
+      setBetFeedback('Số dư ví không đủ để đặt cược!');
+      return;
+    }
+
+    // Immediate wallet deduction upon bet placement
+    depositBalance(-currentStake);
 
     setHasPlacedBet(true);
     setPlacedBetSide(selectedSide);
     setPlacedBetAmount(currentStake);
-    setBetFeedback(`✅ Đã đặt cược thành công: ${selectedSide} (${currentStake.toLocaleString()} VND)`);
+    setBetFeedback(`✅ Đã đặt cược thành công: ${selectedSide} (-$${currentStake.toFixed(2)})`);
   };
 
   // Dynamic status text
@@ -525,32 +538,32 @@ export const SbobetXocDiaView: React.FC = () => {
             <div className="flex items-center gap-1">
               <button
                 type="button"
-                onClick={() => setCurrentStake(prev => Math.floor(prev / 2))}
+                onClick={() => setCurrentStake(prev => Math.max(10, Math.floor(prev / 2)))}
                 className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-gray-300 border border-gray-700 transition-colors"
-                title="Giảm 1 nửa tiền cược"
+                title="Giảm 1 nửa điểm cược"
               >
                 1/2
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentStake(prev => (prev === 0 ? 50000 : prev * 2))}
+                onClick={() => setCurrentStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
                 className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-yellow-400 border border-gray-700 transition-colors"
-                title="Gấp đôi tiền cược"
+                title="Gấp đôi điểm cược"
               >
                 2X
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentStake(prev => prev + 100000)}
+                onClick={() => setCurrentStake(prev => Math.min(300, prev + 50))}
                 className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-blue-300 border border-gray-700 transition-colors"
               >
-                +100K
+                +50
               </button>
               <button
                 type="button"
-                onClick={() => setCurrentStake(1000000)}
+                onClick={() => setCurrentStake(Math.min(300, Math.floor(user?.balance || 300)))}
                 className="px-2 py-0.5 rounded bg-[#162238] hover:bg-[#1E2E4B] text-[10px] font-bold text-emerald-400 border border-gray-700 transition-colors"
-                title="Đặt mức tối đa"
+                title="Đặt mức tối đa (Max 300 pts)"
               >
                 TẤT TAY
               </button>
@@ -562,17 +575,18 @@ export const SbobetXocDiaView: React.FC = () => {
             <input
               type="text"
               inputMode="numeric"
-              value={currentStake > 0 ? currentStake.toLocaleString() : ''}
+              value={currentStake > 0 ? currentStake.toString() : ''}
               onChange={(e) => {
                 const raw = e.target.value.replace(/\D/g, '');
-                setCurrentStake(raw ? parseInt(raw, 10) : 0);
+                const val = raw ? parseInt(raw, 10) : 0;
+                setCurrentStake(Math.min(300, val));
               }}
-              placeholder="Nhập số tiền cược tùy ý (VND)..."
+              placeholder="Nhập số điểm cược (pts)..."
               disabled={gameState === 'REVEAL'}
               className="w-full bg-[#070A12] border border-[#23355A] focus:border-yellow-400 rounded-lg py-2 pl-3 pr-14 text-sm font-black text-yellow-300 font-mono tracking-wider outline-none transition-colors"
             />
             <span className="absolute right-3 text-xs font-black text-gray-400 pointer-events-none">
-              VND
+              pts
             </span>
           </div>
         </div>

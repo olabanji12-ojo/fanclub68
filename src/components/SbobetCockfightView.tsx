@@ -48,6 +48,15 @@ interface ArenaMatchStream {
   name: string;
 }
 
+interface ActiveCockfightBet {
+  id: string;
+  arenaId: string;
+  match: number;
+  side: 'MERON' | 'WALA' | 'BDD';
+  stake: number;
+  odds: number;
+}
+
 const ARENA_MATCHES: Record<string, ArenaMatchStream[]> = {
   CPC1: [
     { round: 1, playUrl: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', name: 'Trận 1 (Thomo CPC1)' },
@@ -116,8 +125,67 @@ export const SbobetCockfightView: React.FC = () => {
   const currentArena = arenasData.find(a => a.id === activeArena) || arenasData[0];
   const isGateLocked = currentArena.status === 'GATE_LOCKED' || currentArena.status === 'FIGHTING' || currentArena.timeRemainingSeconds <= 3;
 
-  // Soi Cầu history for current arena (M: Meron, W: Wala, B: BDD)
-  const history: ('M' | 'W' | 'B')[] = ['M', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'M', 'W'];
+  // Active bets placed by the user
+  const [activeBets, setActiveBets] = useState<ActiveCockfightBet[]>([]);
+  const activeBetsRef = useRef<ActiveCockfightBet[]>(activeBets);
+  activeBetsRef.current = activeBets;
+
+  const settledMatchesRef = useRef<Set<string>>(new Set());
+
+  // Dynamic Soi Cầu history for all 7 arenas (M: Meron, W: Wala, B: BDD)
+  const [arenaHistories, setArenaHistories] = useState<Record<string, ('M' | 'W' | 'B')[]>>({
+    CPC1: ['M', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'M', 'W'],
+    CPC2: ['W', 'W', 'M', 'W', 'M', 'M', 'W', 'W', 'B', 'W', 'M', 'W', 'M', 'W'],
+    CPC3: ['M', 'M', 'W', 'M', 'W', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'M'],
+    CPC4: ['W', 'M', 'W', 'M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'W'],
+    PH1: ['M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'W', 'M'],
+    PH2: ['W', 'M', 'W', 'W', 'M', 'M', 'B', 'W', 'M', 'W', 'M', 'W'],
+    PH3: ['M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'M', 'W', 'W', 'M']
+  });
+
+  const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
+
+  // Settle bets and award payouts on match conclusion
+  const settleArenaMatch = (arenaId: string, matchNum: number) => {
+    const key = `${arenaId}-${matchNum}`;
+    if (settledMatchesRef.current.has(key)) return;
+    settledMatchesRef.current.add(key);
+
+    // Realistic outcome ratio: Meron 47%, Wala 47%, BDD 6%
+    const rand = Math.random();
+    const winner: 'MERON' | 'WALA' | 'BDD' = rand < 0.47 ? 'MERON' : (rand < 0.94 ? 'WALA' : 'BDD');
+    const winnerCode: 'M' | 'W' | 'B' = winner === 'MERON' ? 'M' : (winner === 'WALA' ? 'W' : 'B');
+
+    // Update arena roadmap
+    setArenaHistories(prev => {
+      const cur = prev[arenaId] || ['M', 'W'];
+      return {
+        ...prev,
+        [arenaId]: [...cur.slice(-29), winnerCode]
+      };
+    });
+
+    // Settle user bets for this match
+    const pendingBets = activeBetsRef.current.filter(b => b.arenaId === arenaId && b.match === matchNum);
+    if (pendingBets.length > 0) {
+      pendingBets.forEach(bet => {
+        if (bet.side === winner) {
+          const winPayout = Math.round(bet.stake * (1 + bet.odds) * 100) / 100;
+          depositBalance(winPayout);
+          setBetFeedback({
+            text: `🎉 Bồ ${arenaId} Trận #${matchNum}: ${winner} THẮNG! Bạn nhận +$${winPayout.toFixed(2)} (+${winPayout} pts)`,
+            isError: false
+          });
+        } else {
+          setBetFeedback({
+            text: `Trận #${matchNum} bồ ${arenaId}: ${winner} thắng. Rất tiếc bạn chưa trúng (-$${bet.stake.toFixed(2)}).`,
+            isError: true
+          });
+        }
+      });
+      setActiveBets(prev => prev.filter(b => !(b.arenaId === arenaId && b.match === matchNum)));
+    }
+  };
 
   // 1. Fetch live backend arenas every 2 seconds
   useEffect(() => {
@@ -127,6 +195,11 @@ export const SbobetCockfightView: React.FC = () => {
       try {
         const res = await ApiService.getCockfightArenas();
         if (isMounted && res.data && res.data.arenas && res.data.arenas.length > 0) {
+          res.data.arenas.forEach((arena: ArenaInfo) => {
+            if (arena.status === 'SETTLING') {
+              settleArenaMatch(arena.id, arena.currentMatch);
+            }
+          });
           setArenasData(res.data.arenas);
         }
       } catch (err) {
@@ -142,6 +215,7 @@ export const SbobetCockfightView: React.FC = () => {
       setArenasData(prev => prev.map(a => {
         let newSec = a.timeRemainingSeconds - 1;
         let newStatus = a.status;
+        let nextMatch = a.currentMatch;
 
         if (newSec <= 3 && a.status === 'BETTING_OPEN') {
           newStatus = 'GATE_LOCKED';
@@ -153,16 +227,19 @@ export const SbobetCockfightView: React.FC = () => {
             newSec = 25;
           } else if (a.status === 'FIGHTING') {
             newStatus = 'SETTLING';
-            newSec = 5;
+            newSec = 6;
+            settleArenaMatch(a.id, a.currentMatch);
           } else {
             newStatus = 'BETTING_OPEN';
             newSec = 35;
+            nextMatch = a.currentMatch + 1;
           }
         }
         return {
           ...a,
           timeRemainingSeconds: Math.max(0, newSec),
-          status: newStatus
+          status: newStatus,
+          currentMatch: nextMatch
         };
       }));
     }, 1000);
@@ -361,7 +438,7 @@ export const SbobetCockfightView: React.FC = () => {
     return () => cancelAnimationFrame(animId);
   }, [activeArena, currentArena.status]);
 
-  // Anti-Vét 3-Second Verification & Wallet Balance Deduction
+  // Anti-Vét 3-Second Verification, 300-Point Hard Cap & Wallet Balance Deduction
   const handlePlaceCockfightBet = (side: 'MERON' | 'WALA' | 'BDD', odds: number) => {
     setBetFeedback(null);
 
@@ -374,7 +451,24 @@ export const SbobetCockfightView: React.FC = () => {
       return;
     }
 
-    // 2. Validate user balance
+    // 2. Validate stake bounds
+    if (selectedStake <= 0) {
+      setBetFeedback({
+        text: 'Vui lòng chọn số điểm cược hợp lệ!',
+        isError: true
+      });
+      return;
+    }
+
+    if (selectedStake > 300) {
+      setBetFeedback({
+        text: 'Vượt quá giới hạn cược tối đa 300 điểm cho mỗi đơn cược!',
+        isError: true
+      });
+      return;
+    }
+
+    // 3. Validate user balance
     if (user && user.balance < selectedStake) {
       setBetFeedback({
         text: 'Số dư ví không đủ để đặt cược!',
@@ -383,10 +477,21 @@ export const SbobetCockfightView: React.FC = () => {
       return;
     }
 
-    // 3. Immediate Wallet Balance Deduction
+    // 4. Immediate Wallet Balance Deduction
     depositBalance(-selectedStake);
 
-    // 4. Dispatch bet to backend API & slip
+    // 5. Record active bet for match conclusion settlement
+    const betRecord: ActiveCockfightBet = {
+      id: `${activeArena}-${currentArena.currentMatch}-${side}-${Date.now()}`,
+      arenaId: activeArena,
+      match: currentArena.currentMatch,
+      side,
+      stake: selectedStake,
+      odds
+    };
+    setActiveBets(prev => [...prev, betRecord]);
+
+    // 6. Dispatch bet to backend API & slip
     ApiService.placeCockfightBet(activeArena, side, selectedStake).then(({ data, error }) => {
       if (error && !data) {
         setBetFeedback({
@@ -396,14 +501,14 @@ export const SbobetCockfightView: React.FC = () => {
         return;
       }
       setBetFeedback({
-        text: `Đã chấp nhận cược ${side} bồ ${activeArena} (-$${selectedStake.toFixed(2)})!`,
+        text: `Đã chấp nhận cược ${side} bồ ${activeArena} Trận #${currentArena.currentMatch} (-$${selectedStake.toFixed(2)})!`,
         isError: false
       });
     });
 
     // Also register into user bet slip
     addSelection({
-      matchId: `cockfight-${activeArena}-${Date.now()}`,
+      matchId: `cockfight-${activeArena}-${currentArena.currentMatch}`,
       matchName: `Đá Gà SV388 [${activeArena}] - Trận #${currentArena.currentMatch}`,
       marketName: 'Kèo Trực Tiếp',
       selectionName: side === 'MERON' ? 'Meron (Gà Đỏ)' : side === 'WALA' ? 'Wala (Gà Xanh)' : 'BDD (Hòa)',
@@ -701,25 +806,105 @@ export const SbobetCockfightView: React.FC = () => {
           </div>
         </div>
 
-        {/* Stake Quick Selection */}
-        <div className="bg-white p-2 sm:p-3 rounded-xl border border-gray-200 shadow-xs flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
-          <div className="text-xs font-bold text-gray-700 shrink-0">
-            <span className="hidden sm:inline">Tiền cược (Điểm):</span>
-            <span className="sm:hidden">Cược (pts):</span>
+        {/* Stake Quick Selection with Multipliers & Custom Input */}
+        <div className="bg-white p-2.5 sm:p-3 rounded-xl border border-gray-200 shadow-xs space-y-2">
+          <div className="flex items-center justify-between text-xs font-bold text-gray-700">
+            <div className="flex items-center gap-1.5">
+              <span>Tiền cược (Điểm):</span>
+              <span className="text-[#0B4DA2] font-black">{selectedStake} pts</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setSelectedStake(prev => Math.max(10, Math.floor(prev / 2)))}
+                className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors"
+                title="Giảm 1 nửa điểm cược"
+              >
+                1/2
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
+                className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-blue-700 border border-gray-300 transition-colors"
+                title="Gấp đôi điểm cược"
+              >
+                2X
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedStake(prev => Math.min(300, prev + 50))}
+                className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-amber-700 border border-gray-300 transition-colors"
+              >
+                +50
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedStake(Math.min(300, Math.floor(user?.balance || 300)))}
+                className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-emerald-700 border border-gray-300 transition-colors"
+                title="Đặt mức tối đa (Max 300 pts)"
+              >
+                TẤT TAY
+              </button>
+            </div>
           </div>
-          <div className="grid grid-cols-4 gap-1 sm:gap-1.5 flex-1 max-w-xs">
-            {[50, 100, 200, 300].map(val => (
+
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              inputMode="numeric"
+              value={selectedStake > 0 ? selectedStake.toString() : ''}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, '');
+                const val = raw ? parseInt(raw, 10) : 0;
+                setSelectedStake(Math.min(300, val));
+              }}
+              placeholder="Nhập số điểm cược (pts)..."
+              disabled={isGateLocked}
+              className="w-full bg-gray-50 border border-gray-300 focus:border-[#0B4DA2] rounded-lg py-1.5 sm:py-2 pl-3 pr-12 text-sm font-black text-[#0B4DA2] font-mono tracking-wider outline-none shadow-2xs transition-colors"
+            />
+            <span className="absolute right-3 text-xs font-black text-gray-400 pointer-events-none">
+              pts
+            </span>
+          </div>
+
+          <div className="grid grid-cols-5 gap-1 sm:gap-1.5">
+            {[25, 50, 100, 200, 300].map(val => (
               <button
                 key={val}
                 type="button"
                 onClick={() => setSelectedStake(val)}
-                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
-                  }`}
+                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${
+                  selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
+                }`}
               >
                 {val}
               </button>
             ))}
           </div>
+
+          {/* Active bets on this arena */}
+          {activeBets.filter(b => b.arenaId === activeArena).length > 0 && (
+            <div className="pt-1.5 border-t border-gray-100 space-y-1">
+              <div className="text-[10px] uppercase font-extrabold text-blue-900 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Vé cược đang đấu bồ {activeArena}:</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {activeBets.filter(b => b.arenaId === activeArena).map(b => (
+                  <span
+                    key={b.id}
+                    className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded text-[11px] font-bold text-blue-900 shadow-2xs"
+                  >
+                    <span>Trận #{b.match}:</span>
+                    <span className={b.side === 'MERON' ? 'text-red-600 font-black' : b.side === 'WALA' ? 'text-blue-600 font-black' : 'text-emerald-600 font-black'}>
+                      {b.side}
+                    </span>
+                    <span className="text-gray-500 font-mono">({b.stake} pts @{b.odds.toFixed(2)})</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bet Feedback Alert */}

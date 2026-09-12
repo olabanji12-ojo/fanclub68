@@ -174,28 +174,66 @@ export const SbobetBetSlipDrawer: React.FC = () => {
                 <span className="text-[11px] text-gray-500">Số dư: ${user?.balance.toFixed(2) || '1,000.00'}</span>
               </div>
               <div className="space-y-2">
-                <input
-                  type="number"
-                  value={stake}
-                  onChange={(e) => setStake(Number(e.target.value))}
-                  disabled={isProcessing}
-                  max={300}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-blue-600 shadow-xs"
-                />
-                <div className="grid grid-cols-4 gap-1.5">
-                  {[50, 100, 200, 300].map(val => (
+                <div className="relative flex items-center">
+                  <input
+                    type="number"
+                    value={stake > 0 ? stake : ''}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setStake(Math.min(300, isNaN(val) ? 0 : val));
+                    }}
+                    disabled={isProcessing}
+                    max={300}
+                    placeholder="Nhập số điểm cược..."
+                    className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm font-bold text-gray-900 focus:outline-none focus:border-blue-600 shadow-xs pr-12"
+                  />
+                  <span className="absolute right-3 text-xs font-bold text-gray-400">pts</span>
+                </div>
+                <div className="flex items-center justify-between gap-1 flex-wrap">
+                  <div className="grid grid-cols-4 gap-1 flex-1 min-w-[160px]">
+                    {[50, 100, 200, 300].map(val => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => setStake(val)}
+                        disabled={isProcessing}
+                        className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${
+                          stake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                        }`}
+                      >
+                        {val}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
                     <button
-                      key={val}
                       type="button"
-                      onClick={() => setStake(val)}
+                      onClick={() => setStake(prev => Math.max(10, Math.floor(prev / 2)))}
                       disabled={isProcessing}
-                      className={`py-1.5 text-xs font-bold rounded-md border transition-all text-center ${
-                        stake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                      }`}
+                      className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-xs font-bold text-gray-700 border border-gray-300"
+                      title="Giảm 1 nửa điểm cược"
                     >
-                      {val}
+                      1/2
                     </button>
-                  ))}
+                    <button
+                      type="button"
+                      onClick={() => setStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
+                      disabled={isProcessing}
+                      className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-xs font-bold text-blue-700 border border-gray-300"
+                      title="Gấp đôi điểm cược"
+                    >
+                      2X
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setStake(Math.min(300, Math.floor(user?.balance || 300)))}
+                      disabled={isProcessing}
+                      className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-xs font-bold text-emerald-700 border border-gray-300"
+                      title="Mức tối đa (Max 300 pts)"
+                    >
+                      MAX
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -313,9 +313,9 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
   casinoOverride: null,
   setCasinoOverride: (val) => set({ casinoOverride: val }),
   depositBalance: (amount) => set((s) => ({
-    user: s.user ? { ...s.user, balance: Math.max(0, s.user.balance + amount) } : {
+    user: s.user ? { ...s.user, balance: Math.round(Math.max(0, s.user.balance + amount) * 100) / 100 } : {
       username: 'SbobetTrader_88',
-      balance: Math.max(0, 1000.0 + amount),
+      balance: Math.round(Math.max(0, 1000.0 + amount) * 100) / 100,
       vipLevel: 'VIP Master'
     }
   }))
