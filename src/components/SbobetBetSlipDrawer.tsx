@@ -12,12 +12,13 @@ export const SbobetBetSlipDrawer: React.FC = () => {
     clearSlip,
     isBetSlipOpen,
     setIsBetSlipOpen,
-    user
+    user,
+    depositBalance
   } = useSbobetStore();
 
   const [stake, setStake] = useState<number>(50);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [countdown, setCountdown] = useState<number>(8);
+  const [countdown, setCountdown] = useState<number>(5);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -43,9 +44,15 @@ export const SbobetBetSlipDrawer: React.FC = () => {
       return;
     }
 
-    // Initiate Anti-Latency Delay Queue (Milestone 2/4 Rule)
+    // Check balance
+    if (user && user.balance < stake) {
+      setErrorMsg('Số dư không đủ để đặt cược!');
+      return;
+    }
+
+    // Initiate Anti-Latency Delay Queue (Milestone 2 Contract: 5 seconds)
     setIsProcessing(true);
-    setCountdown(8);
+    setCountdown(5);
 
     // Dispatch to Backend Staging Delay Queue
     ApiService.placeBet({
@@ -74,6 +81,8 @@ export const SbobetBetSlipDrawer: React.FC = () => {
       setCountdown(prev => {
         if (prev <= 1) {
           clearInterval(interval);
+          // Immediate wallet balance deduction upon bet acceptance!
+          depositBalance(-stake);
           setIsProcessing(false);
           setIsSuccess(true);
           setTimeout(() => {
@@ -120,7 +129,7 @@ export const SbobetBetSlipDrawer: React.FC = () => {
         <div className="bg-blue-50 border-b border-blue-100 px-3 py-1.5 text-[11px] text-blue-900 flex items-center justify-between">
           <span className="flex items-center gap-1 font-semibold">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-700" />
-            <span>Anti-Latency Protection: 8s delay queue</span>
+            <span>Anti-Latency Protection: 5s delay queue</span>
           </span>
           <span className="font-bold text-blue-800">Max 300 pts</span>
         </div>
@@ -204,16 +213,29 @@ export const SbobetBetSlipDrawer: React.FC = () => {
               </div>
             )}
 
-            {/* Place Bet Button / Countdown */}
+            {/* Place Bet Button / Countdown with Visual Progress Bar */}
             {isProcessing ? (
-              <div className="w-full py-3 bg-blue-700 text-white font-black text-xs uppercase rounded flex items-center justify-center gap-2 shadow">
-                <Clock className="w-4 h-4 animate-spin" />
-                <span>Đang kiểm tra biến động tỷ lệ... ({countdown}s)</span>
+              <div className="space-y-1.5">
+                <div className="w-full py-3 bg-[#0B4DA2] text-white font-black text-xs uppercase rounded flex items-center justify-center gap-2 shadow">
+                  <Clock className="w-4 h-4 animate-spin text-yellow-300" />
+                  <span>Đang kiểm tra biến động tỷ lệ... ({countdown}s)</span>
+                </div>
+                {/* Visual Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden border border-gray-300">
+                  <div 
+                    className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full transition-all duration-1000 ease-linear rounded-full"
+                    style={{ width: `${Math.min(100, Math.max(0, ((5 - countdown) / 5) * 100))}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] text-gray-500 font-semibold px-0.5">
+                  <span>Hàng đợi kiểm tra độ trễ (Anti-Latency)</span>
+                  <span className="font-mono font-bold text-blue-700">{5 - countdown}/5s</span>
+                </div>
               </div>
             ) : isSuccess ? (
               <div className="w-full py-3 bg-emerald-600 text-white font-black text-xs uppercase rounded flex items-center justify-center gap-2 shadow">
                 <CheckCircle2 className="w-4 h-4" />
-                <span>Cược đã được chấp nhận thành công!</span>
+                <span>Cược đã được chấp nhận thành công! (-${stake})</span>
               </div>
             ) : (
               <button

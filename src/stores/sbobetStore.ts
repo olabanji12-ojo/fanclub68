@@ -145,8 +145,12 @@ export const useSbobetStore = create<SbobetState>((set, get) => ({
 
   clearSlip: () => set({ slipSelections: [] }),
 
-  isLoggedIn: false,
-  user: null,
+  isLoggedIn: true,
+  user: {
+    username: 'SbobetTrader_88',
+    balance: 1000.0,
+    vipLevel: 'VIP Master'
+  },
 
   isAuthModalOpen: false,
   authModalTab: 'login',
