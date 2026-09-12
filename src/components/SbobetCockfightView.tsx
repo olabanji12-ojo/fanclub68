@@ -41,14 +41,47 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
   { id: 'PH3', name: 'Cebu PH3 Live Cockpit', location: 'Philippines', status: 'BETTING_OPEN', meronOdds: 0.91, walaOdds: 0.91, bddOdds: 8.00, timeRemainingSeconds: 38, streamUrl: '', currentMatch: 31 },
 ];
 
-const ARENA_VIDEO_MAP: Record<string, string> = {
-  CPC1: 'gkW4a0awqZU', // Thomo CPC1 Đua Tài Trực Tiếp
-  CPC2: 'YlFAY7ONdcQ', // Thomo CPC2 Derby
-  CPC3: 'mAEbl-oJ6bQ', // Thomo CPC3 Nơi Vua Chúa Đá Gà
-  CPC4: 'pPUHtor817s', // Thomo CPC4 Sư Kê Đỉnh Cao
-  PH1: 'gkW4a0awqZU',  // Pasay City PH1 Colosseum
-  PH2: 'mAEbl-oJ6bQ',  // Davao PH2 Cockpit Arena
-  PH3: 'YlFAY7ONdcQ'   // Cebu PH3 Live Cockpit
+interface ArenaMatchStream {
+  round: number;
+  playUrl: string;
+  name: string;
+}
+
+const ARENA_MATCHES: Record<string, ArenaMatchStream[]> = {
+  CPC1: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', name: 'Trận 1 (Thomo CPC1)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', name: 'Trận 2 (Thomo CPC1)' },
+    { round: 3, playUrl: 'https://player.videosv388.com/?play=9258d9b1-816c-4990-bb9d-342b717e9ea6', name: 'Trận 3 (Thomo CPC1)' },
+    { round: 4, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 4 (Thomo CPC1)' },
+  ],
+  CPC2: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 1 (Thomo CPC2)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', name: 'Trận 2 (Thomo CPC2)' },
+    { round: 3, playUrl: 'https://player.videosv388.com/?play=62a2c246-ceb5-4a7b-91f2-6a549f7b4d02', name: 'Trận 3 (Thomo CPC2)' },
+    { round: 4, playUrl: 'https://player.videosv388.com/?play=b7b736e2-fb20-4653-9f02-9eace2f4289f', name: 'Trận 4 (Thomo CPC2)' },
+    { round: 5, playUrl: 'https://player.videosv388.com/?play=e9c51fae-6b79-4cbd-9792-b154abb1d9d0', name: 'Trận 5 (Thomo CPC2)' },
+  ],
+  CPC3: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=c14547a2-b7fd-4ea6-8ddc-995ef8d6a782', name: 'Trận 1 (Thomo CPC3)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=6556ea54-8448-46e4-9244-b832677e6967', name: 'Trận 2 (Thomo CPC3)' },
+    { round: 3, playUrl: 'https://player.videosv388.com/?play=b18e6293-cf3a-4f17-b353-6b361e9bc055', name: 'Trận 3 (Thomo CPC3)' },
+  ],
+  CPC4: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=8fe9b578-8bd6-4197-90ae-1f9ea6fc1a3a', name: 'Trận 1 (Thomo CPC4)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=2ed5512c-3026-4489-a3bb-84c2b2b4dbf2', name: 'Trận 2 (Thomo CPC4)' },
+  ],
+  PH1: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', name: 'Trận 1 (Pasay Colosseum)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', name: 'Trận 2 (Pasay Colosseum)' },
+  ],
+  PH2: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=98238cef-89ca-4216-a29d-3d0e8c348216', name: 'Trận 1 (Davao Cockpit)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', name: 'Trận 2 (Davao Cockpit)' },
+  ],
+  PH3: [
+    { round: 1, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 1 (Cebu Live)' },
+    { round: 2, playUrl: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', name: 'Trận 2 (Cebu Live)' },
+  ]
 };
 
 export const SbobetCockfightView: React.FC = () => {
@@ -57,6 +90,7 @@ export const SbobetCockfightView: React.FC = () => {
 
   const arenaKeys = ['CPC1', 'CPC2', 'CPC3', 'CPC4', 'PH1', 'PH2', 'PH3'];
   const [activeArena, setActiveArena] = useState<string>('CPC1');
+  const [selectedRound, setSelectedRound] = useState<number>(1);
   const [arenasData, setArenasData] = useState<ArenaInfo[]>(DEFAULT_ARENAS);
   const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
   const [selectedStake, setSelectedStake] = useState<number>(100);
@@ -455,7 +489,7 @@ export const SbobetCockfightView: React.FC = () => {
           return (
             <button
               key={arenaId}
-              onClick={() => { setActiveArena(arenaId); setBetFeedback(null); }}
+              onClick={() => { setActiveArena(arenaId); setSelectedRound(1); setBetFeedback(null); }}
               className={`flex-1 min-w-0 py-2 px-0.5 sm:px-1 rounded-md text-[10px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${
                 activeArena === arenaId
                   ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
@@ -496,9 +530,9 @@ export const SbobetCockfightView: React.FC = () => {
                       ? 'bg-[#0B4DA2] text-white shadow-xs'
                       : 'text-gray-700 hover:text-gray-900'
                   }`}
-                  title="Xem luồng phát sóng video trực tiếp Thomo"
+                  title="Xem luồng phát sóng video SV388 trực tiếp"
                 >
-                  <span>🎥 Cam 1 Live</span>
+                  <span>🎥 SV388 Feed</span>
                 </button>
                 <button
                   type="button"
@@ -533,17 +567,52 @@ export const SbobetCockfightView: React.FC = () => {
             </div>
           </div>
 
+          {/* SV388 Match Round Selector Bar */}
+          {viewMode === 'video' && (
+            <div className="bg-[#0A2A54] text-white px-2.5 py-1.5 flex items-center justify-between text-[11px] gap-2 border-b border-[#082245] overflow-x-auto">
+              <div className="flex items-center gap-1 shrink-0 text-yellow-300 font-bold text-[10px]">
+                <span>Trận đấu hôm nay:</span>
+              </div>
+              <div className="flex items-center gap-1.5 overflow-x-auto">
+                {(ARENA_MATCHES[activeArena] || ARENA_MATCHES['CPC2']).map((m) => (
+                  <button
+                    key={m.round}
+                    type="button"
+                    onClick={() => setSelectedRound(m.round)}
+                    className={`px-2 py-0.5 rounded text-[10px] font-black transition-all shrink-0 ${
+                      selectedRound === m.round
+                        ? 'bg-[#FFC800] text-black shadow-xs font-black'
+                        : 'bg-white/15 text-gray-200 hover:bg-white/25'
+                    }`}
+                  >
+                    Trận #{m.round}
+                  </button>
+                ))}
+              </div>
+              <div className="shrink-0 text-[9px] text-gray-400 font-mono hidden md:block">
+                Feed: player.videosv388.com
+              </div>
+            </div>
+          )}
+
           {/* Active Live Video Stream or 3D Canvas with Full Broadcast HUD Overlay */}
           <div className="relative aspect-video bg-black overflow-hidden select-none">
             {viewMode === 'video' ? (
               <div className="w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
-                <iframe
-                  key={`${activeArena}-${ARENA_VIDEO_MAP[activeArena] || 'gkW4a0awqZU'}`}
-                  src={`https://www.youtube-nocookie.com/embed/${ARENA_VIDEO_MAP[activeArena] || 'gkW4a0awqZU'}?autoplay=1&mute=1&loop=1&playlist=${ARENA_VIDEO_MAP[activeArena] || 'gkW4a0awqZU'}&controls=0&modestbranding=1&showinfo=0&rel=0&iv_load_policy=3&playsinline=1&enablejsapi=1`}
-                  title={`SV388 Cockfight Live Stream Arena ${activeArena}`}
-                  className="w-[125%] h-[125%] object-cover pointer-events-none absolute -top-[12.5%] -left-[12.5%] border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
+                {(() => {
+                  const matchStreams = ARENA_MATCHES[activeArena] || ARENA_MATCHES['CPC2'];
+                  const currentMatch = matchStreams.find(m => m.round === selectedRound) || matchStreams[0];
+                  return (
+                    <iframe
+                      key={`${activeArena}-${currentMatch.playUrl}`}
+                      src={currentMatch.playUrl}
+                      title={`SV388 Cockfight Live Player ${activeArena} Trận ${currentMatch.round}`}
+                      className="w-full h-full border-0 object-cover"
+                      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                      allowFullScreen
+                    />
+                  );
+                })()}
               </div>
             ) : (
               <canvas
