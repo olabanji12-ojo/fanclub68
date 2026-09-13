@@ -12,41 +12,168 @@ import {
   Radio,
   CheckCircle2,
   AlertOctagon,
-  Play
+  Play,
+  Scale,
+  Settings,
+  Tv,
+  ExternalLink,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
 import { ApiService } from '../services/api';
+import { SbobetLiveStreamPlayer, StreamSource } from './SbobetLiveStreamPlayer';
 
-interface ArenaInfo {
+export interface RoosterProfile {
+  breed: string;
+  weightKg: number;
+  spurType: string;
+  record: string;
+  tag: string;
+}
+
+export interface ArenaInfo {
   id: string;
   name: string;
   location: string;
-  status: 'BETTING_OPEN' | 'GATE_LOCKED' | 'FIGHTING' | 'SETTLING';
+  isOpen: boolean;
+  operatingHours: string;
+  status: 'BETTING_OPEN' | 'GATE_LOCKED' | 'FIGHTING' | 'SETTLING' | 'WEIGHING' | 'CLOSED';
+  phase: 'CLOSED' | 'WEIGHING' | 'BETTING_OPEN' | 'GATE_LOCKED' | 'FIGHTING' | 'SETTLING';
   meronOdds: number;
   walaOdds: number;
   bddOdds: number;
   timeRemainingSeconds: number;
   streamUrl: string;
   currentMatch: number;
+  meronRooster?: RoosterProfile;
+  walaRooster?: RoosterProfile;
+  customStreamUrl?: string;
 }
 
 const DEFAULT_ARENAS: ArenaInfo[] = [
-  { id: 'CPC1', name: 'Thomo CPC1 VIP Arena', location: 'Campuchia', status: 'BETTING_OPEN', meronOdds: 0.88, walaOdds: 0.96, bddOdds: 8.00, timeRemainingSeconds: 28, streamUrl: '', currentMatch: 42 },
-  { id: 'CPC2', name: 'Thomo CPC2 Grand Arena', location: 'Campuchia', status: 'BETTING_OPEN', meronOdds: 0.85, walaOdds: 0.98, bddOdds: 8.00, timeRemainingSeconds: 19, streamUrl: '', currentMatch: 35 },
-  { id: 'CPC3', name: 'Thomo CPC3 Iron Spur', location: 'Campuchia', status: 'BETTING_OPEN', meronOdds: 0.90, walaOdds: 0.92, bddOdds: 8.00, timeRemainingSeconds: 34, streamUrl: '', currentMatch: 28 },
-  { id: 'CPC4', name: 'Thomo CPC4 Derby', location: 'Campuchia', status: 'BETTING_OPEN', meronOdds: 0.86, walaOdds: 0.95, bddOdds: 8.00, timeRemainingSeconds: 12, streamUrl: '', currentMatch: 19 },
-  { id: 'PH1', name: 'Pasay City PH1 Colosseum', location: 'Philippines', status: 'BETTING_OPEN', meronOdds: 0.89, walaOdds: 0.94, bddOdds: 8.00, timeRemainingSeconds: 22, streamUrl: '', currentMatch: 50 },
-  { id: 'PH2', name: 'Davao PH2 Cockpit Arena', location: 'Philippines', status: 'BETTING_OPEN', meronOdds: 0.87, walaOdds: 0.97, bddOdds: 8.00, timeRemainingSeconds: 15, streamUrl: '', currentMatch: 44 },
-  { id: 'PH3', name: 'Cebu PH3 Live Cockpit', location: 'Philippines', status: 'BETTING_OPEN', meronOdds: 0.91, walaOdds: 0.91, bddOdds: 8.00, timeRemainingSeconds: 38, streamUrl: '', currentMatch: 31 },
+  {
+    id: 'CPC1',
+    name: 'Thomo CPC1 VIP Arena',
+    location: 'Campuchia',
+    isOpen: true,
+    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
+    status: 'WEIGHING',
+    phase: 'WEIGHING',
+    meronOdds: 0.88,
+    walaOdds: 0.96,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 520,
+    streamUrl: '',
+    currentMatch: 42,
+    meronRooster: { breed: 'Gà Asil Rặc', weightKg: 3.25, spurType: 'Cựa Sắt Tròn Thomo', record: '8W - 1L', tag: 'M-#4210' },
+    walaRooster: { breed: 'Gà Tre Mỹ', weightKg: 3.20, spurType: 'Cựa Sắt Tròn Thomo', record: '6W - 2L', tag: 'W-#4211' }
+  },
+  {
+    id: 'CPC2',
+    name: 'Thomo CPC2 Grand Arena',
+    location: 'Campuchia',
+    isOpen: true,
+    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
+    status: 'BETTING_OPEN',
+    phase: 'BETTING_OPEN',
+    meronOdds: 0.85,
+    walaOdds: 0.98,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 45,
+    streamUrl: '',
+    currentMatch: 35,
+    meronRooster: { breed: 'Gà Peru Lai', weightKg: 3.10, spurType: 'Cựa Tháp Sắt', record: '9W - 0L', tag: 'M-#3504' },
+    walaRooster: { breed: 'Gà Kelso', weightKg: 3.12, spurType: 'Cựa Tháp Sắt', record: '7W - 1L', tag: 'W-#3505' }
+  },
+  {
+    id: 'CPC3',
+    name: 'Thomo CPC3 Iron Spur',
+    location: 'Campuchia',
+    isOpen: true,
+    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
+    status: 'WEIGHING',
+    phase: 'WEIGHING',
+    meronOdds: 0.90,
+    walaOdds: 0.92,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 480,
+    streamUrl: '',
+    currentMatch: 28,
+    meronRooster: { breed: 'Gà Sweater', weightKg: 2.95, spurType: 'Cựa Tròn 2.5 Inch', record: '5W - 1L', tag: 'M-#2802' },
+    walaRooster: { breed: 'Gà Cuban', weightKg: 2.98, spurType: 'Cựa Tròn 2.5 Inch', record: '6W - 3L', tag: 'W-#2803' }
+  },
+  {
+    id: 'CPC4',
+    name: 'Thomo CPC4 Derby',
+    location: 'Campuchia',
+    isOpen: true,
+    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
+    status: 'BETTING_OPEN',
+    phase: 'BETTING_OPEN',
+    meronOdds: 0.86,
+    walaOdds: 0.95,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 30,
+    streamUrl: '',
+    currentMatch: 19,
+    meronRooster: { breed: 'Gà Asil Derby', weightKg: 3.05, spurType: 'Cựa Sắt Tròn Thomo', record: '4W - 0L', tag: 'M-#1901' },
+    walaRooster: { breed: 'Gà Tre Chuối', weightKg: 3.02, spurType: 'Cựa Sắt Tròn Thomo', record: '5W - 1L', tag: 'W-#1902' }
+  },
+  {
+    id: 'PH1',
+    name: 'Pasay City PH1 Colosseum',
+    location: 'Philippines',
+    isOpen: true,
+    operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
+    status: 'WEIGHING',
+    phase: 'WEIGHING',
+    meronOdds: 0.89,
+    walaOdds: 0.94,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 560,
+    streamUrl: '',
+    currentMatch: 50,
+    meronRooster: { breed: 'Gà Hatch Slasher', weightKg: 2.85, spurType: 'Cựa Dao Slasher', record: '12W - 2L', tag: 'M-#5001' },
+    walaRooster: { breed: 'Gà Roundhead', weightKg: 2.88, spurType: 'Cựa Dao Slasher', record: '10W - 1L', tag: 'W-#5002' }
+  },
+  {
+    id: 'PH2',
+    name: 'Davao PH2 Cockpit Arena',
+    location: 'Philippines',
+    isOpen: true,
+    operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
+    status: 'BETTING_OPEN',
+    phase: 'BETTING_OPEN',
+    meronOdds: 0.87,
+    walaOdds: 0.97,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 22,
+    streamUrl: '',
+    currentMatch: 44,
+    meronRooster: { breed: 'Gà Kelso Davao', weightKg: 2.92, spurType: 'Cựa Dao Double Blade', record: '8W - 3L', tag: 'M-#4401' },
+    walaRooster: { breed: 'Gà Albany', weightKg: 2.95, spurType: 'Cựa Dao Double Blade', record: '7W - 2L', tag: 'W-#4402' }
+  },
+  {
+    id: 'PH3',
+    name: 'Cebu PH3 Live Cockpit',
+    location: 'Philippines',
+    isOpen: true,
+    operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
+    status: 'WEIGHING',
+    phase: 'WEIGHING',
+    meronOdds: 0.91,
+    walaOdds: 0.91,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 420,
+    streamUrl: '',
+    currentMatch: 31,
+    meronRooster: { breed: 'Gà Dan Gray', weightKg: 2.89, spurType: 'Cựa Dao Cebu Slasher', record: '5W - 2L', tag: 'M-#3101' },
+    walaRooster: { breed: 'Gà Butcher', weightKg: 2.91, spurType: 'Cựa Dao Cebu Slasher', record: '6W - 1L', tag: 'W-#3102' }
+  },
 ];
-
-interface ArenaMatchStream {
-  round: number;
-  playUrl: string;
-  name: string;
-}
 
 interface ActiveCockfightBet {
   id: string;
@@ -57,51 +184,23 @@ interface ActiveCockfightBet {
   odds: number;
 }
 
-const ARENA_MATCHES: Record<string, ArenaMatchStream[]> = {
+const STREAM_PRESETS: Record<string, StreamSource[]> = {
   CPC1: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', name: 'Trận 1 (Thomo CPC1)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', name: 'Trận 2 (Thomo CPC1)' },
-    { round: 3, playUrl: 'https://player.videosv388.com/?play=9258d9b1-816c-4990-bb9d-342b717e9ea6', name: 'Trận 3 (Thomo CPC1)' },
-    { round: 4, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 4 (Thomo CPC1)' },
+    { id: 'sv388_r1', name: 'SV388 HD Match Feed #1 (Thomo VIP)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
+    { id: 'sv388_r2', name: 'SV388 HD Match Feed #2 (Thomo VIP)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
+    { id: 'hls_live_test', name: 'HLS Live 60FPS Stream', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' },
+    { id: 'bj988_proxy', name: 'BJ988 Sới Trực Tiếp (Proxy)', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' },
   ],
   CPC2: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 1 (Thomo CPC2)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', name: 'Trận 2 (Thomo CPC2)' },
-    { round: 3, playUrl: 'https://player.videosv388.com/?play=62a2c246-ceb5-4a7b-91f2-6a549f7b4d02', name: 'Trận 3 (Thomo CPC2)' },
-    { round: 4, playUrl: 'https://player.videosv388.com/?play=b7b736e2-fb20-4653-9f02-9eace2f4289f', name: 'Trận 4 (Thomo CPC2)' },
-    { round: 5, playUrl: 'https://player.videosv388.com/?play=e9c51fae-6b79-4cbd-9792-b154abb1d9d0', name: 'Trận 5 (Thomo CPC2)' },
-  ],
-  CPC3: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=c14547a2-b7fd-4ea6-8ddc-995ef8d6a782', name: 'Trận 1 (Thomo CPC3)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=6556ea54-8448-46e4-9244-b832677e6967', name: 'Trận 2 (Thomo CPC3)' },
-    { round: 3, playUrl: 'https://player.videosv388.com/?play=b18e6293-cf3a-4f17-b353-6b361e9bc055', name: 'Trận 3 (Thomo CPC3)' },
-  ],
-  CPC4: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=8fe9b578-8bd6-4197-90ae-1f9ea6fc1a3a', name: 'Trận 1 (Thomo CPC4)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=2ed5512c-3026-4489-a3bb-84c2b2b4dbf2', name: 'Trận 2 (Thomo CPC4)' },
+    { id: 'sv388_cpc2', name: 'Thomo CPC2 HD Arena Stream', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
+    { id: 'sv388_cpc2_r2', name: 'Thomo CPC2 Trận 2', url: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', type: 'iframe' },
+    { id: 'bj988_cpc2', name: 'BJ988 Sới Bồ CPC2', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' },
   ],
   PH1: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', name: 'Trận 1 (Pasay Colosseum)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', name: 'Trận 2 (Pasay Colosseum)' },
-  ],
-  PH2: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=98238cef-89ca-4216-a29d-3d0e8c348216', name: 'Trận 1 (Davao Cockpit)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', name: 'Trận 2 (Davao Cockpit)' },
-  ],
-  PH3: [
-    { round: 1, playUrl: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', name: 'Trận 1 (Cebu Live)' },
-    { round: 2, playUrl: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', name: 'Trận 2 (Cebu Live)' },
+    { id: 'pasay_hd', name: 'Pasay Colosseum Sabong Live', url: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', type: 'iframe' },
+    { id: 'pasay_r2', name: 'Pasay Colosseum Trận 2', url: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', type: 'iframe' },
+    { id: 'pasay_bj988', name: 'BJ988 Philippines Feed', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' }
   ]
-};
-
-const ARENA_YOUTUBE_STREAMS: Record<string, string> = {
-  CPC1: 'gkW4a0awqZU',
-  CPC2: 'mAEbl-oJ6bQ',
-  CPC3: 'YlFAY7ONdcQ',
-  CPC4: 'pPUHtor817s',
-  PH1: 'gkW4a0awqZU',
-  PH2: 'mAEbl-oJ6bQ',
-  PH3: 'YlFAY7ONdcQ'
 };
 
 export const SbobetCockfightView: React.FC = () => {
@@ -110,22 +209,28 @@ export const SbobetCockfightView: React.FC = () => {
 
   const arenaKeys = ['CPC1', 'CPC2', 'CPC3', 'CPC4', 'PH1', 'PH2', 'PH3'];
   const [activeArena, setActiveArena] = useState<string>('CPC1');
-  const [selectedRound, setSelectedRound] = useState<number>(1);
   const [arenasData, setArenasData] = useState<ArenaInfo[]>(DEFAULT_ARENAS);
-  const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [selectedStake, setSelectedStake] = useState<number>(100);
   const [betFeedback, setBetFeedback] = useState<{ text: string; isError: boolean } | null>(null);
   const [isLangOpen, setIsLangOpen] = useState<boolean>(false);
-  const [isAudioActive, setIsAudioActive] = useState<boolean>(false);
+  const [isInstructorModalOpen, setIsInstructorModalOpen] = useState<boolean>(false);
+  const [customStreamInput, setCustomStreamInput] = useState<string>('');
+  const [classroomSpeed, setClassroomSpeed] = useState<boolean>(true);
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // Active Stream Source
+  const [activeStreamSource, setActiveStreamSource] = useState<StreamSource>(
+    STREAM_PRESETS['CPC1'][0]
+  );
 
   // Active Arena Data
   const currentArena = arenasData.find(a => a.id === activeArena) || arenasData[0];
-  const isGateLocked = currentArena.status === 'GATE_LOCKED' || currentArena.status === 'FIGHTING' || currentArena.timeRemainingSeconds <= 3;
+  const isGateLocked =
+    currentArena.phase === 'GATE_LOCKED' ||
+    currentArena.phase === 'FIGHTING' ||
+    currentArena.phase === 'CLOSED' ||
+    (currentArena.phase === 'BETTING_OPEN' && currentArena.timeRemainingSeconds <= 3);
 
-  // Active bets placed by the user
+  // Active user bets
   const [activeBets, setActiveBets] = useState<ActiveCockfightBet[]>([]);
   const activeBetsRef = useRef<ActiveCockfightBet[]>(activeBets);
   activeBetsRef.current = activeBets;
@@ -145,13 +250,18 @@ export const SbobetCockfightView: React.FC = () => {
 
   const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
 
+  // Switch Stream preset on arena switch
+  useEffect(() => {
+    const presets = STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1'];
+    setActiveStreamSource(presets[0]);
+  }, [activeArena]);
+
   // Settle bets and award payouts on match conclusion
   const settleArenaMatch = (arenaId: string, matchNum: number) => {
     const key = `${arenaId}-${matchNum}`;
     if (settledMatchesRef.current.has(key)) return;
     settledMatchesRef.current.add(key);
 
-    // Realistic outcome ratio: Meron 47%, Wala 47%, BDD 6%
     const rand = Math.random();
     const winner: 'MERON' | 'WALA' | 'BDD' = rand < 0.47 ? 'MERON' : (rand < 0.94 ? 'WALA' : 'BDD');
     const winnerCode: 'M' | 'W' | 'B' = winner === 'MERON' ? 'M' : (winner === 'WALA' ? 'W' : 'B');
@@ -165,7 +275,7 @@ export const SbobetCockfightView: React.FC = () => {
       };
     });
 
-    // Settle user bets for this match
+    // Settle user bets
     const pendingBets = activeBetsRef.current.filter(b => b.arenaId === arenaId && b.match === matchNum);
     if (pendingBets.length > 0) {
       pendingBets.forEach(bet => {
@@ -187,7 +297,7 @@ export const SbobetCockfightView: React.FC = () => {
     }
   };
 
-  // 1. Fetch live backend arenas every 2 seconds
+  // Fetch live backend arenas every 2 seconds
   useEffect(() => {
     let isMounted = true;
 
@@ -196,49 +306,53 @@ export const SbobetCockfightView: React.FC = () => {
         const res = await ApiService.getCockfightArenas();
         if (isMounted && res.data && res.data.arenas && res.data.arenas.length > 0) {
           res.data.arenas.forEach((arena: ArenaInfo) => {
-            if (arena.status === 'SETTLING') {
+            if (arena.phase === 'SETTLING' || arena.status === 'SETTLING') {
               settleArenaMatch(arena.id, arena.currentMatch);
             }
           });
           setArenasData(res.data.arenas);
         }
       } catch (err) {
-        // Fallback gracefully to autonomous local clock
+        // Fallback locally
       }
     };
 
     fetchArenas();
     const interval = setInterval(fetchArenas, 2000);
 
-    // Smooth local second countdown ticker
+    // Smooth client second countdown
     const ticker = setInterval(() => {
       setArenasData(prev => prev.map(a => {
         let newSec = a.timeRemainingSeconds - 1;
-        let newStatus = a.status;
+        let newPhase = a.phase || a.status;
         let nextMatch = a.currentMatch;
 
-        if (newSec <= 3 && a.status === 'BETTING_OPEN') {
-          newStatus = 'GATE_LOCKED';
+        if (newSec <= 3 && newPhase === 'BETTING_OPEN') {
+          newPhase = 'GATE_LOCKED';
         }
 
         if (newSec <= 0) {
-          if (a.status === 'GATE_LOCKED') {
-            newStatus = 'FIGHTING';
-            newSec = 25;
-          } else if (a.status === 'FIGHTING') {
-            newStatus = 'SETTLING';
-            newSec = 6;
+          if (newPhase === 'WEIGHING') {
+            newPhase = 'BETTING_OPEN';
+            newSec = classroomSpeed ? 40 : 120;
+          } else if (newPhase === 'GATE_LOCKED' || newPhase === 'BETTING_OPEN') {
+            newPhase = 'FIGHTING';
+            newSec = classroomSpeed ? 25 : 90;
+          } else if (newPhase === 'FIGHTING') {
+            newPhase = 'SETTLING';
+            newSec = classroomSpeed ? 8 : 20;
             settleArenaMatch(a.id, a.currentMatch);
           } else {
-            newStatus = 'BETTING_OPEN';
-            newSec = 35;
+            newPhase = 'WEIGHING';
+            newSec = classroomSpeed ? 50 : 600;
             nextMatch = a.currentMatch + 1;
           }
         }
         return {
           ...a,
           timeRemainingSeconds: Math.max(0, newSec),
-          status: newStatus,
+          phase: newPhase,
+          status: newPhase as any,
           currentMatch: nextMatch
         };
       }));
@@ -249,226 +363,67 @@ export const SbobetCockfightView: React.FC = () => {
       clearInterval(interval);
       clearInterval(ticker);
     };
-  }, []);
+  }, [classroomSpeed]);
 
-  // 2. High-Performance HTML5 Cockfight Arena Video Stream Canvas Simulation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  // Handle Custom URL injection
+  const handleApplyCustomStream = () => {
+    if (!customStreamInput.trim()) return;
+    const url = customStreamInput.trim();
+    const isHls = url.endsWith('.m3u8') || url.includes('m3u8');
+    const isProxyIframe = !isHls && (url.includes('bj988') || url.includes('sv388'));
 
-    let animId: number;
-    let frame = 0;
+    setActiveStreamSource({
+      id: `custom-${Date.now()}`,
+      name: `Luồng Tùy Chỉnh: ${url.substring(0, 30)}...`,
+      url,
+      type: isHls ? 'hls' : isProxyIframe ? 'proxy_iframe' : 'iframe'
+    });
+    setIsInstructorModalOpen(false);
+  };
 
-    // Arena fighter physics simulation
-    const render = () => {
-      frame++;
-      const w = canvas.width;
-      const h = canvas.height;
+  // Toggle Classroom vs Real-Time speed
+  const handleToggleClassroomMode = async (enabled: boolean) => {
+    setClassroomSpeed(enabled);
+    try {
+      await fetch('/api/stream/configure-arena', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ classroomMode: enabled })
+      });
+    } catch {
+      // Offline fallback
+    }
+  };
 
-      // Dark Broadcast Arena Background
-      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-      bgGrad.addColorStop(0, '#0a0d14');
-      bgGrad.addColorStop(0.5, '#161b26');
-      bgGrad.addColorStop(1, '#0e121a');
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, w, h);
+  // Format seconds to mm:ss
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
 
-      // Arena Sand Ring Pit (Perspective Oval)
-      ctx.save();
-      ctx.beginPath();
-      ctx.ellipse(w / 2, h * 0.65, w * 0.42, h * 0.28, 0, 0, Math.PI * 2);
-      const sandGrad = ctx.createRadialGradient(w / 2, h * 0.65, 10, w / 2, h * 0.65, w * 0.42);
-      sandGrad.addColorStop(0, '#c29b63');
-      sandGrad.addColorStop(0.7, '#8f6834');
-      sandGrad.addColorStop(1, '#543b1c');
-      ctx.fillStyle = sandGrad;
-      ctx.fill();
-      ctx.lineWidth = 4;
-      ctx.strokeStyle = '#dfba7f';
-      ctx.stroke();
-      ctx.restore();
-
-      // Stadium Overhead Spotlight Beam
-      ctx.save();
-      const spotGrad = ctx.createRadialGradient(w / 2, h * 0.6, 20, w / 2, h * 0.6, w * 0.35);
-      spotGrad.addColorStop(0, 'rgba(255, 255, 230, 0.25)');
-      spotGrad.addColorStop(1, 'rgba(255, 255, 230, 0)');
-      ctx.fillStyle = spotGrad;
-      ctx.beginPath();
-      ctx.ellipse(w / 2, h * 0.6, w * 0.35, h * 0.25, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Dynamic Fighter Roosters Positioning
-      const isFighting = currentArena.status === 'FIGHTING';
-      const bounce = Math.sin(frame * 0.12) * (isFighting ? 14 : 4);
-      const lunge = isFighting ? Math.cos(frame * 0.2) * 25 : Math.sin(frame * 0.05) * 8;
-
-      // Meron (Red Cock) Position
-      const meronX = w * 0.38 + lunge;
-      const meronY = h * 0.63 - Math.abs(bounce);
-
-      // Wala (Blue Cock) Position
-      const walaX = w * 0.62 - lunge;
-      const walaY = h * 0.63 - Math.abs(Math.cos(frame * 0.12) * (isFighting ? 14 : 4));
-
-      // Shadows
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      ctx.beginPath();
-      ctx.ellipse(meronX, h * 0.68, 22, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(walaX, h * 0.68, 22, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Draw Meron (Red Fighter)
-      ctx.save();
-      ctx.translate(meronX, meronY);
-      // Red body
-      ctx.fillStyle = '#b91c1c';
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 24, 16, -0.2, 0, Math.PI * 2);
-      ctx.fill();
-      // Comb
-      ctx.fillStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.arc(14, -14, 6, 0, Math.PI * 2);
-      ctx.fill();
-      // Head
-      ctx.fillStyle = '#991b1b';
-      ctx.beginPath();
-      ctx.arc(12, -8, 8, 0, Math.PI * 2);
-      ctx.fill();
-      // Beak
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.moveTo(19, -8);
-      ctx.lineTo(27, -5);
-      ctx.lineTo(19, -2);
-      ctx.closePath();
-      ctx.fill();
-      // Tail Feathers (Gold & Dark Red)
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(-18, -4);
-      ctx.quadraticCurveTo(-35, -20 + bounce * 0.5, -28, -28);
-      ctx.stroke();
-      ctx.strokeStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.moveTo(-16, 2);
-      ctx.quadraticCurveTo(-38, -10 + bounce * 0.5, -32, -18);
-      ctx.stroke();
-      // Spur
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(4, 12);
-      ctx.lineTo(8, 20);
-      ctx.stroke();
-      ctx.restore();
-
-      // Draw Wala (Blue Fighter)
-      ctx.save();
-      ctx.translate(walaX, walaY);
-      // Blue body
-      ctx.fillStyle = '#1d4ed8';
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 24, 16, 0.2, 0, Math.PI * 2);
-      ctx.fill();
-      // Comb
-      ctx.fillStyle = '#ef4444';
-      ctx.beginPath();
-      ctx.arc(-14, -14, 6, 0, Math.PI * 2);
-      ctx.fill();
-      // Head
-      ctx.fillStyle = '#1e40af';
-      ctx.beginPath();
-      ctx.arc(-12, -8, 8, 0, Math.PI * 2);
-      ctx.fill();
-      // Beak
-      ctx.fillStyle = '#f59e0b';
-      ctx.beginPath();
-      ctx.moveTo(-19, -8);
-      ctx.lineTo(-27, -5);
-      ctx.lineTo(-19, -2);
-      ctx.closePath();
-      ctx.fill();
-      // Tail Feathers (Cyan & Navy)
-      ctx.strokeStyle = '#2563eb';
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      ctx.moveTo(18, -4);
-      ctx.quadraticCurveTo(35, -20 + bounce * 0.5, 28, -28);
-      ctx.stroke();
-      ctx.strokeStyle = '#38bdf8';
-      ctx.beginPath();
-      ctx.moveTo(16, 2);
-      ctx.quadraticCurveTo(38, -10 + bounce * 0.5, 32, -18);
-      ctx.stroke();
-      // Spur
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.moveTo(-4, 12);
-      ctx.lineTo(-8, 20);
-      ctx.stroke();
-      ctx.restore();
-
-      // Fighting Clashing Sparks / Dust effect when fighting
-      if (isFighting && frame % 4 === 0) {
-        ctx.fillStyle = 'rgba(255, 220, 150, 0.8)';
-        ctx.beginPath();
-        ctx.arc((meronX + walaX) / 2 + (Math.random() - 0.5) * 20, h * 0.6 + (Math.random() - 0.5) * 20, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Authentic SV388 Broadcast Scanlines & Vignette
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      for (let y = 0; y < h; y += 4) {
-        ctx.fillRect(0, y, w, 1.5);
-      }
-
-      animId = requestAnimationFrame(render);
-    };
-
-    animId = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(animId);
-  }, [activeArena, currentArena.status]);
-
-  // Anti-Vét 3-Second Verification, 300-Point Hard Cap & Wallet Balance Deduction
+  // Anti-Vét 3-Second Verification & Hard Cap
   const handlePlaceCockfightBet = (side: 'MERON' | 'WALA' | 'BDD', odds: number) => {
     setBetFeedback(null);
 
-    // 1. Strict Anti-Vét Gate Lock Enforced
     if (isGateLocked) {
       setBetFeedback({
-        text: 'CỔNG CƯỢC ĐÃ KHÓA: Trọng tài đã thả gà / khóa sổ (Anti-Vét 3s Gate Lock)',
+        text: currentArena.phase === 'WEIGHING'
+          ? 'Đang giai đoạn Ghép gà & Cân ký (Chưa mở cổng cược).'
+          : 'CỔNG CƯỢC ĐÃ KHÓA: Trọng tài thả gà (Anti-Vét 3s Gate Lock)',
         isError: true
       });
       return;
     }
 
-    // 2. Validate stake bounds
-    if (selectedStake <= 0) {
+    if (selectedStake <= 0 || selectedStake > 300) {
       setBetFeedback({
-        text: 'Vui lòng chọn số điểm cược hợp lệ!',
+        text: 'Điểm cược phải từ 1 đến 300 điểm!',
         isError: true
       });
       return;
     }
 
-    if (selectedStake > 300) {
-      setBetFeedback({
-        text: 'Vượt quá giới hạn cược tối đa 300 điểm cho mỗi đơn cược!',
-        isError: true
-      });
-      return;
-    }
-
-    // 3. Validate user balance
     if (user && user.balance < selectedStake) {
       setBetFeedback({
         text: 'Số dư ví không đủ để đặt cược!',
@@ -477,10 +432,8 @@ export const SbobetCockfightView: React.FC = () => {
       return;
     }
 
-    // 4. Immediate Wallet Balance Deduction
     depositBalance(-selectedStake);
 
-    // 5. Record active bet for match conclusion settlement
     const betRecord: ActiveCockfightBet = {
       id: `${activeArena}-${currentArena.currentMatch}-${side}-${Date.now()}`,
       arenaId: activeArena,
@@ -491,22 +444,17 @@ export const SbobetCockfightView: React.FC = () => {
     };
     setActiveBets(prev => [...prev, betRecord]);
 
-    // 6. Dispatch bet to backend API & slip
     ApiService.placeCockfightBet(activeArena, side, selectedStake).then(({ data, error }) => {
       if (error && !data) {
-        setBetFeedback({
-          text: error,
-          isError: true
-        });
+        setBetFeedback({ text: error, isError: true });
         return;
       }
       setBetFeedback({
-        text: `Đã chấp nhận cược ${side} bồ ${activeArena} Trận #${currentArena.currentMatch} (-$${selectedStake.toFixed(2)})!`,
+        text: `Đã cược ${side} Bồ ${activeArena} Trận #${currentArena.currentMatch} (-$${selectedStake.toFixed(2)})!`,
         isError: false
       });
     });
 
-    // Also register into user bet slip
     addSelection({
       matchId: `cockfight-${activeArena}-${currentArena.currentMatch}`,
       matchName: `Đá Gà SV388 [${activeArena}] - Trận #${currentArena.currentMatch}`,
@@ -538,12 +486,22 @@ export const SbobetCockfightView: React.FC = () => {
               <span className="text-yellow-400 text-sm font-black shrink-0">3</span>
               <span className="text-base font-black italic tracking-tight shrink-0">SBOBET</span>
               <span className="text-[9px] sm:text-[10px] bg-red-600 text-white font-bold px-1 sm:px-1.5 py-0.5 rounded uppercase shadow-xs shrink-0">
-                SV388
+                SV388 / BJ988
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* Instructor Stream & Teaching Control */}
+            <button
+              onClick={() => setIsInstructorModalOpen(true)}
+              className="flex items-center gap-1 bg-amber-600/90 hover:bg-amber-600 text-white px-2 py-1 rounded text-xs font-bold shadow-xs transition"
+              title="Cài đặt luồng video & tốc độ giảng dạy"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">📡 Kênh Live & Giảng Dạy</span>
+            </button>
+
             {/* Language Selector */}
             <div className="relative">
               <button
@@ -575,7 +533,7 @@ export const SbobetCockfightView: React.FC = () => {
 
             {/* User Wallet Balance */}
             <div className="bg-[#08356E] px-2 sm:px-2.5 py-0.5 sm:py-1 rounded text-right border border-[#165AB8] shadow-xs">
-              <div className="text-[8px] sm:text-[9px] text-blue-200 uppercase font-semibold leading-none">Ví</div>
+              <div className="text-[8px] sm:text-[9px] text-blue-200 uppercase font-semibold leading-none">Ví Điểm</div>
               <div className="text-[11px] sm:text-xs font-black text-yellow-300 font-mono">
                 ${user?.balance.toFixed(2) || '1,000.00'}
               </div>
@@ -583,40 +541,43 @@ export const SbobetCockfightView: React.FC = () => {
           </div>
         </div>
 
-        {/* TITLE BAR */}
-        <div className="bg-[#0A438D] px-2 sm:px-3 py-1 sm:py-1.5 flex items-center justify-between text-xs font-bold text-white gap-2">
-          <div className="flex items-center gap-1 text-red-300 min-w-0">
+        {/* TITLE BAR & OPERATING HOURS BANNER */}
+        <div className="bg-[#0A438D] px-2 sm:px-3 py-1 flex items-center justify-between text-[11px] font-bold text-white gap-2">
+          <div className="flex items-center gap-1.5 text-amber-300 min-w-0">
             <Swords className="w-3.5 h-3.5 text-red-400 shrink-0" />
-            <span className="truncate text-[10px] sm:text-xs">ĐÁ GÀ SV388 (7 BỒ THOMO & PASAY)</span>
+            <span className="truncate uppercase font-black">
+              SỚI THOMO & PHILIPPINES ({currentArena.operatingHours})
+            </span>
           </div>
-          <button
-            onClick={() => setCurrentView('sbobet')}
-            className="text-[10px] sm:text-[11px] text-yellow-300 hover:underline flex items-center gap-1 font-bold shrink-0 whitespace-nowrap"
-          >
-            <span className="hidden sm:inline">← Về Sảnh Thể Thao</span>
-            <span className="sm:hidden">← Sảnh</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-full font-mono">
+              {classroomSpeed ? '⚡ Chế độ Giảng Dạy' : '🕒 Lịch Trình Thực Tế (15m)'}
+            </span>
+          </div>
         </div>
       </header>
 
       {/* 2. 7-ARENA RESPONSIVE TAB BAR */}
-      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1 sm:px-2 py-1 sm:py-1.5 flex items-center gap-1 sm:gap-1.5 w-full shadow-inner overflow-x-hidden">
+      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1 sm:px-2 py-1.5 flex items-center gap-1 sm:gap-1.5 w-full shadow-inner overflow-x-auto">
         {arenaKeys.map((arenaId) => {
           const arenaObj = arenasData.find(a => a.id === arenaId);
-          const isArenaLocked = arenaObj && (arenaObj.status === 'GATE_LOCKED' || arenaObj.status === 'FIGHTING' || arenaObj.timeRemainingSeconds <= 3);
+          const isArenaLocked = arenaObj && (arenaObj.phase === 'GATE_LOCKED' || arenaObj.phase === 'FIGHTING' || arenaObj.phase === 'CLOSED');
 
           return (
             <button
               key={arenaId}
-              onClick={() => { setActiveArena(arenaId); setSelectedRound(1); setBetFeedback(null); }}
-              className={`flex-1 py-1 sm:py-2 px-0.5 sm:px-1 rounded text-[10px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${activeArena === arenaId
+              onClick={() => { setActiveArena(arenaId); setBetFeedback(null); }}
+              className={`flex-1 py-1.5 px-1 sm:px-2 rounded text-[11px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${activeArena === arenaId
                 ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
                 : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
                 }`}
             >
-              <span>{arenaId}</span>
+              <div className="flex items-center justify-center gap-1">
+                <span>{arenaId}</span>
+                {arenaId.startsWith('CPC') ? <span className="text-[9px] text-amber-300 opacity-80">KH</span> : <span className="text-[9px] text-cyan-300 opacity-80">PH</span>}
+              </div>
               {isArenaLocked && (
-                <span className="absolute -top-1 -right-0.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-yellow-400 rounded-full ring-1 ring-black" title="Khóa cược" />
+                <span className="absolute -top-1 -right-0.5 w-2 h-2 bg-yellow-400 rounded-full ring-1 ring-black" title="Khóa cược" />
               )}
             </button>
           );
@@ -626,182 +587,136 @@ export const SbobetCockfightView: React.FC = () => {
       {/* 3. MAIN COCKFIGHT ARENA VIEWPORT & BETTING BOARD */}
       <main className="flex-1 p-2 sm:p-3 space-y-2.5 sm:space-y-3 overflow-y-auto max-w-4xl mx-auto w-full overflow-x-hidden min-w-0">
 
-        {/* VIDEO VIEWPORT CONTAINER WITH BROADCAST HUD */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-md w-full max-w-full">
-          {/* Responsive Header of Video Box */}
-          <div className="p-2 sm:p-2.5 bg-[#FAFAFA] border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between text-xs font-bold gap-1.5 sm:gap-2">
-            <div className="flex items-center gap-1.5 text-red-600 min-w-0">
-              <span className="w-2 h-2 rounded-full bg-red-600 animate-ping shrink-0" />
-              <span className="truncate text-[11px] sm:text-xs font-black uppercase">
-                BỒ {activeArena} • {currentArena.name} ({currentArena.location})
+        {/* LIVE STREAM VIDEO HUB PLAYER */}
+        <div className="space-y-2">
+          {/* Stream Preset Quick Buttons */}
+          <div className="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-300">
+            <div className="flex items-center gap-1.5 overflow-x-auto">
+              <span className="text-amber-400 font-bold text-[11px] shrink-0 flex items-center gap-1">
+                <Tv className="w-3.5 h-3.5" /> Luồng:
               </span>
+              {(STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1']).map(preset => (
+                <button
+                  key={preset.id}
+                  onClick={() => setActiveStreamSource(preset)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap transition ${
+                    activeStreamSource.id === preset.id
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  {preset.name}
+                </button>
+              ))}
             </div>
 
-            <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-1.5 flex-wrap">
-              {/* Camera Switcher: SV388 Video Feed vs 3D Arena Radar */}
-              <div className="flex items-center bg-gray-200/80 p-0.5 rounded-md border border-gray-300 text-[9px] sm:text-[10px] font-bold shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setViewMode('video')}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-0.5 ${viewMode === 'video' ? 'bg-[#0B4DA2] text-white shadow-xs' : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  title="Xem luồng phát sóng video SV388 trực tiếp"
-                >
-                  <span>🎥 Video</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('radar')}
-                  className={`px-1.5 sm:px-2 py-0.5 rounded transition-all flex items-center gap-0.5 ${viewMode === 'radar' ? 'bg-[#0B4DA2] text-white shadow-xs' : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  title="Xem mô phỏng sàn đấu 3D Radar"
-                >
-                  <span>🎯 3D Radar</span>
-                </button>
-              </div>
+            <button
+              onClick={() => setIsInstructorModalOpen(true)}
+              className="text-[10px] text-amber-300 hover:text-amber-200 underline font-bold shrink-0 ml-2"
+            >
+              + Nhập Link
+            </button>
+          </div>
 
-              {/* Play / Pause Toggle Button */}
-              {viewMode === 'video' && (
-                <button
-                  type="button"
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1 shadow-xs shrink-0 ${isPlaying ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'bg-red-600 hover:bg-red-700 text-white animate-pulse'
-                    }`}
-                  title={isPlaying ? 'Tạm dừng video' : 'Bật phát video'}
-                >
-                  <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" />
-                  <span>{isPlaying ? 'Tạm Dừng' : 'Phát Video'}</span>
-                </button>
-              )}
+          {/* Video Player Component */}
+          <SbobetLiveStreamPlayer
+            streamSource={activeStreamSource}
+            arenaName={currentArena.name}
+            matchNumber={currentArena.currentMatch}
+            phase={currentArena.phase}
+            isGateLocked={isGateLocked}
+            onRefresh={() => setActiveStreamSource({ ...activeStreamSource })}
+          />
 
-              <button
-                onClick={() => setIsAudioActive(!isAudioActive)}
-                className="p-1 hover:bg-gray-200 rounded text-gray-600 transition-colors shrink-0"
-                title={isAudioActive ? 'Tắt âm thanh' : 'Bật âm thanh'}
-              >
-                {isAudioActive ? <Volume2 className="w-3.5 h-3.5 text-blue-600" /> : <VolumeX className="w-3.5 h-3.5" />}
-              </button>
+          {/* PERSISTENT DISCLOSURE REQUIREMENT — INDEPENDENT VIDEO LAYER & SIMULATED BETTING ROUND */}
+          <div className="bg-slate-900/90 border border-amber-500/30 rounded-lg px-3 py-1.5 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-amber-200 gap-1 shadow-inner">
+            <div className="flex items-center gap-1.5 font-bold text-[10.5px] sm:text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping shrink-0" />
+              <span>🔴 Live Broadcast Feed (Independent) — Betting Round Timer Below (Simulated)</span>
+            </div>
+            <span className="text-[10px] text-amber-400/90 font-mono font-bold shrink-0">
+              Ví Điểm Thực Hành / Virtual Points
+            </span>
+          </div>
+        </div>
 
-              <div className={`inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-black shrink-0 ${isGateLocked
-                ? 'bg-red-100 border border-red-300 text-red-700 animate-pulse'
-                : 'bg-emerald-100 border border-emerald-300 text-emerald-800'
-                }`}>
-                {isGateLocked ? <Lock className="w-3 h-3 text-red-600" /> : <ShieldAlert className="w-3 h-3 text-emerald-600" />}
-                <span>{isGateLocked ? 'CỔNG KHÓA 3S' : `MỞ: ${currentArena.timeRemainingSeconds}s`}</span>
-              </div>
+        {/* ROOSTER WEIGHING & MATCHMAKING PROFILE CARDS (AUTHENTIC 10-15M PREP) */}
+        <div className="bg-white rounded-xl border border-gray-200 p-2.5 sm:p-3 shadow-xs space-y-2">
+          <div className="flex items-center justify-between border-b border-gray-100 pb-1.5">
+            <div className="flex items-center gap-1.5 text-slate-800 font-black text-xs uppercase">
+              <Scale className="w-4 h-4 text-amber-600" />
+              <span>HỒ SƠ CÂN KÝ & GHÉP CẶP TRẬN #{currentArena.currentMatch}</span>
+            </div>
+            <div className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
+              currentArena.phase === 'WEIGHING'
+                ? 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse'
+                : currentArena.phase === 'BETTING_OPEN'
+                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                : 'bg-red-100 text-red-800 border border-red-300'
+            }`}>
+              {currentArena.phase === 'WEIGHING'
+                ? `⚖️ ĐANG CÂN KÝ (${formatTime(currentArena.timeRemainingSeconds)})`
+                : currentArena.phase === 'BETTING_OPEN'
+                ? `🟢 MỞ CƯỢC: ${currentArena.timeRemainingSeconds}s`
+                : '🔒 ĐÃ KHÓA CỔNG'}
             </div>
           </div>
 
-          {/* SV388 Match Round Selector Bar */}
-          {viewMode === 'video' && (
-            <div className="bg-[#0A2A54] text-white px-2 sm:px-2.5 py-1.5 flex items-center gap-1.5 sm:gap-2 border-b border-[#082245] w-full max-w-full flex-wrap sm:flex-nowrap">
-              <div className="flex items-center gap-1 shrink-0 text-yellow-300 font-bold text-[10px]">
-                <span className="hidden sm:inline">Trận đấu hôm nay:</span>
-                <span className="sm:hidden">Trận:</span>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            {/* MERON ROOSTER CARD */}
+            <div className="bg-red-50/70 border border-red-200 rounded-lg p-2 flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-black text-red-700 uppercase tracking-wider text-[11px]">🔴 MERON (GÀ ĐỎ)</span>
+                <span className="font-mono text-[10px] bg-red-200/80 text-red-900 px-1.5 py-0.2 rounded font-bold">
+                  {currentArena.meronRooster?.tag || 'M-#421'}
+                </span>
               </div>
-              <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                {(ARENA_MATCHES[activeArena] || ARENA_MATCHES['CPC2']).map((m) => (
-                  <button
-                    key={m.round}
-                    type="button"
-                    onClick={() => { setSelectedRound(m.round); setIsPlaying(true); }}
-                    className={`px-1.5 sm:px-2 py-0.5 rounded text-[10px] font-black transition-all ${selectedRound === m.round
-                      ? 'bg-[#FFC800] text-black shadow-xs font-black'
-                      : 'bg-white/15 text-gray-200 hover:bg-white/25'
-                      }`}
-                  >
-                    <span className="sm:hidden">#{m.round}</span>
-                    <span className="hidden sm:inline">Trận #{m.round}</span>
-                  </button>
-                ))}
-              </div>
-              <div className="shrink-0 text-[9px] text-gray-400 font-mono hidden md:block ml-auto">
-                Feed: player.videosv388.com
-              </div>
-            </div>
-          )}
-
-          {/* Active Live Video Stream or 3D Canvas with Full Broadcast HUD Overlay */}
-          <div className="relative aspect-video bg-black overflow-hidden select-none w-full max-w-full">
-            {viewMode === 'video' ? (
-              <div className="w-full h-full relative overflow-hidden bg-black flex items-center justify-center">
-                {(() => {
-                  const matchStreams = ARENA_MATCHES[activeArena] || ARENA_MATCHES['CPC2'];
-                  const currentMatch = matchStreams.find(m => m.round === selectedRound) || matchStreams[0];
-                  return (
-                    <iframe
-                      key={`${activeArena}-${currentMatch.playUrl}`}
-                      src={currentMatch.playUrl}
-                      title={`SV388 Cockfight Live Player ${activeArena} Trận ${currentMatch.round}`}
-                      className="w-full h-full border-0"
-                      allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                      referrerPolicy="no-referrer"
-                      allowFullScreen
-                    />
-                  );
-                })()}
-
-                {/* Big Prominent Center Play Button Overlay */}
-                {!isPlaying && (
-                  <div
-                    onClick={() => setIsPlaying(true)}
-                    className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-20 transition-all hover:bg-black/50 group"
-                  >
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-red-600 group-hover:bg-red-500 text-white flex items-center justify-center shadow-2xl ring-4 ring-white/40 group-hover:scale-110 transition-transform duration-200">
-                      <Play className="w-8 h-8 sm:w-10 sm:h-10 fill-white translate-x-0.5" />
-                    </div>
-                    <div className="mt-3 flex flex-col items-center gap-1">
-                      <span className="text-white font-black text-xs sm:text-sm tracking-wider uppercase bg-black/80 px-4 py-1.5 rounded-full border border-white/20 shadow-lg">
-                        ▶ PHÁT VIDEO TRẬN ĐẤU
-                      </span>
-                      <span className="text-gray-300 text-[10px] font-semibold">
-                        Bấm để bắt đầu xem video SV388
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <canvas
-                ref={canvasRef}
-                width={640}
-                height={360}
-                className="w-full h-full object-cover block"
-              />
-            )}
-
-            {/* Live Broadcast HUD - Top Left (pointer-events-none so video is 100% clickable) */}
-            <div className="absolute top-2.5 left-3 flex items-center gap-2 pointer-events-none z-10">
-              <div className="flex items-center gap-1 bg-red-600/90 backdrop-blur-xs text-white px-2 py-0.5 rounded text-[10px] font-black shadow-xs">
-                <Radio className="w-3 h-3 animate-pulse" />
-                <span>TRỰC TIẾP</span>
-              </div>
-              <div className="bg-black/60 backdrop-blur-xs text-gray-200 px-2 py-0.5 rounded text-[10px] font-bold font-mono">
-                1080P • 60FPS
+              <div className="space-y-0.5 text-[11px] text-gray-700">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Giống gà:</span>
+                  <span className="font-bold text-gray-900">{currentArena.meronRooster?.breed || 'Gà Asil'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Cân nặng (Ký):</span>
+                  <span className="font-black text-red-600">{currentArena.meronRooster?.weightKg.toFixed(2) || '3.20'} kg</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Loại cựa:</span>
+                  <span className="font-semibold text-gray-800">{currentArena.meronRooster?.spurType || 'Cựa Sắt'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Thành tích:</span>
+                  <span className="font-bold text-emerald-700">{currentArena.meronRooster?.record || '7W - 1L'}</span>
+                </div>
               </div>
             </div>
 
-            {/* Live Broadcast HUD - Top Right Match & Round Info */}
-            <div className="absolute top-2.5 right-3 flex items-center gap-2 pointer-events-none z-10">
-              <div className="bg-yellow-500/90 text-black px-2 py-0.5 rounded text-[10px] font-black shadow-xs font-mono">
-                TRẬN #{currentArena.currentMatch}
+            {/* WALA ROOSTER CARD */}
+            <div className="bg-blue-50/70 border border-blue-200 rounded-lg p-2 flex flex-col justify-between">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-black text-[#0B4DA2] uppercase tracking-wider text-[11px]">🔵 WALA (GÀ XANH)</span>
+                <span className="font-mono text-[10px] bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded font-bold">
+                  {currentArena.walaRooster?.tag || 'W-#422'}
+                </span>
               </div>
-            </div>
-
-            {/* Corner Indicators Inside Broadcast */}
-            <div className="absolute bottom-10 left-3 bg-red-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-red-500/50 shadow-md pointer-events-none z-10">
-              🔴 MERON: @{currentArena.meronOdds.toFixed(2)}
-            </div>
-            <div className="absolute bottom-10 right-3 bg-blue-700/85 backdrop-blur text-white px-2.5 py-1 rounded-md text-[10px] font-black border border-blue-500/50 shadow-md pointer-events-none z-10">
-              🔵 WALA: @{currentArena.walaOdds.toFixed(2)}
-            </div>
-
-            {/* Bottom Stream Status Bar (Unobtrusive & Non-blocking) */}
-            <div className="absolute bottom-0 left-0 right-0 h-8 flex items-center justify-between text-[10px] sm:text-[11px] bg-gradient-to-t from-black/90 via-black/60 to-transparent px-2 sm:px-3 text-gray-200 pointer-events-none z-10">
-              <span className="font-semibold truncate max-w-[48%]">Bồ: {currentArena.name}</span>
-              <span className="font-mono text-yellow-400 font-bold shrink-0 text-[9px] sm:text-[11px]">
-                {currentArena.status === 'FIGHTING' ? 'GÀ ĐANG ĐẤU' : currentArena.status === 'GATE_LOCKED' ? 'KHÓA CỔNG (ANTI-VÉT)' : `ĐẾM NGƯỢC: ${currentArena.timeRemainingSeconds}s`}
-              </span>
+              <div className="space-y-0.5 text-[11px] text-gray-700">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Giống gà:</span>
+                  <span className="font-bold text-gray-900">{currentArena.walaRooster?.breed || 'Gà Mỹ Tre'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Cân nặng (Ký):</span>
+                  <span className="font-black text-blue-600">{currentArena.walaRooster?.weightKg.toFixed(2) || '3.18'} kg</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Loại cựa:</span>
+                  <span className="font-semibold text-gray-800">{currentArena.walaRooster?.spurType || 'Cựa Sắt'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Thành tích:</span>
+                  <span className="font-bold text-emerald-700">{currentArena.walaRooster?.record || '6W - 2L'}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -818,7 +733,6 @@ export const SbobetCockfightView: React.FC = () => {
                 type="button"
                 onClick={() => setSelectedStake(prev => Math.max(10, Math.floor(prev / 2)))}
                 className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors"
-                title="Giảm 1 nửa điểm cược"
               >
                 1/2
               </button>
@@ -826,7 +740,6 @@ export const SbobetCockfightView: React.FC = () => {
                 type="button"
                 onClick={() => setSelectedStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
                 className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-blue-700 border border-gray-300 transition-colors"
-                title="Gấp đôi điểm cược"
               >
                 2X
               </button>
@@ -841,7 +754,6 @@ export const SbobetCockfightView: React.FC = () => {
                 type="button"
                 onClick={() => setSelectedStake(Math.min(300, Math.floor(user?.balance || 300)))}
                 className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-emerald-700 border border-gray-300 transition-colors"
-                title="Đặt mức tối đa (Max 300 pts)"
               >
                 TẤT TAY
               </button>
@@ -881,30 +793,6 @@ export const SbobetCockfightView: React.FC = () => {
               </button>
             ))}
           </div>
-
-          {/* Active bets on this arena */}
-          {activeBets.filter(b => b.arenaId === activeArena).length > 0 && (
-            <div className="pt-1.5 border-t border-gray-100 space-y-1">
-              <div className="text-[10px] uppercase font-extrabold text-blue-900 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Vé cược đang đấu bồ {activeArena}:</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {activeBets.filter(b => b.arenaId === activeArena).map(b => (
-                  <span
-                    key={b.id}
-                    className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded text-[11px] font-bold text-blue-900 shadow-2xs"
-                  >
-                    <span>Trận #{b.match}:</span>
-                    <span className={b.side === 'MERON' ? 'text-red-600 font-black' : b.side === 'WALA' ? 'text-blue-600 font-black' : 'text-emerald-600 font-black'}>
-                      {b.side}
-                    </span>
-                    <span className="text-gray-500 font-mono">({b.stake} pts @{b.odds.toFixed(2)})</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Bet Feedback Alert */}
@@ -935,8 +823,7 @@ export const SbobetCockfightView: React.FC = () => {
               {currentArena.meronOdds.toFixed(2)}
             </div>
             <div className="text-[8.5px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">
-              <span className="hidden sm:inline">Gà Đỏ (Ăn {Math.round(selectedStake * currentArena.meronOdds)} pts)</span>
-              <span className="sm:hidden">Ăn {Math.round(selectedStake * currentArena.meronOdds)} pts</span>
+              <span>Ăn {Math.round(selectedStake * currentArena.meronOdds)} pts</span>
             </div>
           </button>
 
@@ -957,8 +844,7 @@ export const SbobetCockfightView: React.FC = () => {
               1:{currentArena.bddOdds}
             </div>
             <div className="text-[8.5px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">
-              <span className="hidden sm:inline">Hòa (Ăn {selectedStake * 8} pts)</span>
-              <span className="sm:hidden">Ăn {selectedStake * 8} pts</span>
+              <span>Ăn {selectedStake * 8} pts</span>
             </div>
           </button>
 
@@ -979,8 +865,7 @@ export const SbobetCockfightView: React.FC = () => {
               {currentArena.walaOdds.toFixed(2)}
             </div>
             <div className="text-[8.5px] sm:text-[10px] text-gray-500 font-semibold truncate w-full">
-              <span className="hidden sm:inline">Gà Xanh (Ăn {Math.round(selectedStake * currentArena.walaOdds)} pts)</span>
-              <span className="sm:hidden">Ăn {Math.round(selectedStake * currentArena.walaOdds)} pts</span>
+              <span>Ăn {Math.round(selectedStake * currentArena.walaOdds)} pts</span>
             </div>
           </button>
         </div>
@@ -998,6 +883,101 @@ export const SbobetCockfightView: React.FC = () => {
         />
 
       </main>
+
+      {/* 6. INSTRUCTOR & LIVE STREAM CONTROL MODAL */}
+      {isInstructorModalOpen && (
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 z-50 animate-fadeIn">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-4 sm:p-5 text-white shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Settings className="w-5 h-5 text-amber-400" />
+                <h3 className="font-black text-sm uppercase tracking-wide">Trung Tâm Giảng Dạy & Luồng Live</h3>
+              </div>
+              <button
+                onClick={() => setIsInstructorModalOpen(false)}
+                className="text-slate-400 hover:text-white text-lg font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Teaching Speed Switcher */}
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-xs text-amber-300 flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  Tốc độ Chu Kỳ Trận Đấu
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {classroomSpeed ? '2 Phút (Nhanh)' : '15 Phút (Thực tế)'}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleToggleClassroomMode(true)}
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                    classroomSpeed
+                      ? 'bg-amber-600 text-white shadow-md ring-2 ring-amber-400/50'
+                      : 'bg-slate-900 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  <span>⚡ Giảng Dạy (2 Phút)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleToggleClassroomMode(false)}
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+                    !classroomSpeed
+                      ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-400/50'
+                      : 'bg-slate-900 text-slate-300 hover:bg-slate-700'
+                  }`}
+                >
+                  <span>🕒 Thực Tế (15 Phút)</span>
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Chế độ Giảng Dạy giúp bạn minh họa nhiều tình huống cược, khóa sổ 3s và soi cầu nhanh chóng trong giờ học mà không phải chờ 15 phút.
+              </p>
+            </div>
+
+            {/* Custom URL Injector */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
+                Nhập Link Video Trực Tiếp (.m3u8, BJ988, Youtube, Webview):
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customStreamInput}
+                  onChange={(e) => setCustomStreamInput(e.target.value)}
+                  placeholder="https://bj988.com/vn/vn hoặc link .m3u8..."
+                  className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-white focus:border-amber-500 outline-none"
+                />
+                <button
+                  onClick={handleApplyCustomStream}
+                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-md shadow-amber-600/30"
+                >
+                  Áp Dụng
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-400">
+                Hệ thống backend sẽ tự động gỡ bỏ các tiêu đề bảo mật (X-Frame, CSP) để hiển thị video trực tiếp mà không cần khóa API.
+              </p>
+            </div>
+
+            <div className="pt-2 border-t border-slate-800 flex justify-end">
+              <button
+                onClick={() => setIsInstructorModalOpen(false)}
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-slate-300"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
