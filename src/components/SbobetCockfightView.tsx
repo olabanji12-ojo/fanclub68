@@ -186,20 +186,34 @@ interface ActiveCockfightBet {
 
 const STREAM_PRESETS: Record<string, StreamSource[]> = {
   CPC1: [
-    { id: 'sv388_r1', name: 'SV388 HD Match Feed #1 (Thomo VIP)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
-    { id: 'sv388_r2', name: 'SV388 HD Match Feed #2 (Thomo VIP)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
-    { id: 'hls_live_test', name: 'HLS Live 60FPS Stream', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' },
-    { id: 'bj988_proxy', name: 'BJ988 Sới Trực Tiếp (Proxy)', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' },
+    { id: 'sv388_cpc1_r1', name: 'SV388 Thomo CPC1 VIP (Trận 1)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
+    { id: 'sv388_cpc1_r2', name: 'SV388 Thomo CPC1 VIP (Trận 2)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
+    { id: 'sv388_cpc1_r3', name: 'SV388 Thomo CPC1 VIP (Trận 3)', url: 'https://player.videosv388.com/?play=9258d9b1-816c-4990-bb9d-342b717e9ea6', type: 'iframe' },
   ],
   CPC2: [
-    { id: 'sv388_cpc2', name: 'Thomo CPC2 HD Arena Stream', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
-    { id: 'sv388_cpc2_r2', name: 'Thomo CPC2 Trận 2', url: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', type: 'iframe' },
-    { id: 'bj988_cpc2', name: 'BJ988 Sới Bồ CPC2', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' },
+    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand Arena (Trận 1)', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
+    { id: 'sv388_cpc2_r2', name: 'Thomo CPC2 Grand Arena (Trận 2)', url: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', type: 'iframe' },
+    { id: 'sv388_cpc2_r3', name: 'Thomo CPC2 Grand Arena (Trận 3)', url: 'https://player.videosv388.com/?play=62a2c246-ceb5-4a7b-91f2-6a549f7b4d02', type: 'iframe' },
+  ],
+  CPC3: [
+    { id: 'sv388_cpc3_r1', name: 'Thomo CPC3 Iron Spur (Trận 1)', url: 'https://player.videosv388.com/?play=c14547a2-b7fd-4ea6-8ddc-995ef8d6a782', type: 'iframe' },
+    { id: 'sv388_cpc3_r2', name: 'Thomo CPC3 Iron Spur (Trận 2)', url: 'https://player.videosv388.com/?play=6556ea54-8448-46e4-9244-b832677e6967', type: 'iframe' },
+  ],
+  CPC4: [
+    { id: 'sv388_cpc4_r1', name: 'Thomo CPC4 Derby (Trận 1)', url: 'https://player.videosv388.com/?play=8fe9b578-8bd6-4197-90ae-1f9ea6fc1a3a', type: 'iframe' },
+    { id: 'sv388_cpc4_r2', name: 'Thomo CPC4 Derby (Trận 2)', url: 'https://player.videosv388.com/?play=2ed5512c-3026-4489-a3bb-84c2b2b4dbf2', type: 'iframe' },
   ],
   PH1: [
-    { id: 'pasay_hd', name: 'Pasay Colosseum Sabong Live', url: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', type: 'iframe' },
-    { id: 'pasay_r2', name: 'Pasay Colosseum Trận 2', url: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', type: 'iframe' },
-    { id: 'pasay_bj988', name: 'BJ988 Philippines Feed', url: 'https://bj988.com/vn/vn', type: 'proxy_iframe' }
+    { id: 'pasay_ph1_r1', name: 'Pasay Colosseum Sabong (Trận 1)', url: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', type: 'iframe' },
+    { id: 'pasay_ph1_r2', name: 'Pasay Colosseum Sabong (Trận 2)', url: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', type: 'iframe' },
+  ],
+  PH2: [
+    { id: 'davao_ph2_r1', name: 'Davao Cockpit Arena (Trận 1)', url: 'https://player.videosv388.com/?play=98238cef-89ca-4216-a29d-3d0e8c348216', type: 'iframe' },
+    { id: 'davao_ph2_r2', name: 'Davao Cockpit Arena (Trận 2)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
+  ],
+  PH3: [
+    { id: 'cebu_ph3_r1', name: 'Cebu Live Cockpit (Trận 1)', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
+    { id: 'cebu_ph3_r2', name: 'Cebu Live Cockpit (Trận 2)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
   ]
 };
 
