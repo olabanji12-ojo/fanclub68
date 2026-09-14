@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
 import {
   Play,
+  Pause,
   Volume2,
   VolumeX,
   Maximize2,
@@ -57,6 +58,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   const [hasError, setHasError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isInvalidVideoUrl, setIsInvalidVideoUrl] = useState<boolean>(false);
+  const [isIframeActivated, setIsIframeActivated] = useState<boolean>(false);
   const hlsRef = useRef<Hls | null>(null);
   const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -86,6 +88,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     setHasError(false);
     setErrorMessage('');
     setIsInvalidVideoUrl(false);
+    setIsIframeActivated(false);
 
     const url = (streamSource.url || '').trim();
 
@@ -304,24 +307,27 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       ctx.fill();
       ctx.fillStyle = '#ef4444';
       ctx.beginPath();
-      ctx.arc(14, -14, 6, 0, Math.PI * 2);
+      ctx.ellipse(14, -8, 11, 11, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#991b1b';
+      // Comb
+      ctx.fillStyle = '#dc2626';
       ctx.beginPath();
-      ctx.arc(12, -8, 8, 0, Math.PI * 2);
+      ctx.arc(16, -18, 6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#f59e0b';
+      // Beak
+      ctx.fillStyle = '#fbbf24';
       ctx.beginPath();
-      ctx.moveTo(19, -8);
-      ctx.lineTo(27, -5);
-      ctx.lineTo(19, -2);
+      ctx.moveTo(23, -8);
+      ctx.lineTo(31, -5);
+      ctx.lineTo(23, -2);
       ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 4;
+      // Tail feathers
+      ctx.strokeStyle = '#7f1d1d';
+      ctx.lineWidth = 5;
       ctx.beginPath();
-      ctx.moveTo(-18, -4);
-      ctx.quadraticCurveTo(-35, -20 + bounce * 0.5, -28, -28);
+      ctx.moveTo(-18, 2);
+      ctx.quadraticCurveTo(-38, -14, -34, -28);
       ctx.stroke();
       ctx.restore();
 
@@ -332,42 +338,62 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       ctx.beginPath();
       ctx.ellipse(0, 0, 24, 16, 0.2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#ef4444';
+      ctx.fillStyle = '#3b82f6';
       ctx.beginPath();
-      ctx.arc(-14, -14, 6, 0, Math.PI * 2);
+      ctx.ellipse(-14, -8, 11, 11, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#1e40af';
+      // Comb
+      ctx.fillStyle = '#dc2626';
       ctx.beginPath();
-      ctx.arc(-12, -8, 8, 0, Math.PI * 2);
+      ctx.arc(-16, -18, 6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#f59e0b';
+      // Beak
+      ctx.fillStyle = '#fbbf24';
       ctx.beginPath();
-      ctx.moveTo(-19, -8);
-      ctx.lineTo(-27, -5);
-      ctx.lineTo(-19, -2);
+      ctx.moveTo(-23, -8);
+      ctx.lineTo(-31, -5);
+      ctx.lineTo(-23, -2);
       ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = '#2563eb';
-      ctx.lineWidth = 4;
+      // Tail feathers
+      ctx.strokeStyle = '#1e3a8a';
+      ctx.lineWidth = 5;
       ctx.beginPath();
-      ctx.moveTo(18, -4);
-      ctx.quadraticCurveTo(35, -20 + bounce * 0.5, 28, -28);
+      ctx.moveTo(18, 2);
+      ctx.quadraticCurveTo(38, -14, 34, -28);
       ctx.stroke();
       ctx.restore();
 
-      if (isFighting && frame % 4 === 0) {
-        ctx.fillStyle = 'rgba(255, 220, 150, 0.8)';
-        ctx.beginPath();
-        ctx.arc((meronX + walaX) / 2 + (Math.random() - 0.5) * 20, h * 0.6 + (Math.random() - 0.5) * 20, 3, 0, Math.PI * 2);
-        ctx.fill();
+      // Clash sparks if fighting
+      if (isFighting && Math.sin(frame * 0.3) > 0.4) {
+        ctx.fillStyle = '#fef08a';
+        for (let i = 0; i < 5; i++) {
+          const spX = (meronX + walaX) / 2 + (Math.random() - 0.5) * 30;
+          const spY = h * 0.6 + (Math.random() - 0.5) * 20;
+          ctx.beginPath();
+          ctx.arc(spX, spY, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
+
+      // HUD Arena & Phase Overlay on Canvas
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(10, 10, 220, 48);
+      ctx.strokeStyle = '#334155';
+      ctx.strokeRect(10, 10, 220, 48);
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`⚡ 3D RADAR: ${arenaName}`, 20, 28);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '10px monospace';
+      ctx.fillText(`TRẬN #${matchNumber} | TRẠNG THÁI: ${phase}`, 20, 46);
 
       animId = requestAnimationFrame(render);
     };
 
-    animId = requestAnimationFrame(render);
+    render();
     return () => cancelAnimationFrame(animId);
-  }, [viewMode, phase]);
+  }, [viewMode, phase, arenaName, matchNumber]);
 
   return (
     <div
@@ -433,7 +459,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
           className="w-full h-full object-cover block"
         />
       ) : streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe' ? (
-        /* Direct Webview / Proxy Iframe Mode with Anti-Nesting Protection */
+        /* Direct Webview / Proxy Iframe Mode with Anti-Nesting Protection & Play Overlay */
         <div className="relative w-full h-full bg-slate-950 flex flex-col">
           <iframe
             ref={iframeRef}
@@ -441,13 +467,28 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             title={streamSource.name}
             className="w-full h-full border-0"
             sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; autoplay *; clipboard-write; encrypted-media *; gyroscope; picture-in-picture *; web-share; fullscreen *"
             allowFullScreen
             onError={() => {
               setHasError(true);
               setErrorMessage('Cổng phát ngoài từ chối kết nối hoặc bị chặn bởi máy chủ nguồn.');
             }}
           />
+
+          {/* Big Center Play Overlay for Iframe Embeds (to guarantee user gesture for autoplay) */}
+          {!isIframeActivated && !hasError && (
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center z-20 transition-all">
+              <button
+                onClick={() => setIsIframeActivated(true)}
+                className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/50 transform hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-amber-500/30 cursor-pointer"
+              >
+                <Play className="w-9 h-9 fill-current ml-1" />
+              </button>
+              <p className="text-amber-200 font-bold text-xs uppercase tracking-widest mt-4 drop-shadow">
+                Nhấp để phát luồng SV388 / Click to Play
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         /* Native HLS / Direct Video Mode */
@@ -466,7 +507,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center z-20 transition-all">
               <button
                 onClick={handlePlayClick}
-                className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/50 transform hover:scale-110 active:scale-95 transition-all duration-300 group-hover:ring-8 ring-amber-500/20"
+                className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/50 transform hover:scale-110 active:scale-95 transition-all duration-300 group-hover:ring-8 ring-amber-500/20 cursor-pointer"
               >
                 <Play className="w-9 h-9 fill-current ml-1" />
               </button>
@@ -534,8 +575,8 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Bottom Floating Control Bar */}
-      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-950/80 backdrop-blur-md border border-slate-800/80 rounded-lg px-3 py-1.5 text-slate-300 z-20 opacity-90 group-hover:opacity-100 transition-opacity">
+      {/* Bottom Floating Control Bar with Play/Pause, Sound, Reload, and Fullscreen */}
+      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-slate-950/85 backdrop-blur-md border border-slate-800/80 rounded-lg px-3 py-1.5 text-slate-300 z-20 opacity-90 group-hover:opacity-100 transition-opacity">
         <div className="flex items-center gap-2 text-xs">
           <Tv className="w-4 h-4 text-amber-400" />
           <span className="font-semibold text-white text-[12px] truncate max-w-[180px] sm:max-w-[280px]">
@@ -548,17 +589,51 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
 
         <div className="flex items-center gap-1.5">
+          {/* Play / Pause Toggle Button */}
+          {streamSource.type !== 'iframe' && streamSource.type !== 'proxy_iframe' && (
+            <button
+              onClick={() => {
+                if (videoRef.current) {
+                  if (isPlaying) {
+                    videoRef.current.pause();
+                    setIsPlaying(false);
+                  } else {
+                    handlePlayClick();
+                  }
+                }
+              }}
+              className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition cursor-pointer"
+              title={isPlaying ? 'Tạm dừng (Pause)' : 'Phát video (Play)'}
+            >
+              {isPlaying ? <Pause className="w-4 h-4 text-amber-400" /> : <Play className="w-4 h-4 text-amber-400 fill-current" />}
+            </button>
+          )}
+
+          {/* Quick Reload Stream Button */}
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition cursor-pointer"
+              title="Tải lại luồng phát (Reload Stream)"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          {/* Mute / Unmute Toggle */}
           <button
             onClick={toggleMute}
-            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition"
-            title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition cursor-pointer"
+            title={isMuted ? 'Bật âm thanh (Unmute)' : 'Tắt âm thanh (Mute)'}
           >
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-amber-400" />}
           </button>
+
+          {/* Fullscreen Toggle */}
           <button
             onClick={toggleFullscreen}
-            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition"
-            title="Toàn màn hình"
+            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-md transition cursor-pointer"
+            title="Toàn màn hình (Fullscreen)"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>

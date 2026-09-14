@@ -500,7 +500,14 @@ export const SbobetCockfightView: React.FC = () => {
       return;
     }
 
-    const isProxyIframe = !isHls && !isDirectMp4 && (url.includes('bj988') || url.includes('sv388') || url.includes('ga6789') || url.includes('daga88'));
+    const isDirectEmbedPlayer =
+      url.includes('player.videosv388.com') ||
+      url.includes('youtube.com') ||
+      url.includes('youtu.be') ||
+      url.includes('vimeo.com') ||
+      url.includes('twitch.tv');
+
+    const isProxyIframe = !isHls && !isDirectMp4 && !isDirectEmbedPlayer && (url.includes('bj988') || url.includes('sv388') || url.includes('ga6789') || url.includes('daga88'));
 
     setActiveStreamSource({
       id: `custom-${Date.now()}`,
