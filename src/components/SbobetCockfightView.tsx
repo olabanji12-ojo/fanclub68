@@ -23,7 +23,7 @@ import {
 import { useSbobetStore } from '../stores/sbobetStore';
 import { translations } from '../locales/translations';
 import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
-import { ApiService } from '../services/api';
+import { ApiService, API_BASE_URL } from '../services/api';
 import { SbobetLiveStreamPlayer, StreamSource } from './SbobetLiveStreamPlayer';
 
 export interface RoosterProfile {
@@ -433,7 +433,8 @@ export const SbobetCockfightView: React.FC = () => {
     let isMounted = true;
     const syncActiveStream = async () => {
       try {
-        const res = await fetch('/api/stream/active-source');
+        const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
+        const res = await fetch(`${base}/api/stream/active-source`);
         if (res.ok) {
           const data = await res.json();
           if (isMounted && data.activeSource) {
@@ -474,7 +475,8 @@ export const SbobetCockfightView: React.FC = () => {
     setCustomStreamInput(found.url);
 
     try {
-      await fetch('/api/stream/active-source', {
+      const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
+      await fetch(`${base}/api/stream/active-source`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sourceId })
@@ -503,7 +505,7 @@ export const SbobetCockfightView: React.FC = () => {
       url.includes('daga88');
 
     if (!isHls && !isDirectMp4 && !isEmbedPlayer) {
-      setValidationError('⚠️ URL này là trang web thông thường, không phải luồng video trực tiếp (.m3u8, .mp4 hoặc cổng video được hỗ trợ). Vui lòng chọn 1 trong 3 nguồn chuẩn bên dưới hoặc nhập link .m3u8.');
+      setValidationError('⚠️ URL này là trang web thông thường, không phải luồng video trực tiếp (.m3u8, .mp4 hoặc cổng video được hỗ trợ). Vui lòng chọn 1 trong các nguồn chuẩn bên dưới hoặc nhập link .m3u8.');
       return;
     }
 
@@ -524,7 +526,8 @@ export const SbobetCockfightView: React.FC = () => {
     });
 
     try {
-      await fetch('/api/stream/active-source', {
+      const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
+      await fetch(`${base}/api/stream/active-source`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customUrl: url })
@@ -541,7 +544,8 @@ export const SbobetCockfightView: React.FC = () => {
   const handleToggleClassroomMode = async (enabled: boolean) => {
     setClassroomSpeed(enabled);
     try {
-      await fetch('/api/stream/configure-arena', {
+      const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
+      await fetch(`${base}/api/stream/configure-arena`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ classroomMode: enabled })
