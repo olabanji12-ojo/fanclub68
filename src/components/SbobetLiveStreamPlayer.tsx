@@ -476,6 +476,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             src={getEmbedUrl()}
             title={streamSource.name}
             className="w-full h-full border-0"
+            referrerPolicy="no-referrer"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
             onError={() => {
