@@ -171,13 +171,167 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     return streamSource.url;
   };
 
+  const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // 60FPS 3D Cockfight Arena Physics Simulation
+  useEffect(() => {
+    if (viewMode !== 'radar') return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    let frame = 0;
+
+    const render = () => {
+      frame++;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Dark Broadcast Arena Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, '#0a0d14');
+      bgGrad.addColorStop(0.5, '#161b26');
+      bgGrad.addColorStop(1, '#0e121a');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Arena Sand Ring Pit (Perspective Oval)
+      ctx.save();
+      ctx.beginPath();
+      ctx.ellipse(w / 2, h * 0.65, w * 0.42, h * 0.28, 0, 0, Math.PI * 2);
+      const sandGrad = ctx.createRadialGradient(w / 2, h * 0.65, 10, w / 2, h * 0.65, w * 0.42);
+      sandGrad.addColorStop(0, '#c29b63');
+      sandGrad.addColorStop(0.7, '#8f6834');
+      sandGrad.addColorStop(1, '#543b1c');
+      ctx.fillStyle = sandGrad;
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#dfba7f';
+      ctx.stroke();
+      ctx.restore();
+
+      // Spotlight Beam
+      ctx.save();
+      const spotGrad = ctx.createRadialGradient(w / 2, h * 0.6, 20, w / 2, h * 0.6, w * 0.35);
+      spotGrad.addColorStop(0, 'rgba(255, 255, 230, 0.25)');
+      spotGrad.addColorStop(1, 'rgba(255, 255, 230, 0)');
+      ctx.fillStyle = spotGrad;
+      ctx.beginPath();
+      ctx.ellipse(w / 2, h * 0.6, w * 0.35, h * 0.25, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Dynamic Fighter Roosters Positioning
+      const isFighting = phase === 'FIGHTING';
+      const bounce = Math.sin(frame * 0.12) * (isFighting ? 14 : 4);
+      const lunge = isFighting ? Math.cos(frame * 0.2) * 25 : Math.sin(frame * 0.05) * 8;
+
+      const meronX = w * 0.38 + lunge;
+      const meronY = h * 0.63 - Math.abs(bounce);
+      const walaX = w * 0.62 - lunge;
+      const walaY = h * 0.63 - Math.abs(Math.cos(frame * 0.12) * (isFighting ? 14 : 4));
+
+      // Shadows
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(meronX, h * 0.68, 22, 9, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(walaX, h * 0.68, 22, 9, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Meron (Red Rooster)
+      ctx.save();
+      ctx.translate(meronX, meronY);
+      ctx.fillStyle = '#b91c1c';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 24, 16, -0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(14, -14, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#991b1b';
+      ctx.beginPath();
+      ctx.arc(12, -8, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(19, -8);
+      ctx.lineTo(27, -5);
+      ctx.lineTo(19, -2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-18, -4);
+      ctx.quadraticCurveTo(-35, -20 + bounce * 0.5, -28, -28);
+      ctx.stroke();
+      ctx.restore();
+
+      // Wala (Blue Rooster)
+      ctx.save();
+      ctx.translate(walaX, walaY);
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 24, 16, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(-14, -14, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#1e40af';
+      ctx.beginPath();
+      ctx.arc(-12, -8, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(-19, -8);
+      ctx.lineTo(-27, -5);
+      ctx.lineTo(-19, -2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(18, -4);
+      ctx.quadraticCurveTo(35, -20 + bounce * 0.5, 28, -28);
+      ctx.stroke();
+      ctx.restore();
+
+      if (isFighting && frame % 4 === 0) {
+        ctx.fillStyle = 'rgba(255, 220, 150, 0.8)';
+        ctx.beginPath();
+        ctx.arc((meronX + walaX) / 2 + (Math.random() - 0.5) * 20, h * 0.6 + (Math.random() - 0.5) * 20, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    animId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(animId);
+  }, [viewMode, phase]);
+
   return (
     <div
       ref={containerRef}
       className="relative w-full aspect-video max-h-[460px] bg-slate-950 rounded-xl overflow-hidden border border-amber-900/40 shadow-2xl flex items-center justify-center group select-none"
     >
-      {/* 1. Direct Webview / Proxy Iframe Mode */}
-      {streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe' ? (
+      {/* View Switcher: 3D Radar Canvas vs Video */}
+      {viewMode === 'radar' ? (
+        <canvas
+          ref={canvasRef}
+          width={640}
+          height={360}
+          className="w-full h-full object-cover block"
+        />
+      ) : streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe' ? (
+        /* 1. Direct Webview / Proxy Iframe Mode */
         <div className="relative w-full h-full bg-slate-950 flex flex-col">
           <iframe
             src={getEmbedUrl()}
@@ -232,7 +386,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Top Header Overlay: Arena Name, Match #, Live / Independent Badge */}
+      {/* Top Header Overlay: Arena Name, Match #, Camera Toggle, Live Badge */}
       <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
         <div className="flex items-center gap-2">
           {streamSource.url ? (
@@ -254,15 +408,27 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
 
         <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Camera View Switcher Button */}
+          <div className="flex items-center bg-slate-900/90 backdrop-blur-md border border-slate-700 p-0.5 rounded-lg text-[10px] font-bold">
+            <button
+              onClick={() => setViewMode('video')}
+              className={`px-2 py-0.5 rounded transition ${viewMode === 'video' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+            >
+              🎥 Video
+            </button>
+            <button
+              onClick={() => setViewMode('radar')}
+              className={`px-2 py-0.5 rounded transition ${viewMode === 'radar' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+            >
+              🎯 3D Radar
+            </button>
+          </div>
+
           {isGateLocked && (
             <div className="flex items-center gap-1 bg-red-500/95 text-white font-black text-[10px] uppercase px-2 py-0.5 rounded shadow-lg animate-pulse">
               KHÓA KÈO
             </div>
           )}
-          <div className="bg-slate-900/80 backdrop-blur-md border border-slate-700/50 text-[10px] font-bold text-amber-400 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3 text-amber-400" />
-            <span className="hidden sm:inline">LUỒNG ĐỘC LẬP</span>
-          </div>
         </div>
       </div>
 
