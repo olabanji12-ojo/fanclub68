@@ -234,11 +234,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
 
   // Determine effective embed URL with safety checks
   const getEmbedUrl = () => {
-    if (streamSource.type === 'proxy_iframe') {
-      const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
-      return `${base}/api/stream/embed-proxy?url=${encodeURIComponent(streamSource.url)}`;
-    }
-    return streamSource.url;
+    return (streamSource.url || '').trim();
   };
 
 
@@ -480,8 +476,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             src={getEmbedUrl()}
             title={streamSource.name}
             className="w-full h-full border-0"
-            sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
-            allow="accelerometer; autoplay *; clipboard-write; encrypted-media *; gyroscope; picture-in-picture *; web-share; fullscreen *"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
             allowFullScreen
             onError={() => {
               setHasError(true);
