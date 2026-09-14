@@ -219,32 +219,39 @@ const STREAM_PRESETS: Record<string, StreamSource[]> = {
 
 const TEACHING_FALLBACK_SOURCES = [
   {
-    id: 'source1',
-    name: 'Source 1: ga6789.com (Thomo Center)',
-    url: 'https://ga6789.com',
-    type: 'proxy_iframe' as const,
-    badge: 'Khuyên Dùng / Thomo VIP'
-  },
-  {
-    id: 'source2',
-    name: 'Source 2: bj988.com (Pasay Center)',
-    url: 'https://bj988.com/vn/vn',
-    type: 'proxy_iframe' as const,
-    badge: 'Dự Phòng 2 / Pasay'
-  },
-  {
-    id: 'source3',
-    name: 'Source 3: daga88.net (Backup Feed)',
-    url: 'https://daga88.net',
-    type: 'proxy_iframe' as const,
-    badge: 'Dự Phòng 3 / High-Speed'
+    id: 'sv388_live_direct',
+    name: 'SV388 Direct Live Player (Pasay/Thomo)',
+    url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967',
+    type: 'iframe' as const,
+    badge: 'Đang Hoạt Động / Live 60FPS'
   },
   {
     id: 'fallback_hls',
-    name: 'Source 4: Mux Live Stream (HLS 60FPS Backup)',
+    name: 'Source 2: Mux Live Stream (HLS 60FPS Backup)',
     url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     type: 'hls' as const,
     badge: 'Native 60FPS HLS'
+  },
+  {
+    id: 'source1',
+    name: 'Source 3: ga6789.com (Thomo Center)',
+    url: 'https://ga6789.com',
+    type: 'proxy_iframe' as const,
+    badge: 'Thomo Center'
+  },
+  {
+    id: 'source2',
+    name: 'Source 4: bj988.com (Pasay Center)',
+    url: 'https://bj988.com/vn/vn',
+    type: 'proxy_iframe' as const,
+    badge: 'Pasay Center'
+  },
+  {
+    id: 'source3',
+    name: 'Source 5: daga88.net (Backup Feed)',
+    url: 'https://daga88.net',
+    type: 'proxy_iframe' as const,
+    badge: 'Backup Feed'
   }
 ];
 
@@ -1100,14 +1107,39 @@ export const SbobetCockfightView: React.FC = () => {
                     setCustomStreamInput(e.target.value);
                     setValidationError(null);
                   }}
-                  placeholder="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8..."
+                  placeholder="https://player.videosv388.com/?play=... hoặc .m3u8..."
                   className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-white focus:border-amber-500 outline-none"
                 />
                 <button
                   onClick={handleApplyCustomStream}
-                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-md shadow-amber-600/30"
+                  className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-md shadow-amber-600/30 cursor-pointer"
                 >
                   Áp Dụng
+                </button>
+              </div>
+
+              {/* Quick 1-Click Stream Shortcuts */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                <span className="text-[10px] text-slate-400 font-bold">Nhanh:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967');
+                    handleSelectPresetSource('sv388_live_direct');
+                  }}
+                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>▶ SV388 Direct Live (a254ad13)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
+                    handleSelectPresetSource('fallback_hls');
+                  }}
+                  className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>⚡ Mux HLS Backup</span>
                 </button>
               </div>
 
