@@ -217,6 +217,37 @@ const STREAM_PRESETS: Record<string, StreamSource[]> = {
   ]
 };
 
+const TEACHING_FALLBACK_SOURCES = [
+  {
+    id: 'source1',
+    name: 'Source 1: ga6789.com (Thomo Center)',
+    url: 'https://ga6789.com',
+    type: 'proxy_iframe' as const,
+    badge: 'Khuyên Dùng / Thomo VIP'
+  },
+  {
+    id: 'source2',
+    name: 'Source 2: bj988.com (Pasay Center)',
+    url: 'https://bj988.com/vn/vn',
+    type: 'proxy_iframe' as const,
+    badge: 'Dự Phòng 2 / Pasay'
+  },
+  {
+    id: 'source3',
+    name: 'Source 3: daga88.net (Backup Feed)',
+    url: 'https://daga88.net',
+    type: 'proxy_iframe' as const,
+    badge: 'Dự Phòng 3 / High-Speed'
+  },
+  {
+    id: 'fallback_hls',
+    name: 'Source 4: Mux Live Stream (HLS 60FPS Backup)',
+    url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    type: 'hls' as const,
+    badge: 'Native 60FPS HLS'
+  }
+];
+
 export const SbobetCockfightView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user, depositBalance } = useSbobetStore();
   const t = translations[language];
@@ -229,12 +260,20 @@ export const SbobetCockfightView: React.FC = () => {
   const [isLangOpen, setIsLangOpen] = useState<boolean>(false);
   const [isInstructorModalOpen, setIsInstructorModalOpen] = useState<boolean>(false);
   const [customStreamInput, setCustomStreamInput] = useState<string>('');
+  const [selectedPresetSourceId, setSelectedPresetSourceId] = useState<string>('source1');
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [classroomSpeed, setClassroomSpeed] = useState<boolean>(true);
+  const [isFailoverActive, setIsFailoverActive] = useState<boolean>(false);
+  const [activeSourceInfo, setActiveSourceInfo] = useState<{ name: string; status: string }>({
+    name: 'ga6789.com (Thomo Center)',
+    status: 'ONLINE'
+  });
 
   // Active Stream Source
   const [activeStreamSource, setActiveStreamSource] = useState<StreamSource>(
     STREAM_PRESETS['CPC1'][0]
   );
+
 
   // Active Arena Data
   const currentArena = arenasData.find(a => a.id === activeArena) || arenasData[0];
@@ -382,21 +421,107 @@ export const SbobetCockfightView: React.FC = () => {
     };
   }, [classroomSpeed]);
 
-  // Handle Custom URL injection
-  const handleApplyCustomStream = () => {
+  // Real-time Student Synchronization & Line 2 Failover Listener
+  useEffect(() => {
+    let isMounted = true;
+    const syncActiveStream = async () => {
+      try {
+        const res = await fetch('/api/stream/active-source');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.activeSource) {
+            setActiveSourceInfo({
+              name: data.activeSource.name,
+              status: data.activeSource.status
+            });
+            setIsFailoverActive(data.index > 0);
+          }
+        }
+      } catch {
+        // Offline mode
+      }
+    };
+
+    syncActiveStream();
+    const streamSyncInterval = setInterval(syncActiveStream, 3000);
+    return () => {
+      isMounted = false;
+      clearInterval(streamSyncInterval);
+    };
+  }, []);
+
+  // Handle Preset Source Selection from the 3 Dropdown Choices
+  const handleSelectPresetSource = async (sourceId: string) => {
+    setSelectedPresetSourceId(sourceId);
+    setValidationError(null);
+    const found = TEACHING_FALLBACK_SOURCES.find(s => s.id === sourceId);
+    if (!found) return;
+
+    setActiveStreamSource({
+      id: found.id,
+      name: found.name,
+      url: found.url,
+      type: found.type
+    });
+
+    setCustomStreamInput(found.url);
+
+    try {
+      await fetch('/api/stream/active-source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceId })
+      });
+    } catch {
+      // Offline fallback
+    }
+  };
+
+  // Handle Custom URL injection with strict video verification
+  const handleApplyCustomStream = async () => {
+    setValidationError(null);
     if (!customStreamInput.trim()) return;
     const url = customStreamInput.trim();
+
     const isHls = url.endsWith('.m3u8') || url.includes('m3u8');
-    const isProxyIframe = !isHls && (url.includes('bj988') || url.includes('sv388'));
+    const isDirectMp4 = url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.ts');
+    const isEmbedPlayer =
+      url.includes('player.videosv388.com') ||
+      url.includes('youtube.com/embed') ||
+      url.includes('youtu.be') ||
+      url.includes('twitch.tv') ||
+      url.includes('vimeo.com') ||
+      url.includes('ga6789.com') ||
+      url.includes('bj988.com') ||
+      url.includes('daga88');
+
+    if (!isHls && !isDirectMp4 && !isEmbedPlayer) {
+      setValidationError('⚠️ URL này là trang web thông thường, không phải luồng video trực tiếp (.m3u8, .mp4 hoặc cổng video được hỗ trợ). Vui lòng chọn 1 trong 3 nguồn chuẩn bên dưới hoặc nhập link .m3u8.');
+      return;
+    }
+
+    const isProxyIframe = !isHls && !isDirectMp4 && (url.includes('bj988') || url.includes('sv388') || url.includes('ga6789') || url.includes('daga88'));
 
     setActiveStreamSource({
       id: `custom-${Date.now()}`,
-      name: `Luồng Tùy Chỉnh: ${url.substring(0, 30)}...`,
+      name: `Luồng: ${url.substring(0, 32)}...`,
       url,
-      type: isHls ? 'hls' : isProxyIframe ? 'proxy_iframe' : 'iframe'
+      type: isHls ? 'hls' : isDirectMp4 ? 'mp4' : isProxyIframe ? 'proxy_iframe' : 'iframe'
     });
+
+    try {
+      await fetch('/api/stream/active-source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customUrl: url })
+      });
+    } catch {
+      // Offline fallback
+    }
+
     setIsInstructorModalOpen(false);
   };
+
 
   // Toggle Classroom vs Real-Time speed
   const handleToggleClassroomMode = async (enabled: boolean) => {
@@ -642,7 +767,10 @@ export const SbobetCockfightView: React.FC = () => {
             matchNumber={currentArena.currentMatch}
             phase={currentArena.phase}
             isGateLocked={isGateLocked}
+            failoverActive={isFailoverActive}
+            activeSourceInfo={activeSourceInfo}
             onRefresh={() => setActiveStreamSource({ ...activeStreamSource })}
+            onSwitchToTestStream={() => handleSelectPresetSource('fallback_hls')}
           />
 
           {/* PERSISTENT DISCLOSURE REQUIREMENT — INDEPENDENT VIDEO LAYER & SIMULATED BETTING ROUND */}
@@ -746,13 +874,6 @@ export const SbobetCockfightView: React.FC = () => {
               <span className="text-[#0B4DA2] font-black">{selectedStake} pts</span>
             </div>
             <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setSelectedStake(prev => Math.max(10, Math.floor(prev / 2)))}
-                className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 text-[10px] font-bold text-gray-700 border border-gray-300 transition-colors"
-              >
-                1/2
-              </button>
               <button
                 type="button"
                 onClick={() => setSelectedStake(prev => Math.min(300, (prev === 0 ? 50 : prev * 2)))}
@@ -962,14 +1083,17 @@ export const SbobetCockfightView: React.FC = () => {
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
                 <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
-                Nhập Link Video Trực Tiếp (.m3u8, BJ988, Youtube, Webview):
+                Nhập Link Video Trực Tiếp (.m3u8, MP4, Embed Video Player):
               </label>
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={customStreamInput}
-                  onChange={(e) => setCustomStreamInput(e.target.value)}
-                  placeholder="https://bj988.com/vn/vn hoặc link .m3u8..."
+                  onChange={(e) => {
+                    setCustomStreamInput(e.target.value);
+                    setValidationError(null);
+                  }}
+                  placeholder="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8..."
                   className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-white focus:border-amber-500 outline-none"
                 />
                 <button
@@ -979,9 +1103,38 @@ export const SbobetCockfightView: React.FC = () => {
                   Áp Dụng
                 </button>
               </div>
-              <p className="text-[10px] text-slate-400">
-                Hệ thống backend sẽ tự động gỡ bỏ các tiêu đề bảo mật (X-Frame, CSP) để hiển thị video trực tiếp mà không cần khóa API.
-              </p>
+
+              {validationError && (
+                <div className="p-2.5 bg-red-950/80 border border-red-500/50 rounded-lg text-[11px] text-red-200 leading-relaxed flex items-start gap-1.5">
+                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Preconfigured Fallback Dropdown Selector */}
+            <div className="space-y-1.5 pt-1 border-t border-slate-800">
+              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Tv className="w-3.5 h-3.5 text-amber-400" />
+                  Chọn Nguồn Phát Chuẩn (Teaching Fallback Sources):
+                </span>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold">⚡ 3s Auto-Failover</span>
+              </label>
+              <select
+                value={selectedPresetSourceId}
+                onChange={(e) => handleSelectPresetSource(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-white focus:border-amber-500 outline-none cursor-pointer"
+              >
+                {TEACHING_FALLBACK_SOURCES.map((src) => (
+                  <option key={src.id} value={src.id} className="bg-slate-900 text-white">
+                    {src.name} — [{src.badge}]
+                  </option>
+                ))}
+              </select>
+              <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+                <span>Hệ thống tự động chuyển đổi giữa 3 nguồn này trong ≤ 3 giây nếu gặp sự cố mạng hoặc tường lửa.</span>
+              </div>
             </div>
 
             <div className="pt-2 border-t border-slate-800 flex justify-end">

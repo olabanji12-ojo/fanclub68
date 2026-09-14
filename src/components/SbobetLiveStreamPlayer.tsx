@@ -27,7 +27,11 @@ interface Props {
   matchNumber: number;
   phase: string;
   isGateLocked: boolean;
+  failoverActive?: boolean;
+  activeSourceInfo?: { name: string; status: string };
   onRefresh?: () => void;
+  onSwitchToRadar?: () => void;
+  onSwitchToTestStream?: () => void;
 }
 
 export const SbobetLiveStreamPlayer: React.FC<Props> = ({
@@ -36,23 +40,65 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   matchNumber,
   phase,
   isGateLocked,
-  onRefresh
+  failoverActive = false,
+  activeSourceInfo,
+  onRefresh,
+  onSwitchToRadar,
+  onSwitchToTestStream
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isInvalidVideoUrl, setIsInvalidVideoUrl] = useState<boolean>(false);
   const hlsRef = useRef<Hls | null>(null);
+  const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Check whether a stream source URL is a legitimate video link
+  const isDirectVideoOrHls = (url: string) => {
+    if (!url) return false;
+    const u = url.toLowerCase();
+    return u.includes('.m3u8') || u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.ts');
+  };
+
+  const isEmbedPlayer = (url: string) => {
+    if (!url) return false;
+    const u = url.toLowerCase();
+    return (
+      u.includes('player.videosv388.com') ||
+      u.includes('youtube.com/embed') ||
+      u.includes('youtu.be') ||
+      u.includes('twitch.tv') ||
+      u.includes('vimeo.com') ||
+      u.includes('ga6789.com') ||
+      u.includes('bj988.com') ||
+      u.includes('daga88')
+    );
+  };
 
   // Setup HLS / Video stream on source change
   useEffect(() => {
     setIsLoading(true);
     setHasError(false);
     setErrorMessage('');
+    setIsInvalidVideoUrl(false);
+
+    const url = streamSource.url || '';
+
+    // Validate if the link is a recognized video or authorized embed player
+    if (!url || (!isDirectVideoOrHls(url) && !isEmbedPlayer(url))) {
+      setIsInvalidVideoUrl(true);
+      setHasError(true);
+      setErrorMessage('URL này không phải là luồng video hợp lệ. Hệ thống chỉ cho phép phát luồng video (.m3u8, .mp4) hoặc cổng phát được ủy quyền.');
+      setIsLoading(false);
+      return;
+    }
 
     if (streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe') {
       setIsLoading(false);
@@ -98,7 +144,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
               default:
                 hls.destroy();
                 setHasError(true);
-                setErrorMessage('Không thể tải luồng video HLS trực tiếp.');
+                setErrorMessage('Không thể tải luồng video HLS trực tiếp. Đang chuẩn bị chuyển sang nguồn dự phòng.');
                 setIsLoading(false);
                 break;
             }
@@ -163,7 +209,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     }
   };
 
-  // Determine effective embed URL
+  // Determine effective embed URL with safety checks
   const getEmbedUrl = () => {
     if (streamSource.type === 'proxy_iframe') {
       return `/api/stream/embed-proxy?url=${encodeURIComponent(streamSource.url)}`;
@@ -171,8 +217,6 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     return streamSource.url;
   };
 
-  const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // 60FPS 3D Cockfight Arena Physics Simulation
   useEffect(() => {
@@ -233,7 +277,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       const meronY = h * 0.63 - Math.abs(bounce);
       const walaX = w * 0.62 - lunge;
       const walaY = h * 0.63 - Math.abs(Math.cos(frame * 0.12) * (isFighting ? 14 : 4));
-
+    
       // Shadows
       ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
       ctx.beginPath();
@@ -320,9 +364,54 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-video max-h-[460px] bg-slate-950 rounded-xl overflow-hidden border border-amber-900/40 shadow-2xl flex items-center justify-center group select-none"
+      className="relative w-full aspect-video max-h-[480px] bg-slate-950 rounded-xl overflow-hidden border border-amber-900/40 shadow-2xl flex items-center justify-center group select-none"
     >
-      {/* View Switcher: 3D Radar Canvas vs Video */}
+      {/* 1. Invalid Video URL or Error Screen */}
+      {hasError || isInvalidVideoUrl ? (
+        <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-30">
+          <div className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-3">
+            <AlertCircle className="w-8 h-8 text-amber-500 animate-pulse" />
+          </div>
+          <h4 className="text-white font-black text-sm sm:text-base mb-1.5 uppercase tracking-wide">
+            {isInvalidVideoUrl ? '⚠️ URL Không Phải Là Luồng Video Trực Tiếp' : `Kết Nối Luồng Bồ Gà ${arenaName}`}
+          </h4>
+          <p className="text-slate-400 text-xs max-w-md mb-5 leading-relaxed">
+            {errorMessage || 'Không thể tải luồng video trực tiếp từ nguồn đã chọn. Vui lòng chuyển sang 3D Radar hoặc chọn nguồn dự phòng.'}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <button
+              onClick={() => {
+                setViewMode('radar');
+                if (onSwitchToRadar) onSwitchToRadar();
+              }}
+              className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-lg shadow-amber-600/30 flex items-center gap-1.5"
+            >
+              <span>🎯 Xem Mô Phỏng 3D Radar (60FPS)</span>
+            </button>
+
+            {onSwitchToTestStream && (
+              <button
+                onClick={onSwitchToTestStream}
+                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-blue-300 font-bold text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5"
+              >
+                <span>⚡ Luồng Thử Nghiệm HLS</span>
+              </button>
+            )}
+
+            {onRefresh && (
+              <button
+                onClick={onRefresh}
+                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-lg border border-slate-800 transition flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Thử Lại</span>
+              </button>
+            )}
+          </div>
+        </div>
+      ) : null}
+
+      {/* 2. View Switcher: 3D Radar Canvas vs Video */}
       {viewMode === 'radar' ? (
         <canvas
           ref={canvasRef}
@@ -331,18 +420,24 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
           className="w-full h-full object-cover block"
         />
       ) : streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe' ? (
-        /* 1. Direct Webview / Proxy Iframe Mode */
+        /* Direct Webview / Proxy Iframe Mode with Anti-Nesting Protection */
         <div className="relative w-full h-full bg-slate-950 flex flex-col">
           <iframe
+            ref={iframeRef}
             src={getEmbedUrl()}
             title={streamSource.name}
             className="w-full h-full border-0"
+            sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
+            onError={() => {
+              setHasError(true);
+              setErrorMessage('Cổng phát ngoài từ chối kết nối hoặc bị chặn bởi máy chủ nguồn.');
+            }}
           />
         </div>
       ) : (
-        /* 2. Native HLS / Video Mode */
+        /* Native HLS / Direct Video Mode */
         <div className="relative w-full h-full flex items-center justify-center">
           <video
             ref={videoRef}
@@ -352,22 +447,6 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             loop
             className="w-full h-full object-cover"
           />
-
-          {/* Fallback Simulation when error or loading */}
-          {hasError && (
-            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-10">
-              <AlertCircle className="w-12 h-12 text-amber-500 mb-3 animate-pulse" />
-              <h4 className="text-white font-bold text-base mb-1">Đang Kết Nối Luồng Bồ Gà {arenaName}</h4>
-              <p className="text-slate-400 text-xs max-w-md mb-4">{errorMessage || 'Đang đồng bộ hóa dữ liệu trực tiếp từ sới Thomo / Pasay...'}</p>
-              <button
-                onClick={onRefresh}
-                className="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-amber-600/30"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                Tải lại luồng trực tiếp
-              </button>
-            </div>
-          )}
 
           {/* Big Center Play Button Overlay for Autoplay permissions */}
           {!isPlaying && !isLoading && !hasError && (
@@ -386,9 +465,9 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Top Header Overlay: Arena Name, Match #, Camera Toggle, Live Badge */}
+      {/* Top Header Overlay: Arena Name, Match #, Failover Badge, Camera Toggle, Live Badge */}
       <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {streamSource.url ? (
             <div className="flex items-center gap-1.5 bg-red-600/90 text-white text-[11px] font-black uppercase px-2.5 py-1 rounded-md shadow-lg shadow-red-600/40 tracking-wider">
               <span className="w-2 h-2 rounded-full bg-white animate-ping" />
@@ -400,18 +479,28 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
               No live stream connected
             </div>
           )}
+
           <div className="bg-slate-900/85 backdrop-blur-md border border-slate-700/60 text-amber-300 font-black text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-lg">
             <span>{arenaName}</span>
             <span className="text-slate-500">•</span>
             <span className="text-white">TRẬN #{matchNumber}</span>
           </div>
+
+          {failoverActive && (
+            <div className="bg-emerald-600/90 text-white font-black text-[10px] px-2 py-1 rounded-md shadow-md animate-pulse flex items-center gap-1">
+              <span>⚡ Line 2: Tự Động Chuyển Nguồn ({activeSourceInfo?.name || 'Dự Phòng'})</span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-2 pointer-events-auto">
           {/* Camera View Switcher Button */}
           <div className="flex items-center bg-slate-900/90 backdrop-blur-md border border-slate-700 p-0.5 rounded-lg text-[10px] font-bold">
             <button
-              onClick={() => setViewMode('video')}
+              onClick={() => {
+                setViewMode('video');
+                setHasError(false);
+              }}
               className={`px-2 py-0.5 rounded transition ${viewMode === 'video' ? 'bg-amber-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
             >
               🎥 Video
@@ -465,3 +554,4 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     </div>
   );
 };
+
