@@ -138,7 +138,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           setIsLoading(false);
-          video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+          safePlayVideo(video);
         });
 
         hls.on(Hls.Events.ERROR, (_event, data) => {
@@ -164,7 +164,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         video.src = streamSource.url;
         video.addEventListener('loadedmetadata', () => {
           setIsLoading(false);
-          video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+          safePlayVideo(video);
         });
       }
     } else {
@@ -189,15 +189,29 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     };
   }, [streamSource]);
 
+  const safePlayVideo = (video: HTMLVideoElement) => {
+    try {
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => {
+          setIsPlaying(true);
+        }).catch(err => {
+          if (err.name !== 'AbortError') {
+            console.warn('Autoplay prevented or paused:', err);
+          }
+          setIsPlaying(false);
+        });
+      }
+    } catch {
+      // Ignore synchronous play interruptions
+    }
+  };
+
   const handlePlayClick = () => {
     if (videoRef.current) {
-      videoRef.current.play().then(() => {
-        setIsPlaying(true);
-        setIsMuted(false);
-        videoRef.current!.muted = false;
-      }).catch(err => {
-        console.warn('Autoplay prevented:', err);
-      });
+      videoRef.current.muted = false;
+      setIsMuted(false);
+      safePlayVideo(videoRef.current);
     }
   };
 

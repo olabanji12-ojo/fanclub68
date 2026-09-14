@@ -309,15 +309,17 @@ export const SbobetCockfightView: React.FC = () => {
   });
 
   const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
+  const [isManualStreamLocked, setIsManualStreamLocked] = useState<boolean>(false);
 
-  // Auto-advance stream source when arena or match changes (100% Hands-Free)
+  // Auto-advance stream source ONLY when arena changes (not on every match tick)
   useEffect(() => {
+    if (isManualStreamLocked) return;
     const presets = STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1'];
     if (presets && presets.length > 0) {
       const matchIdx = Math.abs((currentArena.currentMatch - 1) % presets.length);
       setActiveStreamSource(presets[matchIdx]);
     }
-  }, [activeArena, currentArena.currentMatch]);
+  }, [activeArena]);
 
   // Settle bets and award payouts on match conclusion
   const settleArenaMatch = (arenaId: string, matchNum: number) => {
@@ -460,6 +462,7 @@ export const SbobetCockfightView: React.FC = () => {
 
   // Handle Preset Source Selection from the 3 Dropdown Choices
   const handleSelectPresetSource = async (sourceId: string) => {
+    setIsManualStreamLocked(true);
     setSelectedPresetSourceId(sourceId);
     setValidationError(null);
     const found = TEACHING_FALLBACK_SOURCES.find(s => s.id === sourceId);
@@ -518,6 +521,7 @@ export const SbobetCockfightView: React.FC = () => {
 
     const isProxyIframe = !isHls && !isDirectMp4 && !isDirectEmbedPlayer && (url.includes('bj988') || url.includes('sv388') || url.includes('ga6789') || url.includes('daga88'));
 
+    setIsManualStreamLocked(true);
     setActiveStreamSource({
       id: `custom-${Date.now()}`,
       name: `Luồng: ${url.substring(0, 32)}...`,
