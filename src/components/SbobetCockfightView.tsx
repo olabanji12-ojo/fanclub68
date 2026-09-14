@@ -264,11 +264,14 @@ export const SbobetCockfightView: React.FC = () => {
 
   const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
 
-  // Switch Stream preset on arena switch
+  // Auto-advance stream source when arena or match changes (100% Hands-Free)
   useEffect(() => {
     const presets = STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1'];
-    setActiveStreamSource(presets[0]);
-  }, [activeArena]);
+    if (presets && presets.length > 0) {
+      const matchIdx = Math.abs((currentArena.currentMatch - 1) % presets.length);
+      setActiveStreamSource(presets[matchIdx]);
+    }
+  }, [activeArena, currentArena.currentMatch]);
 
   // Settle bets and award payouts on match conclusion
   const settleArenaMatch = (arenaId: string, matchNum: number) => {
