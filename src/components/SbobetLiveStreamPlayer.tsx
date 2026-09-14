@@ -61,7 +61,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   const [viewMode, setViewMode] = useState<'video' | 'radar'>('video');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Check whether a stream source URL is a legitimate video link
+  // Check whether a stream source URL is a legitimate video stream link
   const isDirectVideoOrHls = (url: string) => {
     if (!url) return false;
     const u = url.toLowerCase();
@@ -76,10 +76,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       u.includes('youtube.com/embed') ||
       u.includes('youtu.be') ||
       u.includes('twitch.tv') ||
-      u.includes('vimeo.com') ||
-      u.includes('ga6789.com') ||
-      u.includes('bj988.com') ||
-      u.includes('daga88')
+      u.includes('vimeo.com')
     );
   };
 
@@ -90,13 +87,21 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
     setErrorMessage('');
     setIsInvalidVideoUrl(false);
 
-    const url = streamSource.url || '';
+    const url = (streamSource.url || '').trim();
 
-    // Validate if the link is a recognized video or authorized embed player
-    if (!url || (!isDirectVideoOrHls(url) && !isEmbedPlayer(url))) {
+    // Check if the link is a full website portal (like bj988.com/vn/vn) instead of a direct video stream
+    if (!url) {
       setIsInvalidVideoUrl(true);
       setHasError(true);
-      setErrorMessage('URL này không phải là luồng video hợp lệ. Hệ thống chỉ cho phép phát luồng video (.m3u8, .mp4) hoặc cổng phát được ủy quyền.');
+      setErrorMessage('No stream link provided. Please input a live stream URL.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!isDirectVideoOrHls(url) && !isEmbedPlayer(url)) {
+      setIsInvalidVideoUrl(true);
+      setHasError(true);
+      setErrorMessage('This link cannot be displayed because it is not a direct video stream link. Please provide a direct HLS (.m3u8) video stream URL, direct MP4 link, or embeddable player feed.');
       setIsLoading(false);
       return;
     }
@@ -376,18 +381,23 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             <AlertCircle className="w-8 h-8 text-amber-500 animate-pulse" />
           </div>
           <h4 className="text-white font-black text-sm sm:text-base mb-1.5 uppercase tracking-wide">
-            {isInvalidVideoUrl ? '⚠️ URL Không Phải Là Luồng Video Trực Tiếp' : `Kết Nối Luồng Bồ Gà ${arenaName}`}
+            {isInvalidVideoUrl ? '⚠️ Non-Direct Video Link / Không Phải Luồng Video Trực Tiếp' : `Kết Nối Luồng Bồ Gà ${arenaName}`}
           </h4>
-          <p className="text-slate-400 text-xs max-w-md mb-5 leading-relaxed">
-            {errorMessage || 'Không thể tải luồng video trực tiếp từ nguồn đã chọn. Vui lòng chuyển sang 3D Radar hoặc chọn nguồn dự phòng.'}
-          </p>
+          <div className="bg-slate-900/80 border border-slate-800 rounded-lg p-3 max-w-lg mb-4 text-left">
+            <p className="text-amber-300 font-semibold text-xs mb-1">
+              {errorMessage || 'This link cannot be displayed because it is not a direct video stream link.'}
+            </p>
+            <p className="text-slate-400 text-[11px] leading-relaxed">
+              💡 <strong>Lưu ý kỹ thuật:</strong> Các liên kết trang web nguyên bản (như <code className="text-amber-400 bg-slate-950 px-1 py-0.5 rounded">bj988.com</code>, <code className="text-amber-400 bg-slate-950 px-1 py-0.5 rounded">ga6789.com</code>) chứa giao diện đăng nhập và bảo mật riêng nên không thể nhúng trực tiếp vào khung phát. Vui lòng nhập link luồng video <strong>HLS (.m3u8)</strong> hoặc sử dụng mô phỏng 3D Radar.
+            </p>
+          </div>
           <div className="flex flex-wrap items-center justify-center gap-2.5">
             <button
               onClick={() => {
                 setViewMode('radar');
                 if (onSwitchToRadar) onSwitchToRadar();
               }}
-              className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-lg shadow-amber-600/30 flex items-center gap-1.5"
+              className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs rounded-lg transition shadow-lg shadow-amber-600/30 flex items-center gap-1.5 cursor-pointer"
             >
               <span>🎯 Xem Mô Phỏng 3D Radar (60FPS)</span>
             </button>
@@ -395,16 +405,16 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             {onSwitchToTestStream && (
               <button
                 onClick={onSwitchToTestStream}
-                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-blue-300 font-bold text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5"
+                className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-blue-300 font-bold text-xs rounded-lg border border-slate-700 transition flex items-center gap-1.5 cursor-pointer"
               >
-                <span>⚡ Luồng Thử Nghiệm HLS</span>
+                <span>⚡ Luồng Thử Nghiệm HLS (.m3u8)</span>
               </button>
             )}
 
             {onRefresh && (
               <button
                 onClick={onRefresh}
-                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-lg border border-slate-800 transition flex items-center gap-1.5"
+                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-lg border border-slate-800 transition flex items-center gap-1.5 cursor-pointer"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Thử Lại</span>
