@@ -7,14 +7,16 @@ const getBaseUrl = (): string => {
   if (envApiUrl) {
     return String(envApiUrl).replace(/\/$/, '');
   }
-  // Otherwise in local dev default to port 3000
+  // Local development default
   if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
     return 'http://localhost:3000';
   }
-  return '';
+  // Production default fallback to live Render backend
+  return 'https://game-bet-backend.onrender.com';
 };
 
 export const API_BASE_URL = getBaseUrl();
+
 
 async function safeFetch<T>(endpoint: string, options?: RequestInit): Promise<{ data: T | null; error: string | null }> {
   try {

@@ -48,8 +48,20 @@ function NavigationBridge() {
 }
 
 export default function App() {
+  // If running inside an iframe, prevent loading the full sportsbook UI
+  if (typeof window !== 'undefined' && window.self !== window.top) {
+    return (
+      <div className="w-full h-full min-h-screen bg-slate-950 text-amber-300 flex flex-col items-center justify-center p-6 text-center font-sans">
+        <div className="w-10 h-10 rounded-full border-2 border-amber-500/40 border-t-amber-400 animate-spin mb-3" />
+        <h3 className="text-sm font-black uppercase tracking-wider mb-1">🔴 SBOBET Live Stream Player</h3>
+        <p className="text-[11px] text-slate-400 max-w-xs">Đang kết nối luồng trực tiếp từ máy chủ...</p>
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
+
       <NavigationBridge />
       <Routes>
         {/* 1. Main Sportsbook Routes */}

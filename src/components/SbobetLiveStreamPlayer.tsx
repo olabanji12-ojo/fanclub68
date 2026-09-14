@@ -13,6 +13,7 @@ import {
   ExternalLink,
   ShieldCheck
 } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 
 export interface StreamSource {
   id: string;
@@ -212,10 +213,12 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   // Determine effective embed URL with safety checks
   const getEmbedUrl = () => {
     if (streamSource.type === 'proxy_iframe') {
-      return `/api/stream/embed-proxy?url=${encodeURIComponent(streamSource.url)}`;
+      const base = API_BASE_URL || (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://game-bet-backend.onrender.com');
+      return `${base}/api/stream/embed-proxy?url=${encodeURIComponent(streamSource.url)}`;
     }
     return streamSource.url;
   };
+
 
 
   // 60FPS 3D Cockfight Arena Physics Simulation

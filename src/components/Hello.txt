@@ -1,0 +1,28 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Player</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- video.js framework -->
+  <!-- <script src="assets/js/videojs.hotkeys.min.js"></script> -->
+  <link href="assets/css/video-js.min.css" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/video-js.min.css"></noscript>
+  <script src="assets/js/video.min.js"></script>
+
+  <!-- Ads plugin for video.js -->
+  <link href="assets/css/videojs.ads.css" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/videojs.ads.css"></noscript>
+  <script src="assets/js/videojs.ads.min.js"></script>
+
+  <!-- This plugin for video.js -->
+  <link href="assets/css/videojsx.vast.css" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="assets/css/videojsx.vast.css"></noscript>
+  <script src="assets/js/videojsx.vast.js"></script>
+  <script src="assets/js/player.js"></script>
+
+<link rel="stylesheet" href="styles.675e62ffadaeeeab.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.675e62ffadaeeeab.css"></noscript></head>
+<body style="overflow: hidden; margin: 0;">
+  <app-root></app-root>
+<script src="runtime.df1bac9d86d8a923.js" type="module"></script><script src="polyfills.f6e81ec913950ae3.js" type="module"></script><script src="scripts.14a493dbf0b5bdb1.js" defer></script><script src="main.ffa92ae26db340a7.js" type="module"></script>
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"a2e7d1401ae24b5288f9029c48a216fc","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body></html>

@@ -33,6 +33,14 @@
   ],
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://game-bet-backend.onrender.com/api/$1"
+    },
+    {
+      "source": "/health",
+      "destination": "https://game-bet-backend.onrender.com/health"
+    },
+    {
       "source": "/assets/(.*)",
       "destination": "/assets/$1"
     },
@@ -42,3 +50,4 @@
     }
   ]
 }
+
