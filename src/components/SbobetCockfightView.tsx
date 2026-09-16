@@ -187,28 +187,28 @@ interface ActiveCockfightBet {
 
 const STREAM_PRESETS: Record<string, StreamSource[]> = {
   CPC1: [
-    { id: 'bj88_cpc1_live', name: '▶ BJ88 Direct Live (CPC1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc1_r1', name: 'Thomo CPC1 VIP (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc1_r2', name: 'Thomo CPC1 VIP (Trận 2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_cpc1_live', name: '▶ BJ88 Direct Live (CPC1)', url: '/videos/bj88_direct_live.mp4', type: 'mp4' },
+    { id: 'sv388_cpc1_r1', name: 'Thomo CPC1 VIP (Trận 1)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
+    { id: 'sv388_cpc1_r2', name: 'Thomo CPC1 VIP (Trận 2)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   CPC2: [
-    { id: 'bj88_cpc2_live', name: '▶ BJ88 Direct Live (CPC2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_cpc2_live', name: '▶ BJ88 Direct Live (CPC2)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
+    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand (Trận 1)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   CPC3: [
-    { id: 'bj88_cpc3_live', name: '▶ BJ88 Direct Live (CPC3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_cpc3_live', name: '▶ BJ88 Direct Live (CPC3)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   CPC4: [
-    { id: 'bj88_cpc4_live', name: '▶ BJ88 Direct Live (CPC4)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_cpc4_live', name: '▶ BJ88 Direct Live (CPC4)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   PH1: [
-    { id: 'bj88_ph1_live', name: '▶ BJ88 Direct Live (Pasay PH1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_ph1_live', name: '▶ BJ88 Direct Live (Pasay PH1)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   PH2: [
-    { id: 'bj88_ph2_live', name: '▶ BJ88 Direct Live (Davao PH2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_ph2_live', name: '▶ BJ88 Direct Live (Davao PH2)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ],
   PH3: [
-    { id: 'bj88_ph3_live', name: '▶ BJ88 Direct Live (Cebu PH3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'bj88_ph3_live', name: '▶ BJ88 Direct Live (Cebu PH3)', url: '/videos/cockfight_cpc1.mp4', type: 'mp4' },
   ]
 };
 
@@ -216,27 +216,20 @@ const TEACHING_FALLBACK_SOURCES = [
   {
     id: 'bj88_direct_live',
     name: '▶ BJ88 Direct Live Feed (Pasay & Thomo)',
-    url: 'https://bj88.com/vn/vn',
-    type: 'iframe' as const,
+    url: '/videos/bj88_direct_live.mp4',
+    type: 'mp4' as const,
     badge: 'BJ88 Official Feed'
   },
   {
-    id: 'ga6789_live',
-    name: 'Source 2: ga6789.com (Thomo Center)',
-    url: 'https://ga6789.com',
-    type: 'proxy_iframe' as const,
+    id: 'thomo_cpc1_live',
+    name: 'Source 2: Thomo CPC1 VIP (Arena 60FPS)',
+    url: '/videos/cockfight_cpc1.mp4',
+    type: 'mp4' as const,
     badge: 'Thomo Center'
   },
   {
-    id: 'daga88_live',
-    name: 'Source 3: daga88.net (Backup Feed)',
-    url: 'https://daga88.net',
-    type: 'proxy_iframe' as const,
-    badge: 'Backup Feed'
-  },
-  {
     id: 'fallback_hls',
-    name: 'Source 4: Mux Live Stream (HLS 60FPS Backup)',
+    name: 'Source 3: Mux Live Stream (HLS 60FPS Backup)',
     url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     type: 'hls' as const,
     badge: 'Native 60FPS HLS'

@@ -67,7 +67,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
   const isDirectVideoOrHls = (url: string) => {
     if (!url) return false;
     const u = url.toLowerCase();
-    return u.includes('.m3u8') || u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.ts');
+    return u.includes('.m3u8') || u.includes('/videos/') || u.endsWith('.mp4') || u.endsWith('.mov') || u.endsWith('.webm') || u.endsWith('.ts');
   };
 
   const isEmbedPlayer = (url: string) => {
@@ -78,7 +78,11 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       u.includes('youtube.com/embed') ||
       u.includes('youtu.be') ||
       u.includes('twitch.tv') ||
-      u.includes('vimeo.com')
+      u.includes('vimeo.com') ||
+      u.includes('bj88') ||
+      u.includes('bj988') ||
+      u.includes('ga6789') ||
+      u.includes('daga88')
     );
   };
 
@@ -92,7 +96,6 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
 
     const url = (streamSource.url || '').trim();
 
-    // Check if the link is a full website portal (like bj988.com/vn/vn) instead of a direct video stream
     if (!url) {
       setIsInvalidVideoUrl(true);
       setHasError(true);
@@ -101,15 +104,15 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       return;
     }
 
-    if (!isDirectVideoOrHls(url) && !isEmbedPlayer(url)) {
-      setIsInvalidVideoUrl(true);
-      setHasError(true);
-      setErrorMessage('This link cannot be displayed because it is not a direct video stream link. Please provide a direct HLS (.m3u8) video stream URL, direct MP4 link, or embeddable player feed.');
+    if (streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe') {
       setIsLoading(false);
       return;
     }
 
-    if (streamSource.type === 'iframe' || streamSource.type === 'proxy_iframe') {
+    if (!isDirectVideoOrHls(url) && !isEmbedPlayer(url) && streamSource.type !== 'mp4') {
+      setIsInvalidVideoUrl(true);
+      setHasError(true);
+      setErrorMessage('This link cannot be displayed because it is not a direct video stream link. Please provide a direct HLS (.m3u8) video stream URL, direct MP4 link, or embeddable player feed.');
       setIsLoading(false);
       return;
     }
@@ -171,8 +174,12 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       // Direct MP4
       video.src = streamSource.url;
       video.load();
+      video.onplay = () => setIsPlaying(true);
+      video.onplaying = () => setIsPlaying(true);
+      video.onpause = () => setIsPlaying(false);
       video.oncanplay = () => {
         setIsLoading(false);
+        safePlayVideo(video);
       };
       video.onerror = () => {
         setHasError(true);
