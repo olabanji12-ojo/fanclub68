@@ -25,6 +25,7 @@ import { translations } from '../locales/translations';
 import { SbobetScorecardRoadmap } from './SbobetScorecardRoadmap';
 import { ApiService, API_BASE_URL } from '../services/api';
 import { SbobetLiveStreamPlayer, StreamSource } from './SbobetLiveStreamPlayer';
+import { audioService } from '../services/audioService';
 
 export interface RoosterProfile {
   breed: string;
@@ -66,7 +67,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.96,
     bddOdds: 8.00,
     timeRemainingSeconds: 520,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 42,
     meronRooster: { breed: 'Gà Asil Rặc', weightKg: 3.25, spurType: 'Cựa Sắt Tròn Thomo', record: '8W - 1L', tag: 'M-#4210' },
     walaRooster: { breed: 'Gà Tre Mỹ', weightKg: 3.20, spurType: 'Cựa Sắt Tròn Thomo', record: '6W - 2L', tag: 'W-#4211' }
@@ -83,7 +84,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.98,
     bddOdds: 8.00,
     timeRemainingSeconds: 45,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 35,
     meronRooster: { breed: 'Gà Peru Lai', weightKg: 3.10, spurType: 'Cựa Tháp Sắt', record: '9W - 0L', tag: 'M-#3504' },
     walaRooster: { breed: 'Gà Kelso', weightKg: 3.12, spurType: 'Cựa Tháp Sắt', record: '7W - 1L', tag: 'W-#3505' }
@@ -100,7 +101,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.92,
     bddOdds: 8.00,
     timeRemainingSeconds: 480,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 28,
     meronRooster: { breed: 'Gà Sweater', weightKg: 2.95, spurType: 'Cựa Tròn 2.5 Inch', record: '5W - 1L', tag: 'M-#2802' },
     walaRooster: { breed: 'Gà Cuban', weightKg: 2.98, spurType: 'Cựa Tròn 2.5 Inch', record: '6W - 3L', tag: 'W-#2803' }
@@ -117,7 +118,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.95,
     bddOdds: 8.00,
     timeRemainingSeconds: 30,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 19,
     meronRooster: { breed: 'Gà Asil Derby', weightKg: 3.05, spurType: 'Cựa Sắt Tròn Thomo', record: '4W - 0L', tag: 'M-#1901' },
     walaRooster: { breed: 'Gà Tre Chuối', weightKg: 3.02, spurType: 'Cựa Sắt Tròn Thomo', record: '5W - 1L', tag: 'W-#1902' }
@@ -134,7 +135,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.94,
     bddOdds: 8.00,
     timeRemainingSeconds: 560,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 50,
     meronRooster: { breed: 'Gà Hatch Slasher', weightKg: 2.85, spurType: 'Cựa Dao Slasher', record: '12W - 2L', tag: 'M-#5001' },
     walaRooster: { breed: 'Gà Roundhead', weightKg: 2.88, spurType: 'Cựa Dao Slasher', record: '10W - 1L', tag: 'W-#5002' }
@@ -151,7 +152,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.97,
     bddOdds: 8.00,
     timeRemainingSeconds: 22,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 44,
     meronRooster: { breed: 'Gà Kelso Davao', weightKg: 2.92, spurType: 'Cựa Dao Double Blade', record: '8W - 3L', tag: 'M-#4401' },
     walaRooster: { breed: 'Gà Albany', weightKg: 2.95, spurType: 'Cựa Dao Double Blade', record: '7W - 2L', tag: 'W-#4402' }
@@ -168,7 +169,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.91,
     bddOdds: 8.00,
     timeRemainingSeconds: 420,
-    streamUrl: '',
+    streamUrl: 'https://bj88.com/vn/vn',
     currentMatch: 31,
     meronRooster: { breed: 'Gà Dan Gray', weightKg: 2.89, spurType: 'Cựa Dao Cebu Slasher', record: '5W - 2L', tag: 'M-#3101' },
     walaRooster: { breed: 'Gà Butcher', weightKg: 2.91, spurType: 'Cựa Dao Cebu Slasher', record: '6W - 1L', tag: 'W-#3102' }
@@ -186,72 +187,59 @@ interface ActiveCockfightBet {
 
 const STREAM_PRESETS: Record<string, StreamSource[]> = {
   CPC1: [
-    { id: 'sv388_cpc1_r1', name: 'SV388 Thomo CPC1 VIP (Trận 1)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
-    { id: 'sv388_cpc1_r2', name: 'SV388 Thomo CPC1 VIP (Trận 2)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
-    { id: 'sv388_cpc1_r3', name: 'SV388 Thomo CPC1 VIP (Trận 3)', url: 'https://player.videosv388.com/?play=9258d9b1-816c-4990-bb9d-342b717e9ea6', type: 'iframe' },
+    { id: 'bj88_cpc1_live', name: '▶ BJ88 Direct Live (CPC1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'sv388_cpc1_r1', name: 'Thomo CPC1 VIP (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'sv388_cpc1_r2', name: 'Thomo CPC1 VIP (Trận 2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   CPC2: [
-    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand Arena (Trận 1)', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
-    { id: 'sv388_cpc2_r2', name: 'Thomo CPC2 Grand Arena (Trận 2)', url: 'https://player.videosv388.com/?play=f59dd1ea-5880-4c7f-8f0c-23ea2f2bc6ea', type: 'iframe' },
-    { id: 'sv388_cpc2_r3', name: 'Thomo CPC2 Grand Arena (Trận 3)', url: 'https://player.videosv388.com/?play=62a2c246-ceb5-4a7b-91f2-6a549f7b4d02', type: 'iframe' },
+    { id: 'bj88_cpc2_live', name: '▶ BJ88 Direct Live (CPC2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
+    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   CPC3: [
-    { id: 'sv388_cpc3_r1', name: 'Thomo CPC3 Iron Spur (Trận 1)', url: 'https://player.videosv388.com/?play=c14547a2-b7fd-4ea6-8ddc-995ef8d6a782', type: 'iframe' },
-    { id: 'sv388_cpc3_r2', name: 'Thomo CPC3 Iron Spur (Trận 2)', url: 'https://player.videosv388.com/?play=6556ea54-8448-46e4-9244-b832677e6967', type: 'iframe' },
+    { id: 'bj88_cpc3_live', name: '▶ BJ88 Direct Live (CPC3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   CPC4: [
-    { id: 'sv388_cpc4_r1', name: 'Thomo CPC4 Derby (Trận 1)', url: 'https://player.videosv388.com/?play=8fe9b578-8bd6-4197-90ae-1f9ea6fc1a3a', type: 'iframe' },
-    { id: 'sv388_cpc4_r2', name: 'Thomo CPC4 Derby (Trận 2)', url: 'https://player.videosv388.com/?play=2ed5512c-3026-4489-a3bb-84c2b2b4dbf2', type: 'iframe' },
+    { id: 'bj88_cpc4_live', name: '▶ BJ88 Direct Live (CPC4)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   PH1: [
-    { id: 'pasay_ph1_r1', name: 'Pasay Colosseum Sabong (Trận 1)', url: 'https://player.videosv388.com/?play=9e08a521-b9a0-44a1-8452-5d224bbfe64f', type: 'iframe' },
-    { id: 'pasay_ph1_r2', name: 'Pasay Colosseum Sabong (Trận 2)', url: 'https://player.videosv388.com/?play=ec701903-2715-41f1-a843-87b0762341a8', type: 'iframe' },
+    { id: 'bj88_ph1_live', name: '▶ BJ88 Direct Live (Pasay PH1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   PH2: [
-    { id: 'davao_ph2_r1', name: 'Davao Cockpit Arena (Trận 1)', url: 'https://player.videosv388.com/?play=98238cef-89ca-4216-a29d-3d0e8c348216', type: 'iframe' },
-    { id: 'davao_ph2_r2', name: 'Davao Cockpit Arena (Trận 2)', url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967', type: 'iframe' },
+    { id: 'bj88_ph2_live', name: '▶ BJ88 Direct Live (Davao PH2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ],
   PH3: [
-    { id: 'cebu_ph3_r1', name: 'Cebu Live Cockpit (Trận 1)', url: 'https://player.videosv388.com/?play=0de89302-2ad7-4f02-ae63-83ce3c78f22a', type: 'iframe' },
-    { id: 'cebu_ph3_r2', name: 'Cebu Live Cockpit (Trận 2)', url: 'https://player.videosv388.com/?play=54119d80-ba88-46c0-acb4-06589027db5d', type: 'iframe' },
+    { id: 'bj88_ph3_live', name: '▶ BJ88 Direct Live (Cebu PH3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
   ]
 };
 
 const TEACHING_FALLBACK_SOURCES = [
   {
-    id: 'sv388_live_direct',
-    name: 'SV388 Direct Live Player (Pasay/Thomo)',
-    url: 'https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967',
+    id: 'bj88_direct_live',
+    name: '▶ BJ88 Direct Live Feed (Pasay & Thomo)',
+    url: 'https://bj88.com/vn/vn',
     type: 'iframe' as const,
-    badge: 'Đang Hoạt Động / Live 60FPS'
+    badge: 'BJ88 Official Feed'
   },
   {
-    id: 'fallback_hls',
-    name: 'Source 2: Mux Live Stream (HLS 60FPS Backup)',
-    url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    type: 'hls' as const,
-    badge: 'Native 60FPS HLS'
-  },
-  {
-    id: 'source1',
-    name: 'Source 3: ga6789.com (Thomo Center)',
+    id: 'ga6789_live',
+    name: 'Source 2: ga6789.com (Thomo Center)',
     url: 'https://ga6789.com',
     type: 'proxy_iframe' as const,
     badge: 'Thomo Center'
   },
   {
-    id: 'source2',
-    name: 'Source 4: bj988.com (Pasay Center)',
-    url: 'https://bj988.com/vn/vn',
-    type: 'proxy_iframe' as const,
-    badge: 'Pasay Center'
-  },
-  {
-    id: 'source3',
-    name: 'Source 5: daga88.net (Backup Feed)',
+    id: 'daga88_live',
+    name: 'Source 3: daga88.net (Backup Feed)',
     url: 'https://daga88.net',
     type: 'proxy_iframe' as const,
     badge: 'Backup Feed'
+  },
+  {
+    id: 'fallback_hls',
+    name: 'Source 4: Mux Live Stream (HLS 60FPS Backup)',
+    url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    type: 'hls' as const,
+    badge: 'Native 60FPS HLS'
   }
 ];
 
@@ -321,17 +309,15 @@ export const SbobetCockfightView: React.FC = () => {
     }
   }, [activeArena]);
 
-  // Settle bets and award payouts on match conclusion
-  const settleArenaMatch = (arenaId: string, matchNum: number) => {
+  // Settle bets and award payouts on match conclusion (Exact 0.5s bead drop)
+  const settleArenaMatchWithWinner = (arenaId: string, matchNum: number, winner: 'MERON' | 'WALA' | 'BDD') => {
     const key = `${arenaId}-${matchNum}`;
     if (settledMatchesRef.current.has(key)) return;
     settledMatchesRef.current.add(key);
 
-    const rand = Math.random();
-    const winner: 'MERON' | 'WALA' | 'BDD' = rand < 0.47 ? 'MERON' : (rand < 0.94 ? 'WALA' : 'BDD');
     const winnerCode: 'M' | 'W' | 'B' = winner === 'MERON' ? 'M' : (winner === 'WALA' ? 'W' : 'B');
 
-    // Update arena roadmap
+    // Update arena roadmap with exact 0.5s bead drop
     setArenaHistories(prev => {
       const cur = prev[arenaId] || ['M', 'W'];
       return {
@@ -362,28 +348,134 @@ export const SbobetCockfightView: React.FC = () => {
     }
   };
 
-  // Fetch live backend arenas every 2 seconds
+  const settleArenaMatch = (arenaId: string, matchNum: number) => {
+    const rand = Math.random();
+    const winner: 'MERON' | 'WALA' | 'BDD' = rand < 0.47 ? 'MERON' : (rand < 0.94 ? 'WALA' : 'BDD');
+    settleArenaMatchWithWinner(arenaId, matchNum, winner);
+  };
+
+  // Real-time Authoritative WebSocket Synchronization
   useEffect(() => {
+    let ws: WebSocket | null = null;
+    let reconnectTimeout: any = null;
     let isMounted = true;
 
+    const connectWs = () => {
+      try {
+        let wsUrl: string;
+        if (API_BASE_URL && API_BASE_URL.startsWith('http')) {
+          wsUrl = API_BASE_URL.replace(/^http/, 'ws') + '/ws/cockfight';
+        } else if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+          wsUrl = 'ws://localhost:3000/ws/cockfight';
+        } else {
+          wsUrl = 'wss://game-bet-backend.onrender.com/ws/cockfight';
+        }
+
+        ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+          // Connected to server-side cockfight engine
+        };
+
+        ws.onmessage = (event) => {
+          if (!isMounted) return;
+          try {
+            const msg = JSON.parse(event.data);
+
+            if (msg.type === 'STATE_SYNC' && msg.data?.arenas) {
+              setArenasData(msg.data.arenas);
+            } else if (msg.type === 'TICK') {
+              const { arenaId, remainingSeconds, phase, currentMatch } = msg.data;
+              setArenasData(prev => prev.map(a => {
+                if (a.id === arenaId) {
+                  return {
+                    ...a,
+                    timeRemainingSeconds: remainingSeconds,
+                    phase: phase || a.phase,
+                    status: (phase || a.phase) as any,
+                    currentMatch: currentMatch || a.currentMatch
+                  };
+                }
+                return a;
+              }));
+
+              // Audio feedback for active arena: 5..1 acoustic ticks and 0s bell strike
+              if (arenaId === activeArena) {
+                if (remainingSeconds <= 5 && remainingSeconds >= 1) {
+                  audioService.playTickSound();
+                } else if (remainingSeconds === 0) {
+                  audioService.playGateBellSound();
+                }
+              }
+            } else if (msg.type === 'GATE_LOCKED') {
+              const { arenaId } = msg.data;
+              setArenasData(prev => prev.map(a => a.id === arenaId ? { ...a, phase: 'GATE_LOCKED', status: 'GATE_LOCKED' } : a));
+              if (arenaId === activeArena) {
+                audioService.playGateBellSound();
+                setBetFeedback({
+                  text: '🔒 CỔNG CƯỢC ĐÃ KHÓA (ANTI-VÉT 0.1S GATE LOCK)',
+                  isError: true
+                });
+              }
+            } else if (msg.type === 'RESULT_ANNOUNCED') {
+              const { arenaId, matchNumber, winner } = msg.data;
+              audioService.playResultSound();
+              // Exact 0.5s delay before dropping scorecard bead and settling bets
+              setTimeout(() => {
+                if (isMounted) {
+                  settleArenaMatchWithWinner(arenaId, matchNumber, winner);
+                }
+              }, 500);
+            } else if (msg.type === 'VOID_MATCH') {
+              const { arenaId, matchNumber } = msg.data;
+              // Instant 100% refund for all bets placed on this void match
+              const refundedBets = activeBetsRef.current.filter(b => b.arenaId === arenaId && b.match === matchNumber);
+              let totalRefunded = 0;
+              refundedBets.forEach(b => {
+                depositBalance(b.stake);
+                totalRefunded += b.stake;
+              });
+              setActiveBets(prev => prev.filter(b => !(b.arenaId === arenaId && b.match === matchNumber)));
+              setBetFeedback({
+                text: `⚠️ TRẬN ĐẤU BỊ HỦY (VOID MATCH): Đã hoàn lại 100% (+${totalRefunded > 0 ? totalRefunded : selectedStake} pts) cho bồ ${arenaId} Trận #${matchNumber}`,
+                isError: false
+              });
+            }
+          } catch {
+            // Non-JSON frame
+          }
+        };
+
+        ws.onclose = () => {
+          if (isMounted) {
+            reconnectTimeout = setTimeout(connectWs, 3000);
+          }
+        };
+
+        ws.onerror = () => {
+          ws?.close();
+        };
+      } catch {
+        // Fallback to local polling if WebSocket is blocked
+      }
+    };
+
+    connectWs();
+
+    // Fallback polling for arenas
     const fetchArenas = async () => {
       try {
         const res = await ApiService.getCockfightArenas();
         if (isMounted && res.data && res.data.arenas && res.data.arenas.length > 0) {
-          res.data.arenas.forEach((arena: ArenaInfo) => {
-            if (arena.phase === 'SETTLING' || arena.status === 'SETTLING') {
-              settleArenaMatch(arena.id, arena.currentMatch);
-            }
-          });
           setArenasData(res.data.arenas);
         }
-      } catch (err) {
-        // Fallback locally
+      } catch {
+        // Local fallback
       }
     };
 
     fetchArenas();
-    const interval = setInterval(fetchArenas, 2000);
+    const interval = setInterval(fetchArenas, 3000);
 
     // Smooth client second countdown
     const ticker = setInterval(() => {
@@ -425,10 +517,12 @@ export const SbobetCockfightView: React.FC = () => {
 
     return () => {
       isMounted = false;
+      if (ws) ws.close();
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
       clearInterval(interval);
       clearInterval(ticker);
     };
-  }, [classroomSpeed]);
+  }, [activeArena, classroomSpeed]);
 
   // Real-time Student Synchronization & Line 2 Failover Listener
   useEffect(() => {
@@ -1126,72 +1220,131 @@ export const SbobetCockfightView: React.FC = () => {
                 </button>
               </div>
 
-              {/* Quick 1-Click Stream Shortcuts */}
-              <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[10px] text-slate-400 font-bold">Nhanh:</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCustomStreamInput('https://player.videosv388.com/?play=a254ad13-c625-4dfe-bf75-50beb9db8967');
-                    handleSelectPresetSource('sv388_live_direct');
-                  }}
-                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
-                >
-                  <span>▶ SV388 Direct Live (a254ad13)</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCustomStreamInput('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
-                    handleSelectPresetSource('fallback_hls');
-                  }}
-                  className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
-                >
-                  <span>⚡ Mux HLS Backup</span>
-                </button>
-              </div>
-
-              {validationError && (
-                <div className="p-2.5 bg-red-950/80 border border-red-500/50 rounded-lg text-[11px] text-red-200 leading-relaxed flex items-start gap-1.5">
-                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                  <span>{validationError}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Preconfigured Fallback Dropdown Selector */}
-            <div className="space-y-1.5 pt-1 border-t border-slate-800">
-              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
-                  <Tv className="w-3.5 h-3.5 text-amber-400" />
-                  Chọn Nguồn Phát Chuẩn (Teaching Fallback Sources):
+            {/* Quick Instructor Presentation Triggers */}
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-xs text-amber-300 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  Kịch Bản Trình Chiếu Nhanh (Instructor Live Demo)
                 </span>
-                <span className="text-[10px] text-emerald-400 font-mono font-bold">⚡ 3s Auto-Failover</span>
-              </label>
-              <select
-                value={selectedPresetSourceId}
-                onChange={(e) => handleSelectPresetSource(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-white focus:border-amber-500 outline-none cursor-pointer"
-              >
-                {TEACHING_FALLBACK_SOURCES.map((src) => (
-                  <option key={src.id} value={src.id} className="bg-slate-900 text-white">
-                    {src.name} — [{src.badge}]
-                  </option>
-                ))}
-              </select>
-              <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-                <span>Hệ thống tự động chuyển đổi giữa 3 nguồn này trong ≤ 3 giây nếu gặp sự cố mạng hoặc tường lửa.</span>
+                <span className="text-[10px] text-slate-400 font-mono">Bồ {activeArena} Trận #{currentArena.currentMatch}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await ApiService.overrideCockfightPhase(activeArena, 'GATE_LOCKED');
+                    audioService.playGateBellSound();
+                    setBetFeedback({
+                      text: `🔒 Đã kích hoạt Khóa Kèo Ngay (Anti-Vét 0.1s) trên bồ ${activeArena}!`,
+                      isError: true
+                    });
+                  }}
+                  className="py-1.5 px-2.5 bg-red-900/80 hover:bg-red-800 text-red-200 border border-red-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>🔒 Khóa Kèo (Anti-Vét 0.1s)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await ApiService.voidCockfightMatch(activeArena, 'Instructor manual void test');
+                  }}
+                  className="py-1.5 px-2.5 bg-amber-900/80 hover:bg-amber-800 text-amber-200 border border-amber-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <AlertOctagon className="w-3.5 h-3.5" />
+                  <span>⚠️ Hủy Trận (Hoàn Tiền 100%)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'MERON');
+                  }}
+                  className="py-1.5 px-2.5 bg-red-700 hover:bg-red-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <span>🔴 Meron Thắng (0.5s Rơi Cầu)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'WALA');
+                  }}
+                  className="py-1.5 px-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <span>🔵 Wala Thắng (0.5s Rơi Cầu)</span>
+                </button>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-slate-800 flex justify-end">
+            {/* Quick 1-Click Stream Shortcuts */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[10px] text-slate-400 font-bold">Nhanh:</span>
               <button
-                onClick={() => setIsInstructorModalOpen(false)}
-                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-slate-300"
+                type="button"
+                onClick={() => {
+                  setCustomStreamInput('https://bj88.com/vn/vn');
+                  handleSelectPresetSource('bj88_direct_live');
+                }}
+                className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
               >
-                Đóng
+                <span>▶ BJ88 Direct Live Feed</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setCustomStreamInput('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
+                  handleSelectPresetSource('fallback_hls');
+                }}
+                className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+              >
+                <span>⚡ Mux HLS Backup</span>
               </button>
             </div>
+
+            {validationError && (
+              <div className="p-2.5 bg-red-950/80 border border-red-500/50 rounded-lg text-[11px] text-red-200 leading-relaxed flex items-start gap-1.5">
+                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                <span>{validationError}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Preconfigured Fallback Dropdown Selector */}
+          <div className="space-y-1.5 pt-1 border-t border-slate-800">
+            <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Tv className="w-3.5 h-3.5 text-amber-400" />
+                Chọn Nguồn Phát Chuẩn (Teaching Fallback Sources):
+              </span>
+              <span className="text-[10px] text-emerald-400 font-mono font-bold">⚡ 3s Auto-Failover</span>
+            </label>
+            <select
+              value={selectedPresetSourceId}
+              onChange={(e) => handleSelectPresetSource(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-white focus:border-amber-500 outline-none cursor-pointer"
+            >
+              {TEACHING_FALLBACK_SOURCES.map((src) => (
+                <option key={src.id} value={src.id} className="bg-slate-900 text-white">
+                  {src.name} — [{src.badge}]
+                </option>
+              ))}
+            </select>
+            <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+              <span>Hệ thống tự động chuyển đổi giữa các nguồn trong ≤ 3 giây nếu gặp sự cố mạng hoặc tường lửa.</span>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-slate-800 flex justify-end">
+            <button
+              onClick={() => setIsInstructorModalOpen(false)}
+              className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-slate-300"
+            >
+              Đóng
+            </button>
+          </div>
           </div>
         </div>
       )}

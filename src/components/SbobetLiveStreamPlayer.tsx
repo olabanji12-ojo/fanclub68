@@ -485,17 +485,24 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             }}
           />
 
-          {/* Big Center Play Overlay for Iframe Embeds (to guarantee user gesture for autoplay) */}
+          {/* Big Center Play Overlay for BJ88 Direct Live (Prominent Yellow Button) */}
           {!isIframeActivated && !hasError && (
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center z-20 transition-all">
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] flex flex-col items-center justify-center z-20 transition-all p-4">
               <button
                 onClick={() => setIsIframeActivated(true)}
-                className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/50 transform hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-amber-500/30 cursor-pointer"
+                className="group/btn px-7 sm:px-9 py-3.5 sm:py-4 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-300 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-2xl shadow-yellow-500/50 transform hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-yellow-400/40 flex items-center gap-3.5 cursor-pointer border-2 border-yellow-200"
               >
-                <Play className="w-9 h-9 fill-current ml-1" />
+                <div className="w-10 h-10 rounded-xl bg-slate-950 text-yellow-400 flex items-center justify-center group-hover/btn:scale-110 transition-transform shadow-md">
+                  <Play className="w-5 h-5 fill-current ml-0.5" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">BJ88 Direct Live</span>
+                  <span className="text-[11px] text-slate-900 font-bold opacity-85">Phát Trực Tiếp Sới {arenaName}</span>
+                </div>
               </button>
-              <p className="text-amber-200 font-bold text-xs uppercase tracking-widest mt-4 drop-shadow">
-                Nhấp để phát luồng SV388 / Click to Play
+              <p className="text-yellow-300/90 font-mono text-[11px] uppercase tracking-wider mt-4 drop-shadow flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
+                Nhấp để phát luồng BJ88 trực tiếp • 60FPS Low-Latency
               </p>
             </div>
           )}
@@ -514,15 +521,22 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
 
           {/* Big Center Play Button Overlay for Autoplay permissions */}
           {!isPlaying && !isLoading && !hasError && (
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center z-20 transition-all">
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] flex flex-col items-center justify-center z-20 transition-all p-4">
               <button
                 onClick={handlePlayClick}
-                className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-400 hover:from-amber-500 hover:to-amber-300 text-slate-950 flex items-center justify-center shadow-2xl shadow-amber-500/50 transform hover:scale-110 active:scale-95 transition-all duration-300 group-hover:ring-8 ring-amber-500/20 cursor-pointer"
+                className="group/btn px-7 sm:px-9 py-3.5 sm:py-4 bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-300 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-2xl shadow-yellow-500/50 transform hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-yellow-400/40 flex items-center gap-3.5 cursor-pointer border-2 border-yellow-200"
               >
-                <Play className="w-9 h-9 fill-current ml-1" />
+                <div className="w-10 h-10 rounded-xl bg-slate-950 text-yellow-400 flex items-center justify-center group-hover/btn:scale-110 transition-transform shadow-md">
+                  <Play className="w-5 h-5 fill-current ml-0.5" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">BJ88 Direct Live</span>
+                  <span className="text-[11px] text-slate-900 font-bold opacity-85">Xem Trực Tiếp Sới {arenaName}</span>
+                </div>
               </button>
-              <p className="text-amber-200 font-bold text-xs uppercase tracking-widest mt-4 drop-shadow">
-                Nhấp để xem trực tiếp sới {arenaName}
+              <p className="text-yellow-300/90 font-mono text-[11px] uppercase tracking-wider mt-4 drop-shadow flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
+                Nhấp để xem trực tiếp sới {arenaName} • 60FPS Native
               </p>
             </div>
           )}

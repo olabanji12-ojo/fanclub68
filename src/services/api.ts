@@ -106,9 +106,34 @@ export const ApiService = {
     return safeFetch<{
       success: boolean;
       message: string;
+      code?: string;
     }>('/api/line2/cockfight/bet', {
       method: 'POST',
       body: JSON.stringify({ arenaId, choice, stake })
+    });
+  },
+
+  async overrideCockfightPhase(arenaId: string, phase: string, winner?: string) {
+    return safeFetch<{
+      success: boolean;
+      message: string;
+      phase: string;
+      winner?: string;
+    }>('/api/line2/cockfight/override-phase', {
+      method: 'POST',
+      body: JSON.stringify({ arenaId, phase, winner })
+    });
+  },
+
+  async voidCockfightMatch(arenaId: string, reason?: string) {
+    return safeFetch<{
+      success: boolean;
+      message: string;
+      arenaId: string;
+      matchNumber: number;
+    }>('/api/line2/cockfight/void-match', {
+      method: 'POST',
+      body: JSON.stringify({ arenaId, reason })
     });
   },
 
