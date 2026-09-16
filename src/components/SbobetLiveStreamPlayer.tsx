@@ -88,7 +88,6 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
 
   // Setup HLS / Video stream on source change
   useEffect(() => {
-    setViewMode('video');
     setIsLoading(true);
     setHasError(false);
     setErrorMessage('');
@@ -517,10 +516,9 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
         </div>
       ) : (
         /* Native HLS / Direct Video Mode */
-        <div className="relative w-full h-full flex items-center justify-center bg-black">
+        <div className="relative w-full h-full flex items-center justify-center">
           <video
             ref={videoRef}
-            src={streamSource.url}
             playsInline
             muted={isMuted}
             autoPlay
