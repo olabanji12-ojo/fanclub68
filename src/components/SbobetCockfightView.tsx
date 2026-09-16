@@ -67,7 +67,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.96,
     bddOdds: 8.00,
     timeRemainingSeconds: 520,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 42,
     meronRooster: { breed: 'Gà Asil Rặc', weightKg: 3.25, spurType: 'Cựa Sắt Tròn Thomo', record: '8W - 1L', tag: 'M-#4210' },
     walaRooster: { breed: 'Gà Tre Mỹ', weightKg: 3.20, spurType: 'Cựa Sắt Tròn Thomo', record: '6W - 2L', tag: 'W-#4211' }
@@ -84,7 +84,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.98,
     bddOdds: 8.00,
     timeRemainingSeconds: 45,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 35,
     meronRooster: { breed: 'Gà Peru Lai', weightKg: 3.10, spurType: 'Cựa Tháp Sắt', record: '9W - 0L', tag: 'M-#3504' },
     walaRooster: { breed: 'Gà Kelso', weightKg: 3.12, spurType: 'Cựa Tháp Sắt', record: '7W - 1L', tag: 'W-#3505' }
@@ -101,7 +101,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.92,
     bddOdds: 8.00,
     timeRemainingSeconds: 480,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 28,
     meronRooster: { breed: 'Gà Sweater', weightKg: 2.95, spurType: 'Cựa Tròn 2.5 Inch', record: '5W - 1L', tag: 'M-#2802' },
     walaRooster: { breed: 'Gà Cuban', weightKg: 2.98, spurType: 'Cựa Tròn 2.5 Inch', record: '6W - 3L', tag: 'W-#2803' }
@@ -118,7 +118,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.95,
     bddOdds: 8.00,
     timeRemainingSeconds: 30,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 19,
     meronRooster: { breed: 'Gà Asil Derby', weightKg: 3.05, spurType: 'Cựa Sắt Tròn Thomo', record: '4W - 0L', tag: 'M-#1901' },
     walaRooster: { breed: 'Gà Tre Chuối', weightKg: 3.02, spurType: 'Cựa Sắt Tròn Thomo', record: '5W - 1L', tag: 'W-#1902' }
@@ -135,7 +135,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.94,
     bddOdds: 8.00,
     timeRemainingSeconds: 560,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 50,
     meronRooster: { breed: 'Gà Hatch Slasher', weightKg: 2.85, spurType: 'Cựa Dao Slasher', record: '12W - 2L', tag: 'M-#5001' },
     walaRooster: { breed: 'Gà Roundhead', weightKg: 2.88, spurType: 'Cựa Dao Slasher', record: '10W - 1L', tag: 'W-#5002' }
@@ -152,7 +152,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.97,
     bddOdds: 8.00,
     timeRemainingSeconds: 22,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 44,
     meronRooster: { breed: 'Gà Kelso Davao', weightKg: 2.92, spurType: 'Cựa Dao Double Blade', record: '8W - 3L', tag: 'M-#4401' },
     walaRooster: { breed: 'Gà Albany', weightKg: 2.95, spurType: 'Cựa Dao Double Blade', record: '7W - 2L', tag: 'W-#4402' }
@@ -169,7 +169,7 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     walaOdds: 0.91,
     bddOdds: 8.00,
     timeRemainingSeconds: 420,
-    streamUrl: 'https://bj88.com/vn/vn',
+    streamUrl: 'https://player.videosv388.com',
     currentMatch: 31,
     meronRooster: { breed: 'Gà Dan Gray', weightKg: 2.89, spurType: 'Cựa Dao Cebu Slasher', record: '5W - 2L', tag: 'M-#3101' },
     walaRooster: { breed: 'Gà Butcher', weightKg: 2.91, spurType: 'Cựa Dao Cebu Slasher', record: '6W - 1L', tag: 'W-#3102' }
@@ -185,58 +185,37 @@ interface ActiveCockfightBet {
   odds: number;
 }
 
+// DAGA88 real match video interface
+interface Daga88Match {
+  matchNumber: number;
+  playerUrl: string;
+  uuid: string;
+  arenaKey: string;
+  date: string;
+}
+
+// Fallback static presets (used when DAGA88 scraper has no data yet)
 const STREAM_PRESETS: Record<string, StreamSource[]> = {
-  CPC1: [
-    { id: 'bj88_cpc1_live', name: '▶ BJ88 Direct Live (CPC1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc1_r1', name: 'Thomo CPC1 VIP (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc1_r2', name: 'Thomo CPC1 VIP (Trận 2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  CPC2: [
-    { id: 'bj88_cpc2_live', name: '▶ BJ88 Direct Live (CPC2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-    { id: 'sv388_cpc2_r1', name: 'Thomo CPC2 Grand (Trận 1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  CPC3: [
-    { id: 'bj88_cpc3_live', name: '▶ BJ88 Direct Live (CPC3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  CPC4: [
-    { id: 'bj88_cpc4_live', name: '▶ BJ88 Direct Live (CPC4)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  PH1: [
-    { id: 'bj88_ph1_live', name: '▶ BJ88 Direct Live (Pasay PH1)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  PH2: [
-    { id: 'bj88_ph2_live', name: '▶ BJ88 Direct Live (Davao PH2)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ],
-  PH3: [
-    { id: 'bj88_ph3_live', name: '▶ BJ88 Direct Live (Cebu PH3)', url: 'https://bj88.com/vn/vn', type: 'iframe' },
-  ]
+  CPC1: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC2: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC3: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC4: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PH1: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PH2: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PH3: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
 };
 
 const TEACHING_FALLBACK_SOURCES = [
   {
-    id: 'bj88_direct_live',
-    name: '▶ BJ88 Direct Live Feed (Pasay & Thomo)',
-    url: 'https://bj88.com/vn/vn',
+    id: 'daga88_videosv388',
+    name: '📺 DAGA88 — Recorded Match Feed (player.videosv388.com)',
+    url: 'https://player.videosv388.com',
     type: 'iframe' as const,
-    badge: 'BJ88 Official Feed'
-  },
-  {
-    id: 'ga6789_live',
-    name: 'Source 2: ga6789.com (Thomo Center)',
-    url: 'https://ga6789.com',
-    type: 'proxy_iframe' as const,
-    badge: 'Thomo Center'
-  },
-  {
-    id: 'daga88_live',
-    name: 'Source 3: daga88.net (Backup Feed)',
-    url: 'https://daga88.net',
-    type: 'proxy_iframe' as const,
-    badge: 'Backup Feed'
+    badge: 'DAGA88 Real Matches'
   },
   {
     id: 'fallback_hls',
-    name: 'Source 4: Mux Live Stream (HLS 60FPS Backup)',
+    name: '📡 Mux HLS Live Stream (60FPS Backup)',
     url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     type: 'hls' as const,
     badge: 'Native 60FPS HLS'
@@ -260,9 +239,16 @@ export const SbobetCockfightView: React.FC = () => {
   const [classroomSpeed, setClassroomSpeed] = useState<boolean>(true);
   const [isFailoverActive, setIsFailoverActive] = useState<boolean>(false);
   const [activeSourceInfo, setActiveSourceInfo] = useState<{ name: string; status: string }>({
-    name: 'ga6789.com (Thomo Center)',
+    name: 'DAGA88 / player.videosv388.com',
     status: 'ONLINE'
   });
+
+  // DAGA88 Real Match Videos
+  const [daga88Matches, setDaga88Matches] = useState<Daga88Match[]>([]);
+  const [daga88MatchIndex, setDaga88MatchIndex] = useState<number>(0);
+  const [daga88Loading, setDaga88Loading] = useState<boolean>(false);
+  const [daga88Date, setDaga88Date] = useState<string>('');
+  const [daga88IsStale, setDaga88IsStale] = useState<boolean>(false);
 
   // Active Stream Source
   const [activeStreamSource, setActiveStreamSource] = useState<StreamSource>(
@@ -299,15 +285,63 @@ export const SbobetCockfightView: React.FC = () => {
   const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
   const [isManualStreamLocked, setIsManualStreamLocked] = useState<boolean>(false);
 
-  // Auto-advance stream source ONLY when arena changes (not on every match tick)
+  // Fetch real DAGA88 match videos whenever the active arena changes
   useEffect(() => {
-    if (isManualStreamLocked) return;
-    const presets = STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1'];
-    if (presets && presets.length > 0) {
-      const matchIdx = Math.abs((currentArena.currentMatch - 1) % presets.length);
-      setActiveStreamSource(presets[matchIdx]);
-    }
+    let cancelled = false;
+    setDaga88Loading(true);
+    setDaga88Matches([]);
+    setDaga88MatchIndex(0);
+
+    const fetchVideos = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/line2/cockfight/videos/${activeArena}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (cancelled) return;
+        if (data.success && data.matches?.length > 0) {
+          setDaga88Matches(data.matches);
+          setDaga88Date(data.date || '');
+          setDaga88IsStale(data.isStale || false);
+          // Set first real match as the active stream
+          const firstMatch = data.matches[0];
+          setActiveStreamSource({
+            id: `daga88_${firstMatch.uuid}`,
+            name: `Trận ${firstMatch.matchNumber} — DAGA88`,
+            url: firstMatch.playerUrl,
+            type: 'iframe'
+          });
+          setActiveSourceInfo({ name: `DAGA88 ${data.arenaLabel}`, status: 'ONLINE' });
+        } else {
+          // Fallback to HLS if no videos
+          if (!isManualStreamLocked) {
+            setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC1'][0]);
+          }
+        }
+      } catch {
+        if (!cancelled && !isManualStreamLocked) {
+          setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC1'][0]);
+        }
+      } finally {
+        if (!cancelled) setDaga88Loading(false);
+      }
+    };
+
+    fetchVideos();
+    return () => { cancelled = true; };
   }, [activeArena]);
+
+  // Switch video when user selects a different match
+  useEffect(() => {
+    if (daga88Matches.length === 0) return;
+    const match = daga88Matches[daga88MatchIndex];
+    if (!match) return;
+    setActiveStreamSource({
+      id: `daga88_${match.uuid}`,
+      name: `Trận ${match.matchNumber} — DAGA88 (${daga88Date})`,
+      url: match.playerUrl,
+      type: 'iframe'
+    });
+  }, [daga88MatchIndex, daga88Matches]);
 
   // Settle bets and award payouts on match conclusion (Exact 0.5s bead drop)
   const settleArenaMatchWithWinner = (arenaId: string, matchNum: number, winner: 'MERON' | 'WALA' | 'BDD') => {
@@ -596,31 +630,19 @@ export const SbobetCockfightView: React.FC = () => {
       url.includes('youtube.com/embed') ||
       url.includes('youtu.be') ||
       url.includes('twitch.tv') ||
-      url.includes('vimeo.com') ||
-      url.includes('ga6789.com') ||
-      url.includes('bj988.com') ||
-      url.includes('daga88');
+      url.includes('vimeo.com');
 
     if (!isHls && !isDirectMp4 && !isEmbedPlayer) {
       setValidationError('⚠️ URL này là trang web thông thường, không phải luồng video trực tiếp (.m3u8, .mp4 hoặc cổng video được hỗ trợ). Vui lòng chọn 1 trong các nguồn chuẩn bên dưới hoặc nhập link .m3u8.');
       return;
     }
 
-    const isDirectEmbedPlayer =
-      url.includes('player.videosv388.com') ||
-      url.includes('youtube.com') ||
-      url.includes('youtu.be') ||
-      url.includes('vimeo.com') ||
-      url.includes('twitch.tv');
-
-    const isProxyIframe = !isHls && !isDirectMp4 && !isDirectEmbedPlayer && (url.includes('bj988') || url.includes('sv388') || url.includes('ga6789') || url.includes('daga88'));
-
     setIsManualStreamLocked(true);
     setActiveStreamSource({
       id: `custom-${Date.now()}`,
       name: `Luồng: ${url.substring(0, 32)}...`,
-      url,
-      type: isHls ? 'hls' : isDirectMp4 ? 'mp4' : isProxyIframe ? 'proxy_iframe' : 'iframe'
+      url: url,
+      type: isHls ? 'hls' : isDirectMp4 ? 'mp4' : 'iframe'
     });
 
     try {
@@ -744,7 +766,7 @@ export const SbobetCockfightView: React.FC = () => {
               <span className="text-yellow-400 text-sm font-black shrink-0">3</span>
               <span className="text-base font-black italic tracking-tight shrink-0">SBOBET</span>
               <span className="text-[9px] sm:text-[10px] bg-red-600 text-white font-bold px-1 sm:px-1.5 py-0.5 rounded uppercase shadow-xs shrink-0">
-                SV388 / BJ988
+                SV388 / DAGA88
               </span>
             </div>
           </div>
@@ -849,38 +871,74 @@ export const SbobetCockfightView: React.FC = () => {
         <div className="space-y-2">
           {/* Stream Preset Quick Buttons */}
           <div className="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-300">
-            <div className="flex items-center gap-1.5 overflow-x-auto">
-              <span className="text-amber-400 font-bold text-[11px] shrink-0 flex items-center gap-1">
-                <Tv className="w-3.5 h-3.5" /> Luồng:
-              </span>
-              {(STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1']).map(preset => (
+            {/* DAGA88 Real Match Video Picker */}
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-400 font-bold text-[11px] shrink-0 flex items-center gap-1">
+                  <Tv className="w-3.5 h-3.5" />
+                  {daga88Loading ? (
+                    <span className="animate-pulse">Đang tải video DAGA88...</span>
+                  ) : daga88Matches.length > 0 ? (
+                    <span>
+                      📺 DAGA88 — {daga88Matches.length} Trận
+                      {daga88Date && <span className="text-slate-400 font-normal ml-1">({daga88Date})</span>}
+                      {daga88IsStale && <span className="text-orange-400 ml-1 text-[10px]">⚠ Hôm qua</span>}
+                    </span>
+                  ) : (
+                    <span className="text-slate-400">Luồng Video:</span>
+                  )}
+                </span>
                 <button
-                  key={preset.id}
-                  onClick={() => setActiveStreamSource(preset)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap transition ${
-                    activeStreamSource.id === preset.id
-                      ? 'bg-amber-600 text-white shadow-sm'
-                      : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-                  }`}
+                  onClick={() => setIsInstructorModalOpen(true)}
+                  className="text-[10px] text-amber-300 hover:text-amber-200 underline font-bold shrink-0 ml-auto"
                 >
-                  {preset.name}
+                  + Nhập Link
                 </button>
-              ))}
-            </div>
+              </div>
 
-            <button
-              onClick={() => setIsInstructorModalOpen(true)}
-              className="text-[10px] text-amber-300 hover:text-amber-200 underline font-bold shrink-0 ml-2"
-            >
-              + Nhập Link
-            </button>
-          </div>
+              {/* Match Selector — Real DAGA88 Recorded Matches */}
+              {daga88Matches.length > 0 && (
+                <div className="flex items-center gap-1 overflow-x-auto pb-0.5">
+                  {daga88Matches.map((match, idx) => (
+                    <button
+                      key={match.uuid}
+                      onClick={() => { setDaga88MatchIndex(idx); setIsManualStreamLocked(true); }}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap transition shrink-0 ${daga88MatchIndex === idx
+                          ? 'bg-amber-600 text-white shadow-sm ring-1 ring-amber-400'
+                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                    >
+                      Trận {match.matchNumber}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Fallback: show static presets if no DAGA88 data */}
+              {!daga88Loading && daga88Matches.length === 0 && (
+                <div className="flex items-center gap-1 overflow-x-auto">
+                  {(STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1']).map(preset => (
+                    <button
+                      key={preset.id}
+                      onClick={() => setActiveStreamSource(preset)}
+                      className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap transition ${activeStreamSource.id === preset.id
+                          ? 'bg-amber-600 text-white shadow-sm'
+                          : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        }`}
+                    >
+                      {preset.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div> {/* closes flex items-center justify-between wrapper */}
 
           {/* Video Player Component */}
           <SbobetLiveStreamPlayer
             streamSource={activeStreamSource}
             arenaName={currentArena.name}
-            matchNumber={currentArena.currentMatch}
+            matchNumber={daga88Matches.length > 0 ? daga88Matches[daga88MatchIndex]?.matchNumber || currentArena.currentMatch : currentArena.currentMatch}
             phase={currentArena.phase}
             isGateLocked={isGateLocked}
             failoverActive={isFailoverActive}
@@ -888,6 +946,7 @@ export const SbobetCockfightView: React.FC = () => {
             onRefresh={() => setActiveStreamSource({ ...activeStreamSource })}
             onSwitchToTestStream={() => handleSelectPresetSource('fallback_hls')}
           />
+
 
           {/* PERSISTENT DISCLOSURE REQUIREMENT — INDEPENDENT VIDEO LAYER & SIMULATED BETTING ROUND */}
           <div className="bg-slate-900/90 border border-amber-500/30 rounded-lg px-3 py-1.5 flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-amber-200 gap-1 shadow-inner">
@@ -908,18 +967,17 @@ export const SbobetCockfightView: React.FC = () => {
               <Scale className="w-4 h-4 text-amber-600" />
               <span>HỒ SƠ CÂN KÝ & GHÉP CẶP TRẬN #{currentArena.currentMatch}</span>
             </div>
-            <div className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
-              currentArena.phase === 'WEIGHING'
+            <div className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${currentArena.phase === 'WEIGHING'
                 ? 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse'
                 : currentArena.phase === 'BETTING_OPEN'
-                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                : 'bg-red-100 text-red-800 border border-red-300'
-            }`}>
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                  : 'bg-red-100 text-red-800 border border-red-300'
+              }`}>
               {currentArena.phase === 'WEIGHING'
                 ? `⚖️ ĐANG CÂN KÝ (${formatTime(currentArena.timeRemainingSeconds)})`
                 : currentArena.phase === 'BETTING_OPEN'
-                ? `🟢 MỞ CƯỢC: ${currentArena.timeRemainingSeconds}s`
-                : '🔒 ĐÃ KHÓA CỔNG'}
+                  ? `🟢 MỞ CƯỢC: ${currentArena.timeRemainingSeconds}s`
+                  : '🔒 ĐÃ KHÓA CỔNG'}
             </div>
           </div>
 
@@ -1039,9 +1097,8 @@ export const SbobetCockfightView: React.FC = () => {
                 key={val}
                 type="button"
                 onClick={() => setSelectedStake(val)}
-                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${
-                  selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
-                }`}
+                className={`py-1 text-xs font-bold rounded-md border transition-all text-center ${selectedStake === val ? 'bg-[#0B4DA2] text-white border-[#0B4DA2] shadow-xs' : 'bg-gray-50 text-gray-700 border-gray-300 hover:bg-gray-100'
+                  }`}
               >
                 {val}
               </button>
@@ -1170,22 +1227,20 @@ export const SbobetCockfightView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => handleToggleClassroomMode(true)}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
-                    classroomSpeed
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${classroomSpeed
                       ? 'bg-amber-600 text-white shadow-md ring-2 ring-amber-400/50'
                       : 'bg-slate-900 text-slate-300 hover:bg-slate-700'
-                  }`}
+                    }`}
                 >
                   <span>⚡ Giảng Dạy (2 Phút)</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleToggleClassroomMode(false)}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
-                    !classroomSpeed
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${!classroomSpeed
                       ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-400/50'
                       : 'bg-slate-900 text-slate-300 hover:bg-slate-700'
-                  }`}
+                    }`}
                 >
                   <span>🕒 Thực Tế (15 Phút)</span>
                 </button>
@@ -1220,131 +1275,131 @@ export const SbobetCockfightView: React.FC = () => {
                 </button>
               </div>
 
-            {/* Quick Instructor Presentation Triggers */}
-            <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-xs text-amber-300 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  Kịch Bản Trình Chiếu Nhanh (Instructor Live Demo)
+              {/* Quick Instructor Presentation Triggers */}
+              <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-xs text-amber-300 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    Kịch Bản Trình Chiếu Nhanh (Instructor Live Demo)
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">Bồ {activeArena} Trận #{currentArena.currentMatch}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await ApiService.overrideCockfightPhase(activeArena, 'GATE_LOCKED');
+                      audioService.playGateBellSound();
+                      setBetFeedback({
+                        text: `🔒 Đã kích hoạt Khóa Kèo Ngay (Anti-Vét 0.1s) trên bồ ${activeArena}!`,
+                        isError: true
+                      });
+                    }}
+                    className="py-1.5 px-2.5 bg-red-900/80 hover:bg-red-800 text-red-200 border border-red-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>🔒 Khóa Kèo (Anti-Vét 0.1s)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await ApiService.voidCockfightMatch(activeArena, 'Instructor manual void test');
+                    }}
+                    className="py-1.5 px-2.5 bg-amber-900/80 hover:bg-amber-800 text-amber-200 border border-amber-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <AlertOctagon className="w-3.5 h-3.5" />
+                    <span>⚠️ Hủy Trận (Hoàn Tiền 100%)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'MERON');
+                    }}
+                    className="py-1.5 px-2.5 bg-red-700 hover:bg-red-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>🔴 Meron Thắng (0.5s Rơi Cầu)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'WALA');
+                    }}
+                    className="py-1.5 px-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+                  >
+                    <span>🔵 Wala Thắng (0.5s Rơi Cầu)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick 1-Click Stream Shortcuts */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                <span className="text-[10px] text-slate-400 font-bold">Nhanh:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://player.videosv388.com');
+                    handleSelectPresetSource('daga88_videosv388');
+                  }}
+                  className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>▶ DAGA88 Video Feed</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
+                    handleSelectPresetSource('fallback_hls');
+                  }}
+                  className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>⚡ Mux HLS Backup</span>
+                </button>
+              </div>
+
+              {validationError && (
+                <div className="p-2.5 bg-red-950/80 border border-red-500/50 rounded-lg text-[11px] text-red-200 leading-relaxed flex items-start gap-1.5">
+                  <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                  <span>{validationError}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Preconfigured Fallback Dropdown Selector */}
+            <div className="space-y-1.5 pt-1 border-t border-slate-800">
+              <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Tv className="w-3.5 h-3.5 text-amber-400" />
+                  Chọn Nguồn Phát Chuẩn (Teaching Fallback Sources):
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono">Bồ {activeArena} Trận #{currentArena.currentMatch}</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await ApiService.overrideCockfightPhase(activeArena, 'GATE_LOCKED');
-                    audioService.playGateBellSound();
-                    setBetFeedback({
-                      text: `🔒 Đã kích hoạt Khóa Kèo Ngay (Anti-Vét 0.1s) trên bồ ${activeArena}!`,
-                      isError: true
-                    });
-                  }}
-                  className="py-1.5 px-2.5 bg-red-900/80 hover:bg-red-800 text-red-200 border border-red-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <Lock className="w-3.5 h-3.5" />
-                  <span>🔒 Khóa Kèo (Anti-Vét 0.1s)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await ApiService.voidCockfightMatch(activeArena, 'Instructor manual void test');
-                  }}
-                  className="py-1.5 px-2.5 bg-amber-900/80 hover:bg-amber-800 text-amber-200 border border-amber-700 rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <AlertOctagon className="w-3.5 h-3.5" />
-                  <span>⚠️ Hủy Trận (Hoàn Tiền 100%)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'MERON');
-                  }}
-                  className="py-1.5 px-2.5 bg-red-700 hover:bg-red-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <span>🔴 Meron Thắng (0.5s Rơi Cầu)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await ApiService.overrideCockfightPhase(activeArena, 'RESULT_ANNOUNCED', 'WALA');
-                  }}
-                  className="py-1.5 px-2.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
-                >
-                  <span>🔵 Wala Thắng (0.5s Rơi Cầu)</span>
-                </button>
+                <span className="text-[10px] text-emerald-400 font-mono font-bold">⚡ 3s Auto-Failover</span>
+              </label>
+              <select
+                value={selectedPresetSourceId}
+                onChange={(e) => handleSelectPresetSource(e.target.value)}
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-white focus:border-amber-500 outline-none cursor-pointer"
+              >
+                {TEACHING_FALLBACK_SOURCES.map((src) => (
+                  <option key={src.id} value={src.id} className="bg-slate-900 text-white">
+                    {src.name} — [{src.badge}]
+                  </option>
+                ))}
+              </select>
+              <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
+                <span>Hệ thống tự động chuyển đổi giữa các nguồn trong ≤ 3 giây nếu gặp sự cố mạng hoặc tường lửa.</span>
               </div>
             </div>
 
-            {/* Quick 1-Click Stream Shortcuts */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              <span className="text-[10px] text-slate-400 font-bold">Nhanh:</span>
+            <div className="pt-2 border-t border-slate-800 flex justify-end">
               <button
-                type="button"
-                onClick={() => {
-                  setCustomStreamInput('https://bj88.com/vn/vn');
-                  handleSelectPresetSource('bj88_direct_live');
-                }}
-                className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                onClick={() => setIsInstructorModalOpen(false)}
+                className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-slate-300"
               >
-                <span>▶ BJ88 Direct Live Feed</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setCustomStreamInput('https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8');
-                  handleSelectPresetSource('fallback_hls');
-                }}
-                className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
-              >
-                <span>⚡ Mux HLS Backup</span>
+                Đóng
               </button>
             </div>
-
-            {validationError && (
-              <div className="p-2.5 bg-red-950/80 border border-red-500/50 rounded-lg text-[11px] text-red-200 leading-relaxed flex items-start gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <span>{validationError}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Preconfigured Fallback Dropdown Selector */}
-          <div className="space-y-1.5 pt-1 border-t border-slate-800">
-            <label className="text-xs font-bold text-slate-300 flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Tv className="w-3.5 h-3.5 text-amber-400" />
-                Chọn Nguồn Phát Chuẩn (Teaching Fallback Sources):
-              </span>
-              <span className="text-[10px] text-emerald-400 font-mono font-bold">⚡ 3s Auto-Failover</span>
-            </label>
-            <select
-              value={selectedPresetSourceId}
-              onChange={(e) => handleSelectPresetSource(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-white focus:border-amber-500 outline-none cursor-pointer"
-            >
-              {TEACHING_FALLBACK_SOURCES.map((src) => (
-                <option key={src.id} value={src.id} className="bg-slate-900 text-white">
-                  {src.name} — [{src.badge}]
-                </option>
-              ))}
-            </select>
-            <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1">
-              <span>Hệ thống tự động chuyển đổi giữa các nguồn trong ≤ 3 giây nếu gặp sự cố mạng hoặc tường lửa.</span>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-slate-800 flex justify-end">
-            <button
-              onClick={() => setIsInstructorModalOpen(false)}
-              className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-lg text-slate-300"
-            >
-              Đóng
-            </button>
-          </div>
           </div>
         </div>
       )}

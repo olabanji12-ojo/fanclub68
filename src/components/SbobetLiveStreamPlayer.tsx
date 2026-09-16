@@ -78,11 +78,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
       u.includes('youtube.com/embed') ||
       u.includes('youtu.be') ||
       u.includes('twitch.tv') ||
-      u.includes('vimeo.com') ||
-      u.includes('bj88') ||
-      u.includes('bj988') ||
-      u.includes('ga6789') ||
-      u.includes('daga88')
+      u.includes('vimeo.com')
     );
   };
 
@@ -492,7 +488,7 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
             }}
           />
 
-          {/* Big Center Play Overlay for BJ88 Direct Live (Prominent Yellow Button) */}
+          {/* Big Center Play Overlay for Video / Iframe Stream */}
           {!isIframeActivated && !hasError && (
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] flex flex-col items-center justify-center z-20 transition-all p-4">
               <button
@@ -503,13 +499,15 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
                   <Play className="w-5 h-5 fill-current ml-0.5" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">BJ88 Direct Live</span>
-                  <span className="text-[11px] text-slate-900 font-bold opacity-85">Phát Trực Tiếp Sới {arenaName}</span>
+                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">
+                    {streamSource.name || 'Phát Trực Tiếp'}
+                  </span>
+                  <span className="text-[11px] text-slate-900 font-bold opacity-85">Sới {arenaName}</span>
                 </div>
               </button>
               <p className="text-yellow-300/90 font-mono text-[11px] uppercase tracking-wider mt-4 drop-shadow flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
-                Nhấp để phát luồng BJ88 trực tiếp • 60FPS Low-Latency
+                Nhấp để phát luồng trực tiếp • 60FPS Low-Latency
               </p>
             </div>
           )}
@@ -537,7 +535,9 @@ export const SbobetLiveStreamPlayer: React.FC<Props> = ({
                   <Play className="w-5 h-5 fill-current ml-0.5" />
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">BJ88 Direct Live</span>
+                  <span className="tracking-wide uppercase font-black text-sm sm:text-base text-slate-950 leading-tight">
+                    {streamSource.name || 'Trực Tiếp Đá Gà'}
+                  </span>
                   <span className="text-[11px] text-slate-900 font-bold opacity-85">Xem Trực Tiếp Sới {arenaName}</span>
                 </div>
               </button>
