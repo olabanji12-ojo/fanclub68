@@ -52,26 +52,10 @@ export interface ArenaInfo {
   meronRooster?: RoosterProfile;
   walaRooster?: RoosterProfile;
   customStreamUrl?: string;
+  history?: ('M' | 'W' | 'B')[];
 }
 
 const DEFAULT_ARENAS: ArenaInfo[] = [
-  {
-    id: 'CPC1',
-    name: 'Thomo CPC1 VIP Arena',
-    location: 'Campuchia',
-    isOpen: true,
-    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
-    status: 'WEIGHING',
-    phase: 'WEIGHING',
-    meronOdds: 0.88,
-    walaOdds: 0.96,
-    bddOdds: 8.00,
-    timeRemainingSeconds: 520,
-    streamUrl: 'https://player.videosv388.com',
-    currentMatch: 42,
-    meronRooster: { breed: 'Gà Asil Rặc', weightKg: 3.25, spurType: 'Cựa Sắt Tròn Thomo', record: '8W - 1L', tag: 'M-#4210' },
-    walaRooster: { breed: 'Gà Tre Mỹ', weightKg: 3.20, spurType: 'Cựa Sắt Tròn Thomo', record: '6W - 2L', tag: 'W-#4211' }
-  },
   {
     id: 'CPC2',
     name: 'Thomo CPC2 Grand Arena',
@@ -87,28 +71,30 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 35,
     meronRooster: { breed: 'Gà Peru Lai', weightKg: 3.10, spurType: 'Cựa Tháp Sắt', record: '9W - 0L', tag: 'M-#3504' },
-    walaRooster: { breed: 'Gà Kelso', weightKg: 3.12, spurType: 'Cựa Tháp Sắt', record: '7W - 1L', tag: 'W-#3505' }
+    walaRooster: { breed: 'Gà Kelso', weightKg: 3.12, spurType: 'Cựa Tháp Sắt', record: '7W - 1L', tag: 'W-#3505' },
+    history: ['W', 'W', 'M', 'W', 'M', 'M', 'W', 'W', 'B', 'W', 'M', 'W', 'M', 'W', 'M']
   },
   {
-    id: 'CPC3',
-    name: 'Thomo CPC3 Iron Spur',
+    id: 'CPC5',
+    name: 'Thomo CPC5 Phnom Den Arena',
     location: 'Campuchia',
     isOpen: true,
     operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
     status: 'WEIGHING',
     phase: 'WEIGHING',
-    meronOdds: 0.90,
-    walaOdds: 0.92,
+    meronOdds: 0.88,
+    walaOdds: 0.96,
     bddOdds: 8.00,
-    timeRemainingSeconds: 480,
+    timeRemainingSeconds: 520,
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 28,
-    meronRooster: { breed: 'Gà Sweater', weightKg: 2.95, spurType: 'Cựa Tròn 2.5 Inch', record: '5W - 1L', tag: 'M-#2802' },
-    walaRooster: { breed: 'Gà Cuban', weightKg: 2.98, spurType: 'Cựa Tròn 2.5 Inch', record: '6W - 3L', tag: 'W-#2803' }
+    meronRooster: { breed: 'Gà Asil Rặc', weightKg: 3.25, spurType: 'Cựa Sắt Tròn Thomo', record: '8W - 1L', tag: 'M-#4210' },
+    walaRooster: { breed: 'Gà Tre Mỹ', weightKg: 3.20, spurType: 'Cựa Sắt Tròn Thomo', record: '6W - 2L', tag: 'W-#4211' },
+    history: ['M', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'M', 'W']
   },
   {
-    id: 'CPC4',
-    name: 'Thomo CPC4 Derby',
+    id: 'CPC7',
+    name: 'Thomo CPC7 Arena',
     location: 'Campuchia',
     isOpen: true,
     operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
@@ -121,11 +107,30 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 19,
     meronRooster: { breed: 'Gà Asil Derby', weightKg: 3.05, spurType: 'Cựa Sắt Tròn Thomo', record: '4W - 0L', tag: 'M-#1901' },
-    walaRooster: { breed: 'Gà Tre Chuối', weightKg: 3.02, spurType: 'Cựa Sắt Tròn Thomo', record: '5W - 1L', tag: 'W-#1902' }
+    walaRooster: { breed: 'Gà Tre Chuối', weightKg: 3.02, spurType: 'Cựa Sắt Tròn Thomo', record: '5W - 1L', tag: 'W-#1902' },
+    history: ['M', 'M', 'W', 'M', 'W', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'M', 'W', 'M']
   },
   {
-    id: 'PH1',
-    name: 'Pasay City PH1 Colosseum',
+    id: 'CPC9',
+    name: 'Thomo CPC9 Casino 999 Arena',
+    location: 'Campuchia',
+    isOpen: true,
+    operatingHours: '11:00 AM – 17:00 PM (GMT+7)',
+    status: 'WEIGHING',
+    phase: 'WEIGHING',
+    meronOdds: 0.90,
+    walaOdds: 0.92,
+    bddOdds: 8.00,
+    timeRemainingSeconds: 480,
+    streamUrl: 'https://player.videosv388.com',
+    currentMatch: 24,
+    meronRooster: { breed: 'Gà Sweater', weightKg: 2.95, spurType: 'Cựa Tròn 2.5 Inch', record: '5W - 1L', tag: 'M-#2802' },
+    walaRooster: { breed: 'Gà Cuban', weightKg: 2.98, spurType: 'Cựa Tròn 2.5 Inch', record: '6W - 3L', tag: 'W-#2803' },
+    history: ['W', 'M', 'W', 'M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'W', 'M', 'W', 'M']
+  },
+  {
+    id: 'PC1',
+    name: 'Pasay PC1 Grand Cockpit',
     location: 'Philippines',
     isOpen: true,
     operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
@@ -138,11 +143,12 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 50,
     meronRooster: { breed: 'Gà Hatch Slasher', weightKg: 2.85, spurType: 'Cựa Dao Slasher', record: '12W - 2L', tag: 'M-#5001' },
-    walaRooster: { breed: 'Gà Roundhead', weightKg: 2.88, spurType: 'Cựa Dao Slasher', record: '10W - 1L', tag: 'W-#5002' }
+    walaRooster: { breed: 'Gà Roundhead', weightKg: 2.88, spurType: 'Cựa Dao Slasher', record: '10W - 1L', tag: 'W-#5002' },
+    history: ['M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'W', 'M', 'W', 'W']
   },
   {
-    id: 'PH2',
-    name: 'Davao PH2 Cockpit Arena',
+    id: 'PH1',
+    name: 'Manila PH1 Live Colosseum',
     location: 'Philippines',
     isOpen: true,
     operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
@@ -155,11 +161,12 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 44,
     meronRooster: { breed: 'Gà Kelso Davao', weightKg: 2.92, spurType: 'Cựa Dao Double Blade', record: '8W - 3L', tag: 'M-#4401' },
-    walaRooster: { breed: 'Gà Albany', weightKg: 2.95, spurType: 'Cựa Dao Double Blade', record: '7W - 2L', tag: 'W-#4402' }
+    walaRooster: { breed: 'Gà Albany', weightKg: 2.95, spurType: 'Cựa Dao Double Blade', record: '7W - 2L', tag: 'W-#4402' },
+    history: ['W', 'M', 'W', 'W', 'M', 'M', 'B', 'W', 'M', 'W', 'M', 'W', 'M', 'M', 'W']
   },
   {
-    id: 'PH3',
-    name: 'Cebu PH3 Live Cockpit',
+    id: 'PH2',
+    name: 'Davao PH2 Cockpit Arena',
     location: 'Philippines',
     isOpen: true,
     operatingHours: '14:00 PM – 02:00 AM (GMT+7)',
@@ -172,7 +179,8 @@ const DEFAULT_ARENAS: ArenaInfo[] = [
     streamUrl: 'https://player.videosv388.com',
     currentMatch: 31,
     meronRooster: { breed: 'Gà Dan Gray', weightKg: 2.89, spurType: 'Cựa Dao Cebu Slasher', record: '5W - 2L', tag: 'M-#3101' },
-    walaRooster: { breed: 'Gà Butcher', weightKg: 2.91, spurType: 'Cựa Dao Cebu Slasher', record: '6W - 1L', tag: 'W-#3102' }
+    walaRooster: { breed: 'Gà Butcher', weightKg: 2.91, spurType: 'Cựa Dao Cebu Slasher', record: '6W - 1L', tag: 'W-#3102' },
+    history: ['M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'W', 'M', 'W']
   },
 ];
 
@@ -196,13 +204,13 @@ interface Daga88Match {
 
 // Fallback static presets (used when DAGA88 scraper has no data yet)
 const STREAM_PRESETS: Record<string, StreamSource[]> = {
-  CPC1: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
   CPC2: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
-  CPC3: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
-  CPC4: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
-  PH1: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
-  PH2: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
-  PH3: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC5: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC7: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  CPC9: [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PC1:  [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PH1:  [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
+  PH2:  [{ id: 'fallback_hls', name: 'HLS Backup Feed', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'hls' }],
 };
 
 const TEACHING_FALLBACK_SOURCES = [
@@ -214,8 +222,22 @@ const TEACHING_FALLBACK_SOURCES = [
     badge: 'DAGA88 Real Matches'
   },
   {
+    id: 'source_ga6789',
+    name: '📡 Backup Route 1: GA6789 Live Feed (Thomo Center)',
+    url: 'https://ga6789.com',
+    type: 'proxy_iframe' as const,
+    badge: 'Operator Route 1 (Thomo)'
+  },
+  {
+    id: 'source_bj88',
+    name: '📡 Backup Route 2: BJ88 Direct Live (Pasay Center)',
+    url: 'https://bj88.com/vn/vn',
+    type: 'proxy_iframe' as const,
+    badge: 'Operator Route 2 (Pasay)'
+  },
+  {
     id: 'fallback_hls',
-    name: '📡 Mux HLS Live Stream (60FPS Backup)',
+    name: '⚡ Mux HLS Live Stream (60FPS Backup)',
     url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
     type: 'hls' as const,
     badge: 'Native 60FPS HLS'
@@ -226,8 +248,9 @@ export const SbobetCockfightView: React.FC = () => {
   const { setCurrentView, addSelection, language, setLanguage, user, depositBalance } = useSbobetStore();
   const t = translations[language];
 
-  const arenaKeys = ['CPC1', 'CPC2', 'CPC3', 'CPC4', 'PH1', 'PH2', 'PH3'];
-  const [activeArena, setActiveArena] = useState<string>('CPC1');
+  const arenaKeys = ['CPC2', 'CPC5', 'CPC7', 'CPC9', 'PC1', 'PH1', 'PH2'];
+  const [activeArena, setActiveArena] = useState<string>('CPC2');
+  const [countryFilter, setCountryFilter] = useState<'ALL' | 'CAMBODIA' | 'PHILIPPINES'>('ALL');
   const [arenasData, setArenasData] = useState<ArenaInfo[]>(DEFAULT_ARENAS);
   const [selectedStake, setSelectedStake] = useState<number>(100);
   const [betFeedback, setBetFeedback] = useState<{ text: string; isError: boolean } | null>(null);
@@ -252,7 +275,7 @@ export const SbobetCockfightView: React.FC = () => {
 
   // Active Stream Source
   const [activeStreamSource, setActiveStreamSource] = useState<StreamSource>(
-    STREAM_PRESETS['CPC1'][0]
+    STREAM_PRESETS['CPC2'][0]
   );
 
 
@@ -273,13 +296,13 @@ export const SbobetCockfightView: React.FC = () => {
 
   // Dynamic Soi Cầu history for all 7 arenas (M: Meron, W: Wala, B: BDD)
   const [arenaHistories, setArenaHistories] = useState<Record<string, ('M' | 'W' | 'B')[]>>({
-    CPC1: ['M', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'M', 'W'],
-    CPC2: ['W', 'W', 'M', 'W', 'M', 'M', 'W', 'W', 'B', 'W', 'M', 'W', 'M', 'W'],
-    CPC3: ['M', 'M', 'W', 'M', 'W', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'M'],
-    CPC4: ['W', 'M', 'W', 'M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'W'],
-    PH1: ['M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'W', 'M'],
-    PH2: ['W', 'M', 'W', 'W', 'M', 'M', 'B', 'W', 'M', 'W', 'M', 'W'],
-    PH3: ['M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'M', 'W', 'W', 'M']
+    CPC2: ['M', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'M', 'W'],
+    CPC5: ['W', 'W', 'M', 'W', 'M', 'M', 'W', 'W', 'B', 'W', 'M', 'W', 'M', 'W', 'M'],
+    CPC7: ['M', 'M', 'W', 'M', 'W', 'W', 'M', 'M', 'W', 'B', 'M', 'W', 'M', 'W', 'M'],
+    CPC9: ['W', 'M', 'W', 'M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'W', 'M', 'W', 'M'],
+    PC1:  ['M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M', 'W', 'M', 'W', 'W'],
+    PH1:  ['W', 'M', 'W', 'W', 'M', 'M', 'B', 'W', 'M', 'W', 'M', 'W', 'M', 'M', 'W'],
+    PH2:  ['M', 'M', 'W', 'W', 'M', 'W', 'M', 'B', 'M', 'W', 'W', 'M', 'M', 'W', 'M']
   });
 
   const history = arenaHistories[activeArena] || ['M', 'W', 'M', 'W'];
@@ -314,12 +337,12 @@ export const SbobetCockfightView: React.FC = () => {
         } else {
           // Fallback to HLS if no videos
           if (!isManualStreamLocked) {
-            setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC1'][0]);
+            setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC2'][0]);
           }
         }
       } catch {
         if (!cancelled && !isManualStreamLocked) {
-          setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC1'][0]);
+          setActiveStreamSource(STREAM_PRESETS[activeArena]?.[0] || STREAM_PRESETS['CPC2'][0]);
         }
       } finally {
         if (!cancelled) setDaga88Loading(false);
@@ -418,6 +441,16 @@ export const SbobetCockfightView: React.FC = () => {
 
             if (msg.type === 'STATE_SYNC' && msg.data?.arenas) {
               setArenasData(msg.data.arenas);
+              // Authoritative sync of Soi Cầu history matrix across all arenas
+              const syncedHistory: Record<string, ('M' | 'W' | 'B')[]> = {};
+              msg.data.arenas.forEach((a: any) => {
+                if (a.id && Array.isArray(a.history) && a.history.length > 0) {
+                  syncedHistory[a.id] = a.history;
+                }
+              });
+              if (Object.keys(syncedHistory).length > 0) {
+                setArenaHistories(prev => ({ ...prev, ...syncedHistory }));
+              }
             } else if (msg.type === 'TICK') {
               const { arenaId, remainingSeconds, phase, currentMatch } = msg.data;
               setArenasData(prev => prev.map(a => {
@@ -452,8 +485,17 @@ export const SbobetCockfightView: React.FC = () => {
                 });
               }
             } else if (msg.type === 'RESULT_ANNOUNCED') {
-              const { arenaId, matchNumber, winner } = msg.data;
+              const { arenaId, matchNumber, winner, history: updatedHistory } = msg.data;
               audioService.playResultSound();
+
+              // Ingest updated authoritative history from backend immediately if provided
+              if (updatedHistory && Array.isArray(updatedHistory) && updatedHistory.length > 0) {
+                setArenaHistories(prev => ({
+                  ...prev,
+                  [arenaId]: updatedHistory
+                }));
+              }
+
               // Exact 0.5s delay before dropping scorecard bead and settling bets
               setTimeout(() => {
                 if (isMounted) {
@@ -837,30 +879,83 @@ export const SbobetCockfightView: React.FC = () => {
         </div>
       </header>
 
-      {/* 2. 7-ARENA RESPONSIVE TAB BAR */}
-      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1 sm:px-2 py-1.5 flex items-center gap-1 sm:gap-1.5 w-full shadow-inner overflow-x-auto">
-        {arenaKeys.map((arenaId) => {
-          const arenaObj = arenasData.find(a => a.id === arenaId);
-          const isArenaLocked = arenaObj && (arenaObj.phase === 'GATE_LOCKED' || arenaObj.phase === 'FIGHTING' || arenaObj.phase === 'CLOSED');
+      {/* 2. COUNTRY REGION TABS (CAMPUCHIA vs PHILIPPINES) */}
+      <div className="bg-[#071F3D] border-b border-[#0D366B] px-2 py-1.5 flex items-center justify-between gap-1">
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto">
+          <button
+            onClick={() => setCountryFilter('ALL')}
+            className={`px-2.5 py-1 rounded text-[11px] font-black transition-all ${countryFilter === 'ALL'
+              ? 'bg-amber-500 text-slate-950 shadow-sm'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20'
+              }`}
+          >
+            Tất Cả (7 Bồ)
+          </button>
+          <button
+            onClick={() => {
+              setCountryFilter('CAMBODIA');
+              if (!activeArena.startsWith('CPC')) setActiveArena('CPC2');
+            }}
+            className={`px-2.5 py-1 rounded text-[11px] font-black transition-all flex items-center gap-1.5 ${countryFilter === 'CAMBODIA'
+              ? 'bg-amber-500 text-slate-950 shadow-sm ring-1 ring-amber-300'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20'
+              }`}
+          >
+            <span>🇰🇭</span>
+            <span>Campuchia (CPC)</span>
+            <span className="text-[9px] bg-black/40 text-amber-300 px-1 py-0.2 rounded font-mono font-bold">4 Bồ</span>
+          </button>
+          <button
+            onClick={() => {
+              setCountryFilter('PHILIPPINES');
+              if (!activeArena.startsWith('PC') && !activeArena.startsWith('PH')) setActiveArena('PC1');
+            }}
+            className={`px-2.5 py-1 rounded text-[11px] font-black transition-all flex items-center gap-1.5 ${countryFilter === 'PHILIPPINES'
+              ? 'bg-cyan-500 text-slate-950 shadow-sm ring-1 ring-cyan-300'
+              : 'bg-white/10 text-slate-300 hover:bg-white/20'
+              }`}
+          >
+            <span>🇵🇭</span>
+            <span>Philippines (PH/PC)</span>
+            <span className="text-[9px] bg-black/40 text-cyan-300 px-1 py-0.2 rounded font-mono font-bold">3 Bồ</span>
+          </button>
+        </div>
+        <div className="text-[10px] text-slate-400 font-mono hidden sm:flex items-center gap-1 shrink-0">
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>{currentArena.name} ({currentArena.location})</span>
+        </div>
+      </div>
 
-          return (
-            <button
-              key={arenaId}
-              onClick={() => { setActiveArena(arenaId); setBetFeedback(null); }}
-              className={`flex-1 py-1.5 px-1 sm:px-2 rounded text-[11px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${activeArena === arenaId
-                ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
-                : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
-                }`}
-            >
-              <div className="flex items-center justify-center gap-1">
-                <span>{arenaId}</span>
-                {arenaId.startsWith('CPC') ? <span className="text-[9px] text-amber-300 opacity-80">KH</span> : <span className="text-[9px] text-cyan-300 opacity-80">PH</span>}
-              </div>
-              {isArenaLocked && (
-                <span className="absolute -top-1 -right-0.5 w-2 h-2 bg-yellow-400 rounded-full ring-1 ring-black" title="Khóa cược" />
-              )}
-            </button>
-          );
+      {/* 3. 7-ARENA RESPONSIVE TAB BAR */}
+      <div className="bg-[#0A2A54] border-b-2 border-[#082245] px-1 sm:px-2 py-1.5 flex items-center gap-1 sm:gap-1.5 w-full shadow-inner overflow-x-auto">
+        {arenaKeys
+          .filter(arenaId => {
+            if (countryFilter === 'CAMBODIA') return arenaId.startsWith('CPC');
+            if (countryFilter === 'PHILIPPINES') return arenaId.startsWith('PC') || arenaId.startsWith('PH');
+            return true;
+          })
+          .map((arenaId) => {
+            const arenaObj = arenasData.find(a => a.id === arenaId);
+            const isArenaLocked = arenaObj && (arenaObj.phase === 'GATE_LOCKED' || arenaObj.phase === 'FIGHTING' || arenaObj.phase === 'CLOSED');
+
+            return (
+              <button
+                key={arenaId}
+                onClick={() => { setActiveArena(arenaId); setBetFeedback(null); }}
+                className={`flex-1 py-1.5 px-1 sm:px-2 rounded text-[11px] sm:text-xs font-black text-center transition-all whitespace-nowrap relative ${activeArena === arenaId
+                  ? 'bg-[#C0392B] text-white shadow-md border border-red-300 ring-1 ring-red-400'
+                  : 'bg-white/10 text-gray-200 hover:bg-white/20 border border-white/10'
+                  }`}
+              >
+                <div className="flex items-center justify-center gap-1">
+                  <span>{arenaId}</span>
+                  {arenaId.startsWith('CPC') ? <span className="text-[9px] text-amber-300 opacity-80">🇰🇭 KH</span> : <span className="text-[9px] text-cyan-300 opacity-80">🇵🇭 PH</span>}
+                </div>
+                {isArenaLocked && (
+                  <span className="absolute -top-1 -right-0.5 w-2 h-2 bg-yellow-400 rounded-full ring-1 ring-black" title="Khóa cược" />
+                )}
+              </button>
+            );
         })}
       </div>
 
@@ -917,7 +1012,7 @@ export const SbobetCockfightView: React.FC = () => {
               {/* Fallback: show static presets if no DAGA88 data */}
               {!daga88Loading && daga88Matches.length === 0 && (
                 <div className="flex items-center gap-1 overflow-x-auto">
-                  {(STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC1']).map(preset => (
+                  {(STREAM_PRESETS[activeArena] || STREAM_PRESETS['CPC2']).map(preset => (
                     <button
                       key={preset.id}
                       onClick={() => setActiveStreamSource(preset)}
@@ -1183,12 +1278,12 @@ export const SbobetCockfightView: React.FC = () => {
 
         {/* 5. ROADMAP / BẢNG SOI CẦU BỒ ĐẤU (AUTHENTIC 6-ROW SV388 MATRIX) */}
         <SbobetScorecardRoadmap
-          title={`BẢNG SOI CẦU BỒ ${activeArena}`}
+          title={`BẢNG SOI CẦU BỒ ${activeArena} (${currentArena.location})`}
           gameType="cockfight"
-          items={history.map((res, idx) => ({
+          items={(arenaHistories[activeArena] || currentArena.history || history).map((res, idx) => ({
             round: idx + 1,
             result: res,
-            detail: res === 'M' ? 'Meron (Gà Đỏ) Thắng KO' : res === 'W' ? 'Wala (Gà Xanh) Thắng' : 'BDD (Hòa 1 Ăn 8)'
+            detail: res === 'M' ? 'Meron (Gà Đỏ) Thắng KO' : res === 'W' ? 'Wala (Gà Xanh) Thắng KO' : 'BDD (Hòa 1 Ăn 8)'
           }))}
           rows={6}
         />
@@ -1345,7 +1440,27 @@ export const SbobetCockfightView: React.FC = () => {
                   }}
                   className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
                 >
-                  <span>▶ DAGA88 Video Feed</span>
+                  <span>▶ DAGA88 SV388</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://ga6789.com');
+                    handleSelectPresetSource('source_ga6789');
+                  }}
+                  className="px-2.5 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>📡 GA6789 Thomo</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomStreamInput('https://bj88.com/vn/vn');
+                    handleSelectPresetSource('source_bj88');
+                  }}
+                  className="px-2.5 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>📡 BJ88 Pasay</span>
                 </button>
                 <button
                   type="button"
@@ -1355,7 +1470,7 @@ export const SbobetCockfightView: React.FC = () => {
                   }}
                   className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-blue-300 border border-slate-700 rounded-md text-[10px] font-bold transition flex items-center gap-1 cursor-pointer"
                 >
-                  <span>⚡ Mux HLS Backup</span>
+                  <span>⚡ Mux HLS (60FPS)</span>
                 </button>
               </div>
 
